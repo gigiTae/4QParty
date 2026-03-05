@@ -1,0 +1,9 @@
+<ui:UXML xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements" noNamespaceSchemaLocation="../../../UIElementsSchema/UIElements.xsd" editor-extension-mode="False">
+    <FQParty.UI.Main.MainMenuElement name="MainMenuElement">
+        <Bindings>
+            <UnityEngine.Localization.LocalizedString property="StartButtonText" table="GUID:c65015354b2105a449fc22fc24b9d526" entry="Id(201672200192)"/>
+            <UnityEngine.Localization.LocalizedString property="SettingButtonText" table="GUID:c65015354b2105a449fc22fc24b9d526" entry="Id(437505331200)"/>
+            <UnityEngine.Localization.LocalizedString property="EndButtonText" table="GUID:c65015354b2105a449fc22fc24b9d526" entry="Id(435580145664)"/>
+        </Bindings>
+    </FQParty.UI.Main.MainMenuElement>
+</ui:UXML>

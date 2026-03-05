@@ -6,11 +6,17 @@ EditorBuildSettings:
   serializedVersion: 2
   m_Scenes:
   - enabled: 1
-    path: Assets/4QParty/Scenes/SampleScene.unity
-    guid: 99c9720ab356a0642a771bea13969a05
+    path: Assets/4QParty/Scenes/Build/Main.unity
+    guid: 89a72d35d9e94a647bd4f7cec41a4692
   - enabled: 1
-    path: Assets/NGO_Minimal_Setup/NGO_Setup.unity
-    guid: a7cbc79767234a845baaed5e4877f019
+    path: Assets/4QParty/Scenes/Build/Setting.unity
+    guid: 93fdec89d61530d489c8ce705a2cf8f4
+  - enabled: 1
+    path: Assets/4QParty/Scenes/Build/Lobby.unity
+    guid: 598981394d8ec8241866130ad7cbde50
+  - enabled: 1
+    path: Assets/4QParty/Scenes/Build/Game.unity
+    guid: 84c8492625c5f8d4a9d7f92d4e07990d
   m_configObjects:
     com.unity.addressableassets: {fileID: 11400000, guid: 05787acbd5ed79c488428179afaded24, type: 2}
     com.unity.input.settings.actions: {fileID: -944628639613478452, guid: 052faaac586de48259a63d0c4782560b, type: 3}
