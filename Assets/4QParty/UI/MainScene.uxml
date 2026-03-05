@@ -1,0 +1,19 @@
+<ui:UXML xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements" noNamespaceSchemaLocation="../../../UIElementsSchema/UIElements.xsd" editor-extension-mode="False">
+    <ui:VisualElement name="root" style="flex-grow: 1; position: relative; flex-direction: column-reverse;">
+        <ui:Button text="Button" name="start_button">
+            <Bindings>
+                <UnityEngine.Localization.LocalizedString property="text" table="GUID:c65015354b2105a449fc22fc24b9d526" entry="Id(201672200192)"/>
+            </Bindings>
+        </ui:Button>
+        <ui:Button text="Button" name="setting_button">
+            <Bindings>
+                <UnityEngine.Localization.LocalizedString property="text" table="GUID:c65015354b2105a449fc22fc24b9d526" entry="Id(437505331200)"/>
+            </Bindings>
+        </ui:Button>
+        <ui:Button text="Button" name="end_button">
+            <Bindings>
+                <UnityEngine.Localization.LocalizedString property="text" table="GUID:c65015354b2105a449fc22fc24b9d526" entry="Id(435580145664)"/>
+            </Bindings>
+        </ui:Button>
+    </ui:VisualElement>
+</ui:UXML>
