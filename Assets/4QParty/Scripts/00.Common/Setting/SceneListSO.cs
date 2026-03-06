@@ -3,7 +3,7 @@ using UnityEngine;
 
 namespace FQParty.Common.Setting
 {
-    [CreateAssetMenu(fileName = "BuildSceneList", menuName = "Setting/BuildSceneList")]
+    [CreateAssetMenu(fileName = "BuildSceneList", menuName = "Settings/BuildSceneList")]
     public class BuildSceneList : ScriptableObject
     {
         public string MainScene;

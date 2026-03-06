@@ -8,7 +8,7 @@ using UnityEngine;
 using UnityEngine.UIElements;
 
 
-namespace FQParty.Network
+namespace FQParty.Session.Network
 {
     public class CreateSessionViewModel : IDisposable, IDataSourceViewHashProvider, INotifyBindablePropertyChanged
     {
@@ -30,7 +30,7 @@ namespace FQParty.Network
                 Notify();
             }
         }
-        bool m_CanRegisterSession;
+        bool m_CanRegisterSession =true;
 
         [CreateProperty]
         public bool HasSessionName
@@ -113,7 +113,10 @@ namespace FQParty.Network
         {
             if (m_SessionObserver != null)
             {
-
+                m_SessionObserver.AddingSessionStarted -= OnAddingSessionStarted;
+                m_SessionObserver.SessionAdded -= OnSessionAdded;
+                m_SessionObserver.AddingSessionFailed -= OnAddingSessionFailed;
+                m_SessionObserver.Dispose();
                 m_SessionObserver = null;
             }
 
