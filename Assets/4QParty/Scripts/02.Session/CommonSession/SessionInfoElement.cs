@@ -5,10 +5,13 @@ using UnityEngine.UIElements;
 
 namespace FQParty.Session.CommonSession
 {
+    /// <summary>
+    /// Debug 용도의 세션 정보
+    /// 아마 사용안해도 괜찮을거같지만 혹시라도 나중에 사용할 수있음
+    /// </summary>
     [UxmlElement]
     public partial class SessionInfoElement : VisualElement
     {
-
         const string k_SessionInfoHeaderName = "SessionInfoHeader";
         const string k_SessionInfoHeaderText = "SESSION INFO";
 
@@ -64,8 +67,6 @@ namespace FQParty.Session.CommonSession
 
         public SessionInfoElement()
         {
-            
-
             AddToClassList(UITheme.FullWidth);
 
             var sessionInfoHeader = new Label

@@ -1,0 +1,16 @@
+<ui:UXML xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements" noNamespaceSchemaLocation="../../../../UIElementsSchema/UIElements.xsd" editor-extension-mode="False">
+    <ui:VisualElement style="flex-grow: 1;">
+        <ui:VisualElement style="flex-grow: 1;">
+            <FQParty.Session.CommonSession.PlayerCountLabel/>
+            <FQParty.Session.CommonSession.SessionNameLabel/>
+        </ui:VisualElement>
+        <ui:VisualElement style="flex-grow: 1;">
+            <FQParty.Session.CommonSession.PlayerNameLabel/>
+        </ui:VisualElement>
+        <FQParty.Session.CommonSession.PlayerListViewElement/>
+        <FQParty.Session.CommonSession.LeaveSessionButton name="LeaveSessionButton"/>
+        <ui:VisualElement style="flex-grow: 1;">
+            <FQParty.Session.CommonSession.SessionStatusLabel/>
+        </ui:VisualElement>
+    </ui:VisualElement>
+</ui:UXML>

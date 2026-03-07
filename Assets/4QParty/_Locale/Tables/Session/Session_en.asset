@@ -19,11 +19,27 @@ MonoBehaviour:
     m_Items: []
   m_TableData:
   - m_Id: 6939054080
-    m_Localized: Create
+    m_Localized: CREATE
     m_Metadata:
       m_Items: []
   - m_Id: 608515493888
     m_Localized: Enter Session Name
+    m_Metadata:
+      m_Items: []
+  - m_Id: 343301544316928
+    m_Localized: Leave Session
+    m_Metadata:
+      m_Items: []
+  - m_Id: 344074965585920
+    m_Localized: JOIN
+    m_Metadata:
+      m_Items: []
+  - m_Id: 344958558638080
+    m_Localized: REFRESH LIST
+    m_Metadata:
+      m_Items: []
+  - m_Id: 345193032814592
+    m_Localized: No Session found
     m_Metadata:
       m_Items: []
   references:

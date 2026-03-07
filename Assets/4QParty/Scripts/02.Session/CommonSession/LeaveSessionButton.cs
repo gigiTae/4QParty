@@ -1,15 +1,15 @@
 using FQParty.Common.Constant;
 using System;
 using Unity.Properties;
+using UnityEngine.Localization;
 using UnityEngine.UIElements;
+
 
 namespace FQParty.Session.CommonSession
 {
     [UxmlElement]
     public partial class LeaveSessionButton : Button
     {
-        const string k_LeaveSessionButtonText = "Leave Session";
-
         [CreateProperty, UxmlAttribute]
         public string SessionType
         {
@@ -36,8 +36,6 @@ namespace FQParty.Session.CommonSession
 
         public LeaveSessionButton()
         {
-            text = k_LeaveSessionButtonText;
-
             AddToClassList(UITheme.Button);
             m_DataBinding = new DataBinding() { dataSourcePath = new PropertyPath(nameof(LeaveSessionViewModel.CanLeaveSession)), bindingMode = BindingMode.ToTarget };
             SetBinding(new BindingId(nameof(enabledSelf)), m_DataBinding);

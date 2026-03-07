@@ -11,6 +11,9 @@ namespace FQParty.Session.Network
     [UxmlElement]
     public partial class SessionBrowserElement : ListView
     {
+        const string k_SessionNameLabel = "SessionNameLabel";
+        const string k_SessionPlayerCountLabel = "SessionPlayerCountLabel";
+
         [CreateProperty, UxmlAttribute]
         public string JointButtonText
         {
@@ -61,31 +64,7 @@ namespace FQParty.Session.Network
             }
         }
         string m_NoSessionFoundText = "No Session found";
-
-        [CreateProperty, UxmlAttribute]
-        public string SessionNameLabel
-        {
-            get => m_SessionNameLabel;
-            set
-            {
-                if (m_SessionNameLabel == value) return;
-                m_SessionNameLabel = value;
-            }
-        }
-        string m_SessionNameLabel = "SessionNameLabel";
-
-        [CreateProperty, UxmlAttribute]
-        public string SessionPlayerCountLabel
-        {
-            get => m_SessionPlayerCountLabel;
-            set
-            {
-                if (m_SessionPlayerCountLabel == value) return;
-                m_SessionPlayerCountLabel = value;
-            }
-        }
-        string m_SessionPlayerCountLabel = "SessionPlayerCountLabel";
-
+        
         SessionSettingSO m_SessionSettings;
         SessionBrowserViewModel m_ViewModel;
         List<DataBinding> m_DataBindings;
@@ -247,7 +226,7 @@ namespace FQParty.Session.Network
             container.AddToClassList(UITheme.ScrollViewElement);
             container.AddToClassList(UITheme.ContainerSpaceBetween);
 
-            var sessionNameLabel = new Label { name = SessionNameLabel };
+            var sessionNameLabel = new Label { name = k_SessionNameLabel };
             sessionNameLabel.AddToClassList(UITheme.Label);
             sessionNameLabel.AddToClassList(UITheme.SpaceLeft);
             container.Add(sessionNameLabel);
@@ -260,7 +239,7 @@ namespace FQParty.Session.Network
             };
             sessionNameLabel.SetBinding(nameof(Label.text), db);
 
-            var sessionPlayerCountLabel = new Label { name = SessionPlayerCountLabel };
+            var sessionPlayerCountLabel = new Label { name = k_SessionPlayerCountLabel };
             sessionPlayerCountLabel.AddToClassList(UITheme.Label);
             sessionPlayerCountLabel.AddToClassList(UITheme.SpaceRight);
             container.Add(sessionPlayerCountLabel);

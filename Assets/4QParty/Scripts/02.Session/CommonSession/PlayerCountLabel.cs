@@ -28,7 +28,6 @@ namespace FQParty.Session.CommonSession
         }
 
         string m_SessionType;
-
         DataBinding m_DataBinding;
 
         public PlayerCountLabel()

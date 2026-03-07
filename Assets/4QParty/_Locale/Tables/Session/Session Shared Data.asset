@@ -15,12 +15,32 @@ MonoBehaviour:
   m_TableCollectionName: Session
   m_TableCollectionNameGuidString: 19aafe3bc1b57464cadaf74aa02829b2
   m_Entries:
+  - m_Id: 345193032814592
+    m_Key: Session.CommonSession.LeaveSessionButton.NoSessionFoundText
+    m_Metadata:
+      m_Items: []
+  - m_Id: 343301544316928
+    m_Key: Session.CommonSession.LeaveSessionButton.LeaveText
+    m_Metadata:
+      m_Items: []
   - m_Id: 6939054080
-    m_Key: Session.CreateSession.CreateSessionButton
+    m_Key: Session.Network.CreateSession.CreateSessionButton
     m_Metadata:
       m_Items: []
   - m_Id: 608515493888
-    m_Key: Session.CreateSession.EnterSessionNamePlaceHolder
+    m_Key: Session.Network.CreateSession.EnterSessionNamePlaceHolder
+    m_Metadata:
+      m_Items: []
+  - m_Id: 344074965585920
+    m_Key: 'Session.Network.SessionBroswerElement.JointButtonText
+
+'
+    m_Metadata:
+      m_Items: []
+  - m_Id: 344958558638080
+    m_Key: 'Session.Network.SessionBroswerElement.RefreshButtonText
+
+'
     m_Metadata:
       m_Items: []
   m_Metadata:

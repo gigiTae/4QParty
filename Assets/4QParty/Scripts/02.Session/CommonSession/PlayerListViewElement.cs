@@ -7,7 +7,16 @@ namespace FQParty.Session.CommonSession
     [UxmlElement]
     public partial class PlayerListViewElement : ListView
     {
-        private const string k_PlayerListIsEmptyLabel = "No player has joined";
+        [CreateProperty, UxmlAttribute]
+        public string PlayerListIsEmptyLabel
+        {
+            get => m_PlayerListIsEmptyLabel;
+            set
+            {
+                m_PlayerListIsEmptyLabel = value;
+            }
+        }
+        private string m_PlayerListIsEmptyLabel = "No player has joined";
 
         private string m_SessionType;
         private DataBinding m_DataBinding;
@@ -44,7 +53,6 @@ namespace FQParty.Session.CommonSession
             AddToClassList(UITheme.ScrollView);
 
             makeNoneElement = MakeNoneElement;
-
             makeItem = MakeDefaultItem;
 
             BindItemSource();
@@ -79,9 +87,9 @@ namespace FQParty.Session.CommonSession
             m_DataBinding.dataSource = null;
         }
 
-        private static VisualElement MakeNoneElement()
+        private VisualElement MakeNoneElement()
         {
-            var label = new Label(k_PlayerListIsEmptyLabel);
+            var label = new Label(PlayerListIsEmptyLabel);
             label.AddToClassList(UITheme.Label);
             return label;
         }
