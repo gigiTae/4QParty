@@ -231,7 +231,6 @@ namespace FQParty.Session.Network
 
         public async Task<ISession> JoinSessionByIdAsync(JoinSessionOptions joinSessionOptions)
         {
-
             return await MultiplayerService.Instance.JoinSessionByIdAsync(GetSelectedSessionId(), joinSessionOptions);
         }
 

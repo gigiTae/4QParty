@@ -1,7 +1,7 @@
 using FQParty.Common.Setting;
 using UnityEngine;
+using UnityEngine.Localization;
 using UnityEngine.UIElements;
-
 
 namespace FQParty.UI.Main
 {

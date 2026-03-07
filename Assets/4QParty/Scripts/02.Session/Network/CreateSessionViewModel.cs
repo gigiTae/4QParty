@@ -106,6 +106,7 @@ namespace FQParty.Session.Network
         public async Task<IHostSession> CreateSessionAsync(SessionOptions sessionOptions)
         {
             sessionOptions.Name = SessionName;
+            Debug.Log($"{sessionOptions.Name}");
             return await MultiplayerService.Instance.CreateSessionAsync(sessionOptions);
         }
 

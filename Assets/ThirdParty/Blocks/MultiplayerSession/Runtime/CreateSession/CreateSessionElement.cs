@@ -24,10 +24,7 @@ namespace Blocks.Sessions
 
                 m_SessionSettings = value;
                 if (panel != null)
-                {
-                    Debug.Log("Block");
                     UpdateBindings();
-                }
             }
         }
         SessionSettings m_SessionSettings;

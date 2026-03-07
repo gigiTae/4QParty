@@ -1,6 +1,5 @@
 using UnityEngine;
 
-
 namespace FQParty.Common.Constant
 {
     public static class UITheme

@@ -1,5 +1,3 @@
-using Blocks.Common;
-using Blocks.Sessions.Common;
 using FQParty.Common.Constant;
 using FQParty.Session.Common;
 using System.Collections.Generic;
@@ -11,17 +9,83 @@ using UnityEngine.UIElements;
 namespace FQParty.Session.Network
 {
     [UxmlElement]
-
     public partial class SessionBrowserElement : ListView
     {
+        [CreateProperty, UxmlAttribute]
+        public string JointButtonText
+        {
+            get => m_JoinButtonText;
+            set
+            {
+                if (m_JoinButtonText == value)
+                    return;
+
+                m_JoinButtonText = value;
+
+                if (m_JoinSessionButton != null)
+                {
+                    m_JoinSessionButton.text = value;
+                }
+            }
+        }
         string m_JoinButtonText = "JOIN";
+
+        [CreateProperty, UxmlAttribute]
+        public string RefreshButtonText
+        {
+            get => m_RefreshButtonText;
+            set
+            {
+                if (m_RefreshButtonText == value) return;
+
+                m_RefreshButton.text = value;
+
+                if (m_RefreshButton != null)
+                {
+                    m_RefreshButton.text = value;
+                }
+            }
+        }
         string m_RefreshButtonText = "REFRESH LIST";
+
+        [CreateProperty, UxmlAttribute]
+        public string NoSessionFoundText
+        {
+            get => m_NoSessionFoundText;
+            set
+            {
+                if (value == m_NoSessionFoundText)
+                    return;
+
+                m_NoSessionFoundText = value;
+            }
+        }
         string m_NoSessionFoundText = "No Session found";
 
+        [CreateProperty, UxmlAttribute]
+        public string SessionNameLabel
+        {
+            get => m_SessionNameLabel;
+            set
+            {
+                if (m_SessionNameLabel == value) return;
+                m_SessionNameLabel = value;
+            }
+        }
         string m_SessionNameLabel = "SessionNameLabel";
+
+        [CreateProperty, UxmlAttribute]
+        public string SessionPlayerCountLabel
+        {
+            get => m_SessionPlayerCountLabel;
+            set
+            {
+                if (m_SessionPlayerCountLabel == value) return;
+                m_SessionPlayerCountLabel = value;
+            }
+        }
         string m_SessionPlayerCountLabel = "SessionPlayerCountLabel";
 
-        int m_MaxSessionsDisplayed = 20;
         SessionSettingSO m_SessionSettings;
         SessionBrowserViewModel m_ViewModel;
         List<DataBinding> m_DataBindings;
@@ -41,7 +105,7 @@ namespace FQParty.Session.Network
                 m_SessionSettings = value;
                 if (panel != null)
                 {
-                    //   UpdateBindingSources();
+                    UpdateBindingSources();
                 }
             }
         }
@@ -52,6 +116,7 @@ namespace FQParty.Session.Network
             get => m_MaxSessionsDisplayed;
             set => m_MaxSessionsDisplayed = value;
         }
+        int m_MaxSessionsDisplayed = 20;
 
         // »ý¼ºÀÚ
         public SessionBrowserElement()
@@ -67,21 +132,24 @@ namespace FQParty.Session.Network
             makeNoneElement = MakeNoneElement;
             makeItem = MakeDefaultItem;
             makeFooter = MakeFooter;
+
+            RegisterCallback<AttachToPanelEvent>(OnAttachToPanelEvent);
+            RegisterCallback<DetachFromPanelEvent>(OnDetachFromPanelEvent);
         }
 
         private VisualElement MakeFooter()
         {
             var buttonsContainer = new VisualElement();
-            buttonsContainer.AddToClassList(BlocksTheme.ContainerHorizontal);
-            buttonsContainer.AddToClassList(BlocksTheme.ContainerAlignedRight);
+            buttonsContainer.AddToClassList(UITheme.ContainerHorizontal);
+            buttonsContainer.AddToClassList(UITheme.ContainerAlignedRight);
 
             m_JoinSessionButton = new Button { text = m_JoinButtonText };
-            m_JoinSessionButton.AddToClassList(BlocksTheme.Button);
-            m_JoinSessionButton.AddToClassList(BlocksTheme.SpaceRight);
+            m_JoinSessionButton.AddToClassList(UITheme.Button);
+            m_JoinSessionButton.AddToClassList(UITheme.SpaceRight);
             buttonsContainer.Add(m_JoinSessionButton);
 
             m_RefreshButton = new Button { text = m_RefreshButtonText };
-            m_RefreshButton.AddToClassList(BlocksTheme.Button);
+            m_RefreshButton.AddToClassList(UITheme.Button);
             buttonsContainer.Add(m_RefreshButton);
 
             return buttonsContainer;
@@ -90,7 +158,6 @@ namespace FQParty.Session.Network
         private void OnRefreshButtonClicked()
         {
             ClearSelection();
-            // fire and forget, so we don't block the UI thread
             _ = m_ViewModel?.UpdateSessionListAsync(MaxSessionsDisplayed);
         }
 
@@ -102,11 +169,9 @@ namespace FQParty.Session.Network
                 return;
             }
 
-            // fire and forget, so we don't block the UI thread
             _ = m_ViewModel.JoinSessionAsync(SessionSettings.ToJoinSessionOptions());
         }
 
-     
         private void UpdateBindingSources()
         {
             CleanupBindings();
@@ -166,25 +231,25 @@ namespace FQParty.Session.Network
 
             UpdateBindingSources();
         }
+
         private VisualElement MakeNoneElement()
         {
-            var label = new Label(m_NoSessionFoundText);
-            label.AddToClassList(BlocksTheme.Label);
-            label.AddToClassList(BlocksTheme.SpaceLeft);
+            var label = new Label(NoSessionFoundText);
+            label.AddToClassList(UITheme.Label);
+            label.AddToClassList(UITheme.SpaceLeft);
             return label;
         }
-
 
         private VisualElement MakeDefaultItem()
         {
             var container = new VisualElement();
-            container.AddToClassList(BlocksTheme.ContainerHorizontal);
-            container.AddToClassList(BlocksTheme.ScrollViewElement);
-            container.AddToClassList(BlocksTheme.ContainerSpaceBetween);
+            container.AddToClassList(UITheme.ContainerHorizontal);
+            container.AddToClassList(UITheme.ScrollViewElement);
+            container.AddToClassList(UITheme.ContainerSpaceBetween);
 
-            var sessionNameLabel = new Label { name = m_SessionNameLabel };
-            sessionNameLabel.AddToClassList(BlocksTheme.Label);
-            sessionNameLabel.AddToClassList(BlocksTheme.SpaceLeft);
+            var sessionNameLabel = new Label { name = SessionNameLabel };
+            sessionNameLabel.AddToClassList(UITheme.Label);
+            sessionNameLabel.AddToClassList(UITheme.SpaceLeft);
             container.Add(sessionNameLabel);
 
             var db = new DataBinding
@@ -195,9 +260,9 @@ namespace FQParty.Session.Network
             };
             sessionNameLabel.SetBinding(nameof(Label.text), db);
 
-            var sessionPlayerCountLabel = new Label { name = m_SessionPlayerCountLabel };
-            sessionPlayerCountLabel.AddToClassList(BlocksTheme.Label);
-            sessionPlayerCountLabel.AddToClassList(BlocksTheme.SpaceRight);
+            var sessionPlayerCountLabel = new Label { name = SessionPlayerCountLabel };
+            sessionPlayerCountLabel.AddToClassList(UITheme.Label);
+            sessionPlayerCountLabel.AddToClassList(UITheme.SpaceRight);
             container.Add(sessionPlayerCountLabel);
 
             var sessionPlayerCountBinding = new DataBinding { bindingMode = BindingMode.ToTarget };

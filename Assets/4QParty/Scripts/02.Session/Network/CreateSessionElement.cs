@@ -1,3 +1,4 @@
+using Codice.Client.Common;
 using FQParty.Common.Constant;
 using FQParty.Session.Common;
 using System.Collections.Generic;
@@ -15,6 +16,7 @@ namespace FQParty.Session.Network
         private TextField m_SessionNameTextField;
         private Button m_CreateSessionButton;
 
+        
         [CreateProperty, UxmlAttribute]
         public string CreateButtonText
         {
@@ -59,7 +61,6 @@ namespace FQParty.Session.Network
                 m_SessionSettings = value;
                 if (panel != null)
                 {
-                    Debug.Log("My");
                     UpdateBindings();
                 }
             }
