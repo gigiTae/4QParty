@@ -7,14 +7,15 @@ using UnityEngine.UIElements;
 namespace FQParty.Session.CommonSession
 {
     [UxmlElement]
-    public class StartSessionButton : Button
+    public partial class StartSessionButton : Button
     {
         StartSessionViewModel m_ViewModel;
 
         public StartSessionButton()
         {
             AddToClassList(UITheme.Button);
-            
+
+            clicked += StartSession;
         }
 
         void StartSession()
@@ -30,13 +31,6 @@ namespace FQParty.Session.CommonSession
 
         void CleanupBindings()
         {
-            if (m_DataBinding.dataSource is IDisposable disposable)
-            {
-                disposable.Dispose();
-            }
-
-            m_ViewModel = null;
-            m_DataBinding.dataSource = null;
         }
     }
 

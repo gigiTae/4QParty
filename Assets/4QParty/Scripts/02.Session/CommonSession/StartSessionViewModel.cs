@@ -6,6 +6,12 @@ namespace FQParty.Session.CommonSession
     public class StartSessionViewModel 
     {
         
+        public void StartSession()
+        {
+
+
+        }
+
     }
 
 }
