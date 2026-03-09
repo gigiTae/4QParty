@@ -1,5 +1,12 @@
 {
   "dependencies": {
+    "com.community.netcode.transport.steamnetworkingsockets": {
+      "version": "https://github.com/Unity-Technologies/multiplayer-community-contributions.git?path=/Transports/com.community.netcode.transport.steamnetworkingsockets",
+      "depth": 0,
+      "source": "git",
+      "dependencies": {},
+      "hash": "5cea8f048cc16f3575fabcf03af3ebafbc390499"
+    },
     "com.eflatun.scenereference": {
       "version": "git+https://github.com/starikcetin/Eflatun.SceneReference.git#4.1.1",
       "depth": 0,
@@ -9,6 +16,13 @@
         "com.unity.nuget.newtonsoft-json": "3.0.2"
       },
       "hash": "b849990020c30ac6ead4e4fb4881428f86dcde0d"
+    },
+    "com.rlabrecque.steamworks.net": {
+      "version": "https://github.com/rlabrecque/Steamworks.NET.git?path=/com.rlabrecque.steamworks.net#2025.163.0",
+      "depth": 0,
+      "source": "git",
+      "dependencies": {},
+      "hash": "98d6584e4509dd514768cc28c3f02026fbdd6cc7"
     },
     "com.unity.addressables": {
       "version": "2.9.0",

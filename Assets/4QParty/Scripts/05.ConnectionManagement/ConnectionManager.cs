@@ -1,6 +1,7 @@
 using System.Data;
 using Unity.Netcode;
 using UnityEngine;
+using VContainer;
 
 
 namespace FQParty.ConnectionManagement
@@ -51,8 +52,22 @@ namespace FQParty.ConnectionManagement
 
     public class ConnectionManager : MonoBehaviour
     {
+        ConnectionState m_CurrentState;
 
-        
+        [Inject]
+        NetworkManager m_NetworkManager;
+        public NetworkManager NetworkManager => m_NetworkManager;
+
+        [SerializeField]
+        int m_NbReconnectAttempts = 2;
+        public int NbReconnectAttempts => m_NbReconnectAttempts;
+
+        [Inject]
+        IObjectResolver m_Resolver;
+
+        public int MaxConnectedPlayers = 4;
+
+
     }
 
 }

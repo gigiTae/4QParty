@@ -3,7 +3,7 @@ using Unity.Services.Multiplayer;
 using UnityEngine;
 using VContainer;
 
-namespace FQParty.ConnectionManagement.ConnectionState
+namespace FQParty.ConnectionManagement
 {
     /// <summary>
     /// 
@@ -17,23 +17,13 @@ namespace FQParty.ConnectionManagement.ConnectionState
 
         public override void Exit() { }
 
-        public override void StartClientIP(string playerName, string ipaddress, int port)
-        {
-        }
-
         public override void StartClientSession(string playerName)
-        {
-
-        }
-
-        public override void StartHostIP(string playerName, string ipaddress, int port)
         {
 
         }
 
         public override void StartHostSession(string playerName)
         {
-
         }
     }
 }

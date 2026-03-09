@@ -3,7 +3,7 @@ using Unity.Netcode;
 using UnityEngine;
 using VContainer;
 
-namespace FQParty.ConnectionManagement.ConnectionState
+namespace FQParty.ConnectionManagement
 {
     /// <summary>
     /// 연결 상태 머신(Connection State Machine)에서 각 연결 단계(Offline, Connecting, Hosting 등)를 나타내는 기본 클래스입니다. 
@@ -42,19 +42,9 @@ namespace FQParty.ConnectionManagement.ConnectionState
         public virtual void OnServerStarted() { }
 
         /// <summary>
-        /// IP 주소와 포트를 사용하여 클라이언트로 연결을 시작합니다. (주로 오프라인 상태에서 호출) 
-        /// </summary>
-        public virtual void StartClientIP(string playerName, string ipaddress, int port) { }
-
-        /// <summary>
         /// 유니티 서비스(Relay/Session)를 사용하여 세션 기반 클라이언트 연결을 시작합니다. 
         /// </summary>
         public virtual void StartClientSession(string playerName) { }
-
-        /// <summary>
-        /// 특정 IP와 포트에서 호스트(서버+클라이언트) 모드를 시작합니다. 
-        /// </summary>
-        public virtual void StartHostIP(string playerName, string ipaddress, int port) { }
 
         /// <summary>
         /// 유니티 서비스(Relay/Session)를 통해 세션을 생성하고 호스트 모드를 시작합니다. 

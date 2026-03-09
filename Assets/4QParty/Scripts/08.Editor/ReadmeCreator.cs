@@ -3,7 +3,7 @@ using UnityEditor;
 using System.IO;
 
 
-namespace FQParty.Common
+namespace FQParty.Editor
 {
     /// <summary>
     /// Readme 
