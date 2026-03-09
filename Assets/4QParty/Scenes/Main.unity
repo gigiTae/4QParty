@@ -188,7 +188,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::FQParty.UI.Main.MainMenu
   m_Document: {fileID: 854886657}
-  m_SceneList: {fileID: 11400000, guid: 8667a0e5b2a71eb4db7c2c1866ecf5ce, type: 2}
+  m_LoadSceneGroupEvent: {fileID: 11400000, guid: 361c5387f26c0d741a352c5f4aed7c4b, type: 2}
 --- !u!1 &1271907221
 GameObject:
   m_ObjectHideFlags: 0

@@ -1,4 +1,5 @@
 using Eflatun.SceneReference;
+using FQParty.Common.Constant;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -13,7 +14,6 @@ namespace FQParty.SceneManagement
 {
     public class SceneGroupManager
     {
-        const string k_BootstrapperSceneName = "Bootstrapper";
         public event Action<string> OnSceneLoaded = delegate { };
         public event Action<string> OnSceneUnloaded = delegate { };
         public event Action OnSceneGroupLoaded = delegate { };
@@ -60,7 +60,6 @@ namespace FQParty.SceneManagement
                 OnSceneLoaded.Invoke(sceneData.Name);
             }
 
-            // Wait until all AsyncOperations in the group are done
             while (!operationGroup.IsDone || !m_HandleLoadGroup.IsDone)
             {
                 progress?.Report((operationGroup.Progress + m_HandleLoadGroup.Progress) / 2);
@@ -79,20 +78,30 @@ namespace FQParty.SceneManagement
 
         public async Task UnloadScenes()
         {
-            m_HandleUnloadGroup.Handles.Clear(); 
+            Scene BootstrapperScene = SceneManager.GetSceneByName(SceneGroupTheme.k_Boostrapper);
+            if (BootstrapperScene.IsValid())
+            {
+                SceneManager.SetActiveScene(BootstrapperScene);
+            }
+            else
+            {
+                Debug.Log("TT");
+            }
+
+                m_HandleUnloadGroup.Handles.Clear();
 
             List<string> unloadScenes = new();
             string activeScene = SceneManager.GetActiveScene().name;
             int sceneCount = SceneManager.sceneCount;
 
             // 언로드 (어드레서블 씬, 부트트랩씬 예외) 씬리스트 추가
-            for (int i = sceneCount - 1; i > 0; i--)
+            for (int i = 0; i < sceneCount; i++)
             {
                 var sceneAt = SceneManager.GetSceneAt(i);
                 if (!sceneAt.isLoaded) continue;
 
                 var sceneName = sceneAt.name;
-                if (sceneName.Equals(activeScene) || sceneName == k_BootstrapperSceneName) continue;
+                if (sceneName.Equals(activeScene) || sceneName == SceneGroupTheme.k_Boostrapper) continue;
                 if (m_HandleLoadGroup.Handles.Any(h => h.IsValid() && h.Result.Scene.name == sceneName)) continue;
 
                 unloadScenes.Add(sceneName);
@@ -117,7 +126,7 @@ namespace FQParty.SceneManagement
             {
                 if (handle.IsValid())
                 {
-                    var unloadHandle = Addressables.UnloadSceneAsync(handle);
+                    AsyncOperationHandle<SceneInstance> unloadHandle = Addressables.UnloadSceneAsync(handle);
                     m_HandleUnloadGroup.Handles.Add(unloadHandle);
                 }
             }

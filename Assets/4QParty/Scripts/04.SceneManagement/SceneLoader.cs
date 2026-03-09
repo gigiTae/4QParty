@@ -1,31 +1,54 @@
+using FQParty.Common.Event;
 using System;
 using System.Threading.Tasks;
 using UnityEngine;
 using UnityEngine.UIElements;
-using VContainer;
 
 namespace FQParty.SceneManagement
 {
     public class SceneLoader : MonoBehaviour
     {
         [SerializeField] UIDocument m_Document;
-        [SerializeField] SceneGroup[] m_SceneGroups;
         [SerializeField] float m_FillSpeed = 0.5f;
+        [SerializeField] LoadSceneGroupEvent m_LoadSceneGroupEvent;
+        [SerializeField] SceneGroupListSO m_SceneGroupList;
 
         ProgressBar m_ProgressBar;
 
         float m_TargetProgress;
         bool m_IsLoading;
 
-        public readonly SceneGroupManager manager = new SceneGroupManager();
+        public readonly SceneGroupManager m_Manager = new SceneGroupManager();
 
         void Awake()
         {
             m_ProgressBar = m_Document.rootVisualElement.Q<ProgressBar>();
 
-            manager.OnSceneLoaded += sceneName => Debug.Log("Loaded: " + sceneName);
-            manager.OnSceneUnloaded += sceneName => Debug.Log("Unloaded: " + sceneName);
-            manager.OnSceneGroupLoaded += () => Debug.Log("Scene group loaded");
+            m_LoadSceneGroupEvent.Subscribe(OnLoadSceneGroup);
+
+            m_Manager.OnSceneLoaded += sceneName => Debug.Log("Loaded: " + sceneName);
+            m_Manager.OnSceneUnloaded += sceneName => Debug.Log("Unloaded: " + sceneName);
+            m_Manager.OnSceneGroupLoaded += () => Debug.Log("Scene group loaded");
+        }
+
+        void OnLoadSceneGroup(LoadSceneGroupContext context)
+        {
+            if (m_IsLoading)
+            {
+                Debug.LogWarning("현재 다른 씬그룹을 로딩하고 있습니다");
+                return;
+            }
+
+            var index = m_SceneGroupList.SceneGroups.FindIndex(g => g.GroupName == context.GroupName);
+
+            if (index != -1)
+            {
+                _ = LoadSceneGroup(index);
+            }
+            else
+            {
+                Debug.LogWarning($"{context.GroupName}의 씬 그룹을 찾을 수 없습니다");
+            }
         }
 
         async void Start()
@@ -50,7 +73,7 @@ namespace FQParty.SceneManagement
             m_ProgressBar.value = 0f;
             m_TargetProgress = 0f;
 
-            if (index < 0 || index >= m_SceneGroups.Length)
+            if (index < 0 || index >= m_SceneGroupList.SceneGroups.Count)
             {
                 Debug.LogError("Invalid scene group index: " + index);
                 return;
@@ -60,7 +83,7 @@ namespace FQParty.SceneManagement
             progress.Progressed += target => m_TargetProgress = Mathf.Max(target, m_TargetProgress);
 
             EnableLoadingScreen(true);
-            await manager.LoadScenes(m_SceneGroups[index], progress);
+            await m_Manager.LoadScenes(m_SceneGroupList.SceneGroups[index], progress);
             EnableLoadingScreen(false);
         }
 

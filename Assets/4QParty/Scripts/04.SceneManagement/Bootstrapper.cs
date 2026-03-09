@@ -10,7 +10,7 @@ namespace FQParty.SceneManagement
 {
     public class Bootstrapper : PersistanceSingleton<Bootstrapper>
     {
-        static readonly int SceneIndex = 0;
+        //static readonly int SceneIndex = 0;
 
         [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.BeforeSceneLoad)]
         static void Initialize()

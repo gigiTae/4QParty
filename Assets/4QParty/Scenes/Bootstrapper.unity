@@ -151,14 +151,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: SceneManagement::FQParty.SceneManagement.SceneLoader
   m_Document: {fileID: 245187188}
-  m_SceneGroups:
-  - GroupName: Main
-    Scenes:
-    - Reference:
-        asset: {fileID: 102900000, guid: 89a72d35d9e94a647bd4f7cec41a4692, type: 3}
-        guid: 89a72d35d9e94a647bd4f7cec41a4692
-      SceneType: 0
   m_FillSpeed: 0.5
+  m_LoadSceneGroupEvent: {fileID: 11400000, guid: 361c5387f26c0d741a352c5f4aed7c4b, type: 2}
+  m_SceneGroupList: {fileID: 11400000, guid: 23700daa6db26cb42ab128fc8da7be8a, type: 2}
 --- !u!114 &245187186
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -181,7 +176,7 @@ Transform:
   m_GameObject: {fileID: 245187184}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -12.71211, y: -0.57263, z: -12.27135}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:

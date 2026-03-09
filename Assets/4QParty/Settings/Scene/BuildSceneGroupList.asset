@@ -1,0 +1,39 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5dd825e821644ba46b79535e197ec19f, type: 3}
+  m_Name: BuildSceneGroupList
+  m_EditorClassIdentifier: SceneManagement::FQParty.SceneManagement.SceneGroupListSO
+  SceneGroups:
+  - GroupName: Main
+    Scenes:
+    - Reference:
+        asset: {fileID: 102900000, guid: 89a72d35d9e94a647bd4f7cec41a4692, type: 3}
+        guid: 89a72d35d9e94a647bd4f7cec41a4692
+      SceneType: 0
+  - GroupName: Setting
+    Scenes:
+    - Reference:
+        asset: {fileID: 102900000, guid: 93fdec89d61530d489c8ce705a2cf8f4, type: 3}
+        guid: 93fdec89d61530d489c8ce705a2cf8f4
+      SceneType: 0
+  - GroupName: Session
+    Scenes:
+    - Reference:
+        asset: {fileID: 102900000, guid: 598981394d8ec8241866130ad7cbde50, type: 3}
+        guid: 598981394d8ec8241866130ad7cbde50
+      SceneType: 0
+  - GroupName: Game
+    Scenes:
+    - Reference:
+        asset: {fileID: 102900000, guid: 84c8492625c5f8d4a9d7f92d4e07990d, type: 3}
+        guid: 84c8492625c5f8d4a9d7f92d4e07990d
+      SceneType: 0

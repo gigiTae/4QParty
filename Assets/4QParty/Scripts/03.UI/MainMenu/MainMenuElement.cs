@@ -93,7 +93,6 @@ namespace FQParty.UI.Main
             }
 
             m_ViewModel = viewModel;
-
             m_StartButton.clicked += m_ViewModel.StartGame;
             m_SettingButton.clicked += m_ViewModel.OpenSettings;
             m_EndButton.clicked += m_ViewModel.EndGame;

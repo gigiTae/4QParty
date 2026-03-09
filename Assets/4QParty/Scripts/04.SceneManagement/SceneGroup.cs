@@ -20,7 +20,6 @@ namespace FQParty.SceneManagement
         }
     }
 
-
     [Serializable]
     public class SceneData
     {

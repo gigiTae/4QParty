@@ -1,0 +1,98 @@
+﻿using Unity.Collections;
+using Unity.Netcode;
+using UnityEngine;
+using VContainer;
+
+namespace FQParty.Infrastructure
+{
+    // unmanaged : 제약 조건은 해당 타입이 "관리되지 않는" 타입임을 의미합니다. 즉, 가비지 컬렉터(GC)가 추적해야 하는 참조 형식(Reference Type)을 전혀 포함하지 않는 순수 데이터 구조체여야 합니다.
+
+    /// <summary>
+    /// This type of message channel allows the server to publish a message that will be sent to clients as well as
+    /// being published locally. Clients and the server both can subscribe to it.
+    /// </summary>
+    public class NetworkedMessageChannel<T> : MessageChannel<T> where T : unmanaged, INetworkSerializeByMemcpy
+    {
+        NetworkManager m_NetworkManager;
+
+        string m_Name;
+
+        public NetworkedMessageChannel()
+        {
+            m_Name = $"{typeof(T).FullName}NetworkMessageChannel";
+        }
+
+        [Inject]
+        void InjectDependencies(NetworkManager networkManager)
+        {
+            m_NetworkManager = networkManager;
+            m_NetworkManager.OnConnectionEvent += OnConnectionEvent;
+            if (m_NetworkManager.IsListening)
+            {
+                RegisterHandler();
+            }
+        }
+
+        public override void Dispose()
+        {
+            if (!IsDisposed)
+            {
+                if (m_NetworkManager != null && m_NetworkManager.CustomMessagingManager != null)
+                {
+                    m_NetworkManager.CustomMessagingManager.UnregisterNamedMessageHandler(m_Name);
+                    m_NetworkManager.OnConnectionEvent -= OnConnectionEvent;
+                }
+            }
+            base.Dispose();
+        }
+
+        void OnConnectionEvent(NetworkManager networkManager, ConnectionEventData connectionEventData)
+        {
+            if (connectionEventData.EventType == ConnectionEvent.ClientConnected)
+            {
+                RegisterHandler();
+            }
+        }
+
+        void RegisterHandler()
+        {
+            // Only register message handler on clients
+            if (!m_NetworkManager.IsServer)
+            {
+                m_NetworkManager.CustomMessagingManager.RegisterNamedMessageHandler(m_Name, ReceiveMessageThroughNetwork);
+            }
+        }
+
+        public override void Publish(T message)
+        {
+            if (m_NetworkManager.IsServer)
+            {
+                SendMessageThroughNetwork(message);
+                base.Publish(message);
+            }
+            else
+            {
+                Debug.LogError("Only a server can publish in a NetworkedMessageChannel");
+            }
+        }
+
+        void SendMessageThroughNetwork(T message)
+        {
+            // Avoid throwing an exception if you are in the middle of shutting down and either
+            // NetworkManager no longer exists or the CustomMessagingManager no longer exists.
+            if (m_NetworkManager == null || m_NetworkManager.CustomMessagingManager == null)
+            {
+                return;
+            }
+            var writer = new FastBufferWriter(FastBufferWriter.GetWriteSize<T>(), Allocator.Temp);
+            writer.WriteValueSafe(message);
+            m_NetworkManager.CustomMessagingManager.SendNamedMessageToAll(m_Name, writer);
+        }
+
+        void ReceiveMessageThroughNetwork(ulong clientID, FastBufferReader reader)
+        {
+            reader.ReadValueSafe(out T message);
+            base.Publish(message);
+        }
+    }
+}

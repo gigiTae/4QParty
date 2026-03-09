@@ -1,29 +1,37 @@
-using FQParty.Common.Setting;
-using System;
 using UnityEngine;
 using UnityEngine.SceneManagement;
+using FQParty.SceneManagement;
+using FQParty.Common.Constant;
 
 
 namespace FQParty.UI.Main
 {
     public class MainMenuViewModel
     {
-        public MainMenuViewModel(BuildSceneList list)
+        private LoadSceneGroupEvent m_LoadSceneGroupEvent;
+
+        public MainMenuViewModel(LoadSceneGroupEvent evt)
         {
-            m_SceneList = list;
+            m_LoadSceneGroupEvent = evt;
         }
-
-        private BuildSceneList m_SceneList;
-
 
         public void StartGame()
         {
-            SceneManager.LoadScene(m_SceneList.MainScene);
+            LoadSceneGroupContext context = new()
+            {
+                GroupName = SceneGroupTheme.k_MainGroup
+            };
+
+            m_LoadSceneGroupEvent.Raise(context);
         }
 
         public void OpenSettings()
         {
-            SceneManager.LoadScene(m_SceneList.SettingScene);
+            LoadSceneGroupContext context = new()
+            {
+                GroupName = SceneGroupTheme.k_SettingGroup
+            };
+            m_LoadSceneGroupEvent.Raise(context);
         }
 
         public void EndGame()
