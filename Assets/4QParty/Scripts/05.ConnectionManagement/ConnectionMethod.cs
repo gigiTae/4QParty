@@ -80,7 +80,6 @@ namespace FQParty.ConnectionManagement
             m_ConnectionManager.NetworkManager.NetworkConfig.ConnectionData = payloadBytes;
         }
 
-
         public override void SetupHostConnection()
         {
             SetConnectionPayload();

@@ -47,7 +47,8 @@ namespace FQParty.ConnectionManagement
 
     public struct ConnectionEventMessage : INetworkSerializeByMemcpy
     {
-        //public FixedPlayerName PlayerName;
+        public ConnectStatus ConnectStatus;
+        public string PlayerName;
     }
 
     [Serializable]
