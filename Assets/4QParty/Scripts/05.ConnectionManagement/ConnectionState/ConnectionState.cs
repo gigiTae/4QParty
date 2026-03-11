@@ -11,7 +11,7 @@ namespace FQParty.ConnectionManagement
     abstract class ConnectionState
     {
         [Inject]
-        protected ConnectionManager m_ConnectionManager; // 상태 전환 및 전반적인 연결 관리를 담당하는 매니저 참조 
+        protected ConnectionManager m_ConnectionManager =null; // 상태 전환 및 전반적인 연결 관리를 담당하는 매니저 참조 
 
         [Inject]
         protected IPublisher<ConnectStatus> m_ConnectStatusPublisher; // 연결 성공, 실패, 끊김 등의 상태를 시스템 전반(UI 등)에 알리는 발행자 
@@ -42,12 +42,12 @@ namespace FQParty.ConnectionManagement
         public virtual void OnServerStarted() { }
 
         /// <summary>
-        /// 유니티 서비스(Relay/Session)를 사용하여 세션 기반 클라이언트 연결을 시작합니다. 
+        /// SerivceProvider 를 사용하여 세션 기반 클라이언트 연결을 시작합니다. 
         /// </summary>
         public virtual void StartClientSession(string playerName) { }
 
         /// <summary>
-        /// 유니티 서비스(Relay/Session)를 통해 세션을 생성하고 호스트 모드를 시작합니다. 
+        /// SerivceProvider를 통해 세션을 생성하고 호스트 모드를 시작합니다. 
         /// </summary>
         public virtual void StartHostSession(string playerName) { }
 

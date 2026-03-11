@@ -1,4 +1,5 @@
 using FQParty.Common.Event;
+using FQParty.Common.Persistance;
 using System;
 using System.Threading.Tasks;
 using UnityEngine;
@@ -6,7 +7,7 @@ using UnityEngine.UIElements;
 
 namespace FQParty.SceneManagement
 {
-    public class SceneLoader : MonoBehaviour
+    public class SceneLoader : PersistanceSingleton<SceneLoader>
     {
         [SerializeField] UIDocument m_Document;
         [SerializeField] float m_FillSpeed = 0.5f;
@@ -20,8 +21,10 @@ namespace FQParty.SceneManagement
 
         public readonly SceneGroupManager m_Manager = new SceneGroupManager();
 
-        void Awake()
+        protected override void Awake()
         {
+            base.Awake();
+
             m_ProgressBar = m_Document.rootVisualElement.Q<ProgressBar>();
 
             m_LoadSceneGroupEvent.Subscribe(OnLoadSceneGroup);
@@ -32,6 +35,11 @@ namespace FQParty.SceneManagement
         }
 
         void OnLoadSceneGroup(LoadSceneGroupContext context)
+        {
+            LoadSceneGroup(context);
+        }
+
+        public void LoadSceneGroup(LoadSceneGroupContext context)
         {
             if (m_IsLoading)
             {
@@ -68,7 +76,7 @@ namespace FQParty.SceneManagement
             m_ProgressBar.value = Mathf.Lerp(currentFillAmount, m_TargetProgress, Time.deltaTime * dynamicFillSpeed);
         }
 
-        public async Task LoadSceneGroup(int index)
+        private async Task LoadSceneGroup(int index)
         {
             m_ProgressBar.value = 0f;
             m_TargetProgress = 0f;

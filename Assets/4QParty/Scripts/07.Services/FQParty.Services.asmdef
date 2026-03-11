@@ -1,8 +1,11 @@
 {
-    "name": "FQParty.Steam",
+    "name": "FQParty.Serivces",
     "rootNamespace": "",
     "references": [
-        "GUID:68bd7fdb68ef2684e982e8a9825b18a5"
+        "GUID:68bd7fdb68ef2684e982e8a9825b18a5",
+        "GUID:e504fefc7b15547429893d87af4ff3d5",
+        "GUID:1491147abca9d7d4bb7105af628b223e",
+        "GUID:75469ad4d38634e559750d17036d5f7c"
     ],
     "includePlatforms": [],
     "excludePlatforms": [],

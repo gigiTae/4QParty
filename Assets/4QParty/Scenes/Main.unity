@@ -417,7 +417,8 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1810286935}
-  - component: {fileID: 1810286934}
+  - component: {fileID: 1810286936}
+  - component: {fileID: 1810286937}
   m_Layer: 0
   m_Name: SteamManager
   m_TagString: Untagged
@@ -425,18 +426,6 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!114 &1810286934
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1810286933}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 18ce3bb01c2eb7248aead632d36ca732, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: FQParty.Steam::SteamTest
 --- !u!4 &1810286935
 Transform:
   m_ObjectHideFlags: 0
@@ -452,6 +441,33 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1810286936
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1810286933}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9be201193ec3faf4f8cb63fd77c229eb, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: FQParty.Serivces::FQParty.Services.SteamManager
+  m_Settings: {fileID: 11400000, guid: 9c80a082be2a80a43b465751e0427a8a, type: 2}
+--- !u!114 &1810286937
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1810286933}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fc4ccaff1920208429cca7c350560301, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: SteamNetworkingSockets Transport for Netcode for GameObjects::Netcode.Transports.SteamNetworkingSocketsTransport
+  ConnectToSteamID: 38
+  options: []
 --- !u!1660057539 &9223372036854775807
 SceneRoots:
   m_ObjectHideFlags: 0

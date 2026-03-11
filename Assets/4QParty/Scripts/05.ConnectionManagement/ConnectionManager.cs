@@ -1,3 +1,4 @@
+using System;
 using System.Data;
 using Unity.Netcode;
 using UnityEngine;
@@ -40,7 +41,7 @@ namespace FQParty.ConnectionManagement
         public ReconnectMessage(int currentAttempt, int maxAttempt)
         {
             CurrentAttempt = currentAttempt;
-            MaxAttempt = maxAttempt;    
+            MaxAttempt = maxAttempt;
         }
     }
 
@@ -48,26 +49,108 @@ namespace FQParty.ConnectionManagement
     {
         //public FixedPlayerName PlayerName;
     }
-    
+
+    [Serializable]
+    public class ConnectionPayload
+    {
+        public ulong Id;
+        public string PlayerName;
+        public bool IsDebug;
+    }
+
 
     public class ConnectionManager : MonoBehaviour
     {
         ConnectionState m_CurrentState;
 
-        [Inject]
-        NetworkManager m_NetworkManager;
+        [SerializeField]
+        NetworkManager m_NetworkManager = null;
         public NetworkManager NetworkManager => m_NetworkManager;
 
-        [SerializeField]
-        int m_NbReconnectAttempts = 2;
-        public int NbReconnectAttempts => m_NbReconnectAttempts;
+        internal readonly OfflineState m_Offline = new OfflineState();
+        internal readonly ClientConnectingState m_ClientConnecting = new ClientConnectingState();
+        internal readonly ClientConnectedState m_ClientConnected = new ClientConnectedState();
+        internal readonly ClientReconnectingState m_ClientReconnecting = new ClientReconnectingState();
+        internal readonly StartingHostState m_StartingHost = new StartingHostState();
+        internal readonly HostingState m_Hosting = new HostingState();
 
-        [Inject]
-        IObjectResolver m_Resolver;
+        internal void ChangeState(ConnectionState nextState)
+        {
+            Debug.Log($"{name}: Changed connection state from {m_CurrentState.GetType().Name} to {nextState.GetType().Name}.");
 
-        public int MaxConnectedPlayers = 4;
+            if (m_CurrentState != null)
+            {
+                m_CurrentState.Exit();
+            }
+            m_CurrentState = nextState;
+            m_CurrentState.Enter();
+        }
 
+        private void Awake()
+        {
+            NetworkManager.OnConnectionEvent += OnConnectionEvent;
+            NetworkManager.OnServerStarted += OnServerStarted;
+            NetworkManager.ConnectionApprovalCallback += ApprovalCheck;
+            NetworkManager.OnTransportFailure += OnTransportFailure;
+            NetworkManager.OnServerStopped += OnServerStopped;
+        }
+
+        private void OnDestroy()
+        {
+            NetworkManager.OnConnectionEvent -= OnConnectionEvent;
+            NetworkManager.OnServerStarted -= OnServerStarted;
+            NetworkManager.ConnectionApprovalCallback -= ApprovalCheck;
+            NetworkManager.OnTransportFailure -= OnTransportFailure;
+            NetworkManager.OnServerStopped -= OnServerStopped;
+        }
+
+        void OnConnectionEvent(NetworkManager networkManager, ConnectionEventData connectionEventData)
+        {
+            switch (connectionEventData.EventType)
+            {
+                case ConnectionEvent.ClientConnected:
+                    m_CurrentState.OnClientConnected(connectionEventData.ClientId);
+                    break;
+                case ConnectionEvent.ClientDisconnected:
+                    m_CurrentState.OnClientDisconnect(connectionEventData.ClientId);
+                    break;
+            }
+        }
+
+        void OnServerStarted()
+        {
+            m_CurrentState.OnServerStarted();
+        }
+
+        void ApprovalCheck(NetworkManager.ConnectionApprovalRequest request, NetworkManager.ConnectionApprovalResponse response)
+        {
+            m_CurrentState.ApprovalCheck(request, response);
+        }
+
+        void OnTransportFailure()
+        {
+            m_CurrentState.OnTransportFailure();
+        }
+
+        void OnServerStopped(bool _) // we don't need this parameter as the ConnectionState already carries the relevant information
+        {
+            m_CurrentState.OnServerStopped();
+        }
+
+        public void StartClientSession(string playerName)
+        {
+            m_CurrentState.StartClientSession(playerName);
+        }
+
+        public void StartHostSession(string playerName)
+        {
+            m_CurrentState.StartHostSession(playerName);
+        }
+
+        public void RequestShutdown()
+        {
+            m_CurrentState.OnUserRequestedShutdown();
+        }
 
     }
-
 }

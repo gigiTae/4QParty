@@ -1,4 +1,4 @@
-using System;
+ using System;
 using UnityEngine;
 using FQParty.Common.Event;
 
@@ -9,5 +9,6 @@ namespace FQParty.SceneManagement
     public struct LoadSceneGroupContext
     {
         public string GroupName;
+        public bool UseNetworkSceneManager;
     }
 }
