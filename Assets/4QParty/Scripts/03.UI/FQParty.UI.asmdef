@@ -1,0 +1,20 @@
+{
+    "name": "FQParty.UI",
+    "rootNamespace": "",
+    "references": [
+        "GUID:8913323ef227c594b92227f0b39c2a07",
+        "GUID:467cc0602c9f7d6428263c9470125276",
+        "GUID:eec0964c48f6f4e40bc3ec2257ccf8c5",
+        "GUID:e504fefc7b15547429893d87af4ff3d5",
+        "GUID:6d6994727e1ed154682159832f34a750"
+    ],
+    "includePlatforms": [],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
+}

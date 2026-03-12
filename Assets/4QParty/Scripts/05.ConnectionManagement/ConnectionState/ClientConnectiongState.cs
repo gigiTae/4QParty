@@ -6,7 +6,6 @@ namespace FQParty.ConnectionManagement
 {
     class ClientConnectingState : OnlineState
     {
-
         protected ConnectionMethodBase m_ConnectionMethod;
 
         public ClientConnectingState Configure(ConnectionMethodBase connectionMethod)
@@ -52,7 +51,6 @@ namespace FQParty.ConnectionManagement
             m_ConnectionMethod.SetupClientConnection();
             m_ConnectionManager.NetworkManager.StartClient();
         }
-
 
         public override void Exit() { }
     }

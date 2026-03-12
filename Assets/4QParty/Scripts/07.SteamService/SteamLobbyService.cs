@@ -12,7 +12,8 @@ namespace FQParty.SteamService
         public bool IsSuccess;
         public bool IsPrivate;
         public string LobbyName;
-        public ulong LobbyId;
+        public ulong LobbyID;
+        public ulong HostID;
         public int MaxPlayers;
         public int CurrentPlayers;
     }
@@ -41,11 +42,11 @@ namespace FQParty.SteamService
                     IsPrivate = isPrivate,
                     LobbyName = lobbyName,
                     IsSuccess = callback.m_eResult == EResult.k_EResultOK,
-                    LobbyId = callback.m_ulSteamIDLobby,
+                    LobbyID = callback.m_ulSteamIDLobby,
                     MaxPlayers = m_SteamSettings.MaxPlayer
                 };
 
-                CSteamID lobbyID = new CSteamID(data.LobbyId);
+                CSteamID lobbyID = new CSteamID(data.LobbyID);
                 SteamMatchmaking.SetLobbyData(lobbyID, k_LobbyNameKey, lobbyName);
                 SteamMatchmaking.SetLobbyData(lobbyID, k_GameNameKey, k_GameName);
 
@@ -67,13 +68,11 @@ namespace FQParty.SteamService
         {
             var tcs = new TaskCompletionSource<List<LobbyData>>();
 
-            // 로비 목록 요청 결과에 대한 콜백 핸들러
             Callback<LobbyMatchList_t> matchListCallback = null;
             matchListCallback = Callback<LobbyMatchList_t>.Create(callback =>
             {
                 List<LobbyData> lobbies = new List<LobbyData>();
 
-                // 반환된 로비 개수만큼 반복하며 데이터 추출
                 for (int i = 0; i < callback.m_nLobbiesMatching; i++)
                 {
                     CSteamID lobbyID = SteamMatchmaking.GetLobbyByIndex(i);
@@ -81,11 +80,11 @@ namespace FQParty.SteamService
                     lobbies.Add(new LobbyData
                     {
                         IsSuccess = true,
-                        LobbyId = lobbyID.m_SteamID,
+                        LobbyID = lobbyID.m_SteamID,
                         LobbyName = SteamMatchmaking.GetLobbyData(lobbyID, k_LobbyNameKey),
                         MaxPlayers = SteamMatchmaking.GetLobbyMemberLimit(lobbyID),
                         CurrentPlayers = SteamMatchmaking.GetNumLobbyMembers(lobbyID),
-                        IsPrivate = false // 목록에 나오는 것은 보통 Public/FriendsOnly 입니다.
+                        IsPrivate = false 
                     });
                 }
 
@@ -99,6 +98,49 @@ namespace FQParty.SteamService
 
             // 로비 목록 요청 시작
             SteamMatchmaking.RequestLobbyList();
+
+            return await tcs.Task;
+        }
+
+        public async Task<LobbyData> JoinLobby(ulong lobbyID)
+        {
+            var tcs = new TaskCompletionSource<LobbyData>();
+            CSteamID steamLobbyID = new CSteamID(lobbyID);
+
+            Callback<LobbyEnter_t> enterCallback = null;
+            enterCallback = Callback<LobbyEnter_t>.Create(callback =>
+            {
+                // 콜백으로 받은 ID가 내가 요청한 로비 ID와 일치하는지 확인
+                if (callback.m_ulSteamIDLobby != lobbyID) return;
+
+                bool success = (EChatRoomEnterResponse)callback.m_rgfChatPermissions == EChatRoomEnterResponse.k_EChatRoomEnterResponseSuccess;
+
+                LobbyData data = new LobbyData
+                {
+                    IsSuccess = success,
+                    LobbyID = callback.m_ulSteamIDLobby,
+                    LobbyName = SteamMatchmaking.GetLobbyData(steamLobbyID, k_LobbyNameKey),
+                    MaxPlayers = SteamMatchmaking.GetLobbyMemberLimit(steamLobbyID),
+                    CurrentPlayers = SteamMatchmaking.GetNumLobbyMembers(steamLobbyID),
+                    HostID = SteamMatchmaking.GetLobbyOwner(steamLobbyID).m_SteamID,
+                    IsPrivate = false 
+                };
+
+                if (success)
+                {
+                    Debug.Log($"Successfully joined lobby: {data.LobbyName}");
+                }
+                else
+                {
+                    Debug.LogError($"Failed to join lobby. Response code: {callback.m_rgfChatPermissions}");
+                }
+
+                enterCallback.Dispose(); // 콜백 해제
+                tcs.SetResult(data);
+            });
+
+            // 로비 참가 요청
+            SteamMatchmaking.JoinLobby(steamLobbyID);
 
             return await tcs.Task;
         }
