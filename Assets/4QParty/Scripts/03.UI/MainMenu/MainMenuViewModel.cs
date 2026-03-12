@@ -17,6 +17,8 @@ namespace FQParty.UI.Main
 
         public void StartGame()
         {
+            Debug.Log("StartGame");
+
             LoadSceneGroupContext context = new()
             {
                 GroupName = SceneGroupTheme.k_LobbyBrowser
