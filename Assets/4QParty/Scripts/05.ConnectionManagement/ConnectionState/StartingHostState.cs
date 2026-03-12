@@ -1,7 +1,6 @@
-using FQParty.Common.Constant;
 using FQParty.Common.Session;
-using FQParty.SceneManagement;
-using FQParty.Services;
+using FQParty.SteamService;
+using System;
 using Unity.Netcode;
 using UnityEngine;
 using VContainer;
@@ -11,10 +10,7 @@ namespace FQParty.ConnectionManagement
 {
     class StartingHostState : OnlineState
     {
-        [Inject]
-        ServiceProvider m_ServiceProvider;
         ConnectionMethodBase m_ConnectionMethod;
-
         public StartingHostState Configure(ConnectionMethodBase baseConnectionMethod)
         {
             m_ConnectionMethod = baseConnectionMethod;
@@ -28,13 +24,11 @@ namespace FQParty.ConnectionManagement
 
         public override void OnServerStarted()
         {
-            m_ConnectStatusPublisher.Publish(ConnectStatus.Success);
+            //m_ConnectStatusPublisher.Publish(ConnectStatus.Success);
             m_ConnectionManager.ChangeState(m_ConnectionManager.m_Hosting);
         }
 
         public override void Exit() { }
-
-    
 
         public override void ApprovalCheck(NetworkManager.ConnectionApprovalRequest request, NetworkManager.ConnectionApprovalResponse response)
         {
@@ -62,8 +56,7 @@ namespace FQParty.ConnectionManagement
         void StartHost()
         {
             m_ConnectionMethod.SetupHostConnection();
-
-            if(!m_ConnectionManager.NetworkManager.StartHost())
+            if (!m_ConnectionManager.NetworkManager.StartHost())
             {
                 StartHostFailed();
             }
@@ -76,7 +69,7 @@ namespace FQParty.ConnectionManagement
 
         void StartHostFailed()
         {
-            m_ConnectStatusPublisher.Publish(ConnectStatus.StartHostFailed);
+            // m_ConnectStatusPublisher.Publish(ConnectStatus.StartHostFailed);
             m_ConnectionManager.ChangeState(m_ConnectionManager.m_Offline);
         }
     }

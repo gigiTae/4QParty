@@ -9,10 +9,10 @@ using UnityEngine.UIElements;
 namespace FQParty.Session.Network
 {
     [UxmlElement]
-    public partial class SessionBrowserElement : ListView
+    public partial class LobbyBrowserElement : ListView
     {
-        const string k_SessionNameLabel = "SessionNameLabel";
-        const string k_SessionPlayerCountLabel = "SessionPlayerCountLabel";
+        const string k_LobbyNameLabel = "LobbyNameLabel";
+        const string k_LobbyPlayerCountLabel = "LobbyPlayerCountLabel";
 
         [CreateProperty, UxmlAttribute]
         public string JointButtonText
@@ -52,21 +52,21 @@ namespace FQParty.Session.Network
         string m_RefreshButtonText = "REFRESH LIST";
 
         [CreateProperty, UxmlAttribute]
-        public string NoSessionFoundText
+        public string NoLobbyFoundText
         {
-            get => m_NoSessionFoundText;
+            get => m_NoLobbyFoundText;
             set
             {
-                if (value == m_NoSessionFoundText)
+                if (value == m_NoLobbyFoundText)
                     return;
 
-                m_NoSessionFoundText = value;
+                m_NoLobbyFoundText = value;
             }
         }
-        string m_NoSessionFoundText = "No Session found";
+        string m_NoLobbyFoundText = "No Lobby found";
         
         SessionSettingSO m_SessionSettings;
-        SessionBrowserViewModel m_ViewModel;
+        LobbyBrowserViewModel m_ViewModel;
         List<DataBinding> m_DataBindings;
 
         Button m_RefreshButton;
@@ -98,7 +98,7 @@ namespace FQParty.Session.Network
         int m_MaxSessionsDisplayed = 20;
 
         // »ý¼ºÀÚ
-        public SessionBrowserElement()
+        public LobbyBrowserElement()
         {
             virtualizationMethod = CollectionVirtualizationMethod.FixedHeight;
             fixedItemHeight = 56f;
@@ -155,7 +155,7 @@ namespace FQParty.Session.Network
         {
             CleanupBindings();
 
-            m_ViewModel = new SessionBrowserViewModel(SessionSettings?.SessionType);
+            m_ViewModel = new LobbyBrowserViewModel(SessionSettings?.SessionType);
             foreach (var dataBinding in m_DataBindings)
             {
                 dataBinding.dataSource = m_ViewModel;
@@ -177,7 +177,7 @@ namespace FQParty.Session.Network
             CleanupBindings();
 
             m_RefreshButton.clicked -= OnRefreshButtonClicked;
-            m_RefreshButton.ClearBinding(nameof(SessionBrowserViewModel.CanRefresh));
+            m_RefreshButton.ClearBinding(nameof(LobbyBrowserViewModel.CanRefresh));
             m_JoinSessionButton.clicked -= JoinSession;
             m_JoinSessionButton.ClearBinding(nameof(enabledSelf));
 
@@ -188,21 +188,21 @@ namespace FQParty.Session.Network
         {
             m_DataBindings = new List<DataBinding>();
 
-            var listBinding = new DataBinding { dataSourcePath = new PropertyPath(nameof(SessionBrowserViewModel.Sessions)), bindingMode = BindingMode.ToTarget };
+            var listBinding = new DataBinding { dataSourcePath = new PropertyPath(nameof(LobbyBrowserViewModel.Sessions)), bindingMode = BindingMode.ToTarget };
             SetBinding(new BindingId(nameof(ListView.itemsSource)), listBinding);
             m_DataBindings.Add(listBinding);
 
-            var selectionBinding = new DataBinding { dataSourcePath = new PropertyPath(nameof(SessionBrowserViewModel.SelectedSessionIndex)), bindingMode = BindingMode.TwoWay };
+            var selectionBinding = new DataBinding { dataSourcePath = new PropertyPath(nameof(LobbyBrowserViewModel.SelectedSessionIndex)), bindingMode = BindingMode.TwoWay };
             SetBinding(new BindingId(nameof(ListView.selectedIndex)), selectionBinding);
             m_DataBindings.Add(selectionBinding);
 
-            var joinSessionBinding = new DataBinding { dataSourcePath = new PropertyPath(nameof(SessionBrowserViewModel.SelectedAndAvailable)), bindingMode = BindingMode.ToTarget };
+            var joinSessionBinding = new DataBinding { dataSourcePath = new PropertyPath(nameof(LobbyBrowserViewModel.SelectedAndAvailable)), bindingMode = BindingMode.ToTarget };
 
             m_JoinSessionButton.SetBinding(new BindingId(nameof(enabledSelf)), joinSessionBinding);
             m_DataBindings.Add(joinSessionBinding);
             m_JoinSessionButton.clicked += JoinSession;
 
-            var refreshBinding = new DataBinding { dataSourcePath = new PropertyPath(nameof(SessionBrowserViewModel.CanRefresh)), bindingMode = BindingMode.ToTarget };
+            var refreshBinding = new DataBinding { dataSourcePath = new PropertyPath(nameof(LobbyBrowserViewModel.CanRefresh)), bindingMode = BindingMode.ToTarget };
 
             m_RefreshButton.SetBinding(new BindingId(nameof(enabledSelf)), refreshBinding);
             m_DataBindings.Add(refreshBinding);
@@ -213,7 +213,7 @@ namespace FQParty.Session.Network
 
         private VisualElement MakeNoneElement()
         {
-            var label = new Label(NoSessionFoundText);
+            var label = new Label(NoLobbyFoundText);
             label.AddToClassList(UITheme.Label);
             label.AddToClassList(UITheme.SpaceLeft);
             return label;
@@ -226,20 +226,20 @@ namespace FQParty.Session.Network
             container.AddToClassList(UITheme.ScrollViewElement);
             container.AddToClassList(UITheme.ContainerSpaceBetween);
 
-            var sessionNameLabel = new Label { name = k_SessionNameLabel };
+            var sessionNameLabel = new Label { name = k_LobbyNameLabel };
             sessionNameLabel.AddToClassList(UITheme.Label);
             sessionNameLabel.AddToClassList(UITheme.SpaceLeft);
             container.Add(sessionNameLabel);
 
             var db = new DataBinding
             {
-                dataSourcePath = PropertyPath.FromName(nameof(SessionInfoViewModel.Name)),
+                dataSourcePath = PropertyPath.FromName(nameof(LobbyInfoViewModel.Name)),
                 bindingMode = BindingMode.ToTarget,
                 updateTrigger = BindingUpdateTrigger.OnSourceChanged
             };
             sessionNameLabel.SetBinding(nameof(Label.text), db);
 
-            var sessionPlayerCountLabel = new Label { name = k_SessionPlayerCountLabel };
+            var sessionPlayerCountLabel = new Label { name = k_LobbyPlayerCountLabel };
             sessionPlayerCountLabel.AddToClassList(UITheme.Label);
             sessionPlayerCountLabel.AddToClassList(UITheme.SpaceRight);
             container.Add(sessionPlayerCountLabel);
@@ -248,7 +248,7 @@ namespace FQParty.Session.Network
 
             // register a local converter to display relevant session properties as a formatted string
             sessionPlayerCountBinding.sourceToUiConverters
-                .AddConverter((ref SessionInfoViewModel session) => $"{session.MaxPlayers - session.AvailableSlots}/{session.MaxPlayers} Players");
+                .AddConverter((ref LobbyInfoViewModel session) => $"{session.MaxPlayers - session.AvailableSlots}/{session.MaxPlayers} Players");
 
             sessionPlayerCountLabel.SetBinding(nameof(Label.text), sessionPlayerCountBinding);
 

@@ -1,4 +1,3 @@
-using FQParty.Common.Event;
 using FQParty.Common.Persistance;
 using System;
 using System.Threading.Tasks;
@@ -31,7 +30,6 @@ namespace FQParty.SceneManagement
 
             m_Manager.OnSceneLoaded += sceneName => Debug.Log("Loaded: " + sceneName);
             m_Manager.OnSceneUnloaded += sceneName => Debug.Log("Unloaded: " + sceneName);
-            m_Manager.OnSceneGroupLoaded += () => Debug.Log("Scene group loaded");
         }
 
         void OnLoadSceneGroup(LoadSceneGroupContext context)

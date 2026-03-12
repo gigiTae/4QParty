@@ -25,13 +25,25 @@ MonoBehaviour:
         asset: {fileID: 102900000, guid: 93fdec89d61530d489c8ce705a2cf8f4, type: 3}
         guid: 93fdec89d61530d489c8ce705a2cf8f4
       SceneType: 0
-  - GroupName: Session
+  - GroupName: LobbyBrowser
+    Scenes:
+    - Reference:
+        asset: {fileID: 102900000, guid: 79fb181a195bd494b977d62cbd38b644, type: 3}
+        guid: 79fb181a195bd494b977d62cbd38b644
+      SceneType: 0
+  - GroupName: Lobby
     Scenes:
     - Reference:
         asset: {fileID: 102900000, guid: 598981394d8ec8241866130ad7cbde50, type: 3}
         guid: 598981394d8ec8241866130ad7cbde50
       SceneType: 0
-  - GroupName: Game
+  - GroupName: GameGimmick
+    Scenes:
+    - Reference:
+        asset: {fileID: 102900000, guid: e9bd2a5b6b065e74caf4d7701643c61a, type: 3}
+        guid: e9bd2a5b6b065e74caf4d7701643c61a
+      SceneType: 0
+  - GroupName: GamePlay
     Scenes:
     - Reference:
         asset: {fileID: 102900000, guid: 84c8492625c5f8d4a9d7f92d4e07990d, type: 3}

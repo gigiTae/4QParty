@@ -1,23 +1,27 @@
+using FQParty.ConnectionManagement;
+using FQParty.SteamService;
 using System;
 using System.Runtime.CompilerServices;
 using System.Threading.Tasks;
 using Unity.Properties;
-using Unity.Services.Lobbies;
 using Unity.Services.Multiplayer;
+using UnityEditor.Rendering;
 using UnityEngine;
 using UnityEngine.UIElements;
 
 
 namespace FQParty.Session.Network
 {
-    public class CreateSessionViewModel : IDisposable, IDataSourceViewHashProvider, INotifyBindablePropertyChanged
+    public class CreateLobbyViewModel : IDisposable, IDataSourceViewHashProvider, INotifyBindablePropertyChanged
     {
+        ConnectionManager m_ConnectionManager;
+
         SessionObserver m_SessionObserver;
-        ISession m_Session;
+        LobbyData m_LobbyData;
         long m_UpdateVersion;
 
         [CreateProperty]
-        public bool CanRegisterSession
+        public bool CanRegisterLobby
         {
             get => m_CanRegisterSession;
             private set
@@ -30,7 +34,7 @@ namespace FQParty.Session.Network
                 Notify();
             }
         }
-        bool m_CanRegisterSession =true;
+        bool m_CanRegisterSession = true;
 
         [CreateProperty]
         public bool HasSessionName
@@ -65,7 +69,7 @@ namespace FQParty.Session.Network
         }
         string m_SessionName;
 
-        public CreateSessionViewModel(string sessionType)
+        public CreateLobbyViewModel(string sessionType)
         {
             m_SessionObserver = new SessionObserver(sessionType);
 
@@ -79,35 +83,37 @@ namespace FQParty.Session.Network
             }
         }
 
-        void OnAddingSessionFailed(AddingSessionOptions session, SessionException exception) => CanRegisterSession = true;
-        void OnAddingSessionStarted(AddingSessionOptions session) => CanRegisterSession = false;
+        void OnAddingSessionFailed(AddingSessionOptions session, SessionException exception) => CanRegisterLobby = true;
+        void OnAddingSessionStarted(AddingSessionOptions session) => CanRegisterLobby = false;
 
         void OnSessionAdded(ISession session)
         {
-            m_Session = session;
-            m_Session.RemovedFromSession += OnSessionRemoved;
-            m_Session.Deleted += OnSessionRemoved;
-            CanRegisterSession = false;
+
+
+            //m_Session = session;
+            // m_Session.RemovedFromSession += OnSessionRemoved;
+            // m_Session.Deleted += OnSessionRemoved;
+            CanRegisterLobby = false;
         }
 
         void OnSessionRemoved()
         {
-            m_Session.RemovedFromSession -= OnSessionRemoved;
-            m_Session.Deleted -= OnSessionRemoved;
-            m_Session = null;
-            CanRegisterSession = true;
+            //m_Session.RemovedFromSession -= OnSessionRemoved;
+            //m_Session.Deleted -= OnSessionRemoved;
+            //m_Session = null;
+            CanRegisterLobby = true;
         }
 
         public bool AreMultiplayerServicesInitialized()
         {
-            return MultiplayerService.Instance != null;
+            return SteamManager.Instance.IsInitialized;
         }
 
-        public async Task<IHostSession> CreateSessionAsync(SessionOptions sessionOptions)
+        public async Task CreateLobbyAsync()
         {
-            sessionOptions.Name = SessionName;
-            Debug.Log($"{sessionOptions.Name}");
-            return await MultiplayerService.Instance.CreateSessionAsync(sessionOptions);
+            LobbyData data = await SteamManager.Instance.SteamLobbyService.CreateLobby(SessionName, false);
+
+            ConnectionManager.Instance.StartHostSession();
         }
 
         public void Dispose()
@@ -121,12 +127,12 @@ namespace FQParty.Session.Network
                 m_SessionObserver = null;
             }
 
-            if (m_Session != null)
-            {
-                m_Session.RemovedFromSession -= OnSessionRemoved;
-                m_Session.Deleted -= OnSessionRemoved;
-                m_Session = null;
-            }
+            //if (m_Session != null)
+            //{
+            //    m_Session.RemovedFromSession -= OnSessionRemoved;
+            //    m_Session.Deleted -= OnSessionRemoved;
+            //    m_Session = null;
+            //}
         }
 
         public long GetViewHashCode() => m_UpdateVersion;

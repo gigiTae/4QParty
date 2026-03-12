@@ -1,4 +1,7 @@
+using FQParty.Common.Persistance;
+using FQParty.Infrastructure;
 using System;
+using System.Collections.Generic;
 using System.Data;
 using Unity.Netcode;
 using UnityEngine;
@@ -59,14 +62,26 @@ namespace FQParty.ConnectionManagement
         public bool IsDebug;
     }
 
+    public class TempPublisher : IPublisher<ConnectStatus>
+    {
 
-    public class ConnectionManager : MonoBehaviour
+        public void Publish(ConnectStatus message)
+        {
+           
+        }
+    }
+
+
+
+    public class ConnectionManager : PersistanceSingleton<ConnectionManager>
     {
         ConnectionState m_CurrentState;
 
         [SerializeField]
         NetworkManager m_NetworkManager = null;
         public NetworkManager NetworkManager => m_NetworkManager;
+
+        TempPublisher m_TempPublisher = new();
 
         internal readonly OfflineState m_Offline = new OfflineState();
         internal readonly ClientConnectingState m_ClientConnecting = new ClientConnectingState();
@@ -87,13 +102,28 @@ namespace FQParty.ConnectionManagement
             m_CurrentState.Enter();
         }
 
-        private void Awake()
+        protected override void Awake()
         {
+            base.Awake();
+
+            List<ConnectionState> states = new() { m_Offline, m_ClientConnecting, m_ClientConnected, m_ClientReconnecting, m_StartingHost, m_Hosting };
+            foreach (var connectionState in states)
+            {
+                connectionState.m_ConnectionManager = this;
+                connectionState.m_ConnectStatusPublisher = m_TempPublisher;
+            }
+
+
             NetworkManager.OnConnectionEvent += OnConnectionEvent;
             NetworkManager.OnServerStarted += OnServerStarted;
             NetworkManager.ConnectionApprovalCallback += ApprovalCheck;
             NetworkManager.OnTransportFailure += OnTransportFailure;
             NetworkManager.OnServerStopped += OnServerStopped;
+        }
+
+        public void Start()
+        {
+            m_CurrentState = m_Offline;
         }
 
         private void OnDestroy()
@@ -138,14 +168,14 @@ namespace FQParty.ConnectionManagement
             m_CurrentState.OnServerStopped();
         }
 
-        public void StartClientSession(string playerName)
+        public void StartClientSession()
         {
-            m_CurrentState.StartClientSession(playerName);
+            m_CurrentState.StartClientSession();
         }
 
-        public void StartHostSession(string playerName)
+        public void StartHostSession()
         {
-            m_CurrentState.StartHostSession(playerName);
+            m_CurrentState.StartHostSession();
         }
 
         public void RequestShutdown()

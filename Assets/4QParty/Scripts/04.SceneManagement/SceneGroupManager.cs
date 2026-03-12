@@ -78,17 +78,13 @@ namespace FQParty.SceneManagement
 
         public async Task UnloadScenes()
         {
-            Scene BootstrapperScene = SceneManager.GetSceneByName(SceneGroupTheme.k_Boostrapper);
+            Scene BootstrapperScene = SceneManager.GetSceneByName(SceneGroupTheme.k_Bootstrapper);
             if (BootstrapperScene.IsValid())
             {
                 SceneManager.SetActiveScene(BootstrapperScene);
             }
-            else
-            {
-                Debug.Log("TT");
-            }
 
-                m_HandleUnloadGroup.Handles.Clear();
+            m_HandleUnloadGroup.Handles.Clear();
 
             List<string> unloadScenes = new();
             string activeScene = SceneManager.GetActiveScene().name;
@@ -101,7 +97,7 @@ namespace FQParty.SceneManagement
                 if (!sceneAt.isLoaded) continue;
 
                 var sceneName = sceneAt.name;
-                if (sceneName.Equals(activeScene) || sceneName == SceneGroupTheme.k_Boostrapper) continue;
+                if (sceneName.Equals(activeScene) || sceneName == SceneGroupTheme.k_Bootstrapper) continue;
                 if (m_HandleLoadGroup.Handles.Any(h => h.IsValid() && h.Result.Scene.name == sceneName)) continue;
 
                 unloadScenes.Add(sceneName);

@@ -10,7 +10,7 @@ using UnityEngine.UIElements;
 namespace FQParty.Session.Network
 {
 
-    public class SessionInfoViewModel : ISessionInfo,
+    public class LobbyInfoViewModel : ISessionInfo,
          INotifyBindablePropertyChanged, IDataSourceViewHashProvider, IDisposable
     {
         const string m_Unavailalble = "N/A";
@@ -20,12 +20,12 @@ namespace FQParty.Session.Network
 
         long m_UpdateVersion;
 
-        public SessionInfoViewModel(ISessionInfo sessionInfo)
+        public LobbyInfoViewModel(ISessionInfo sessionInfo)
         {
             m_SessionInfo = sessionInfo;
         }
 
-        public SessionInfoViewModel(ISession session)
+        public LobbyInfoViewModel(ISession session)
         {
             m_Session = session;
 

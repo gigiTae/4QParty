@@ -19,7 +19,7 @@ namespace FQParty.UI.Main
         {
             LoadSceneGroupContext context = new()
             {
-                GroupName = SceneGroupTheme.k_MainGroup
+                GroupName = SceneGroupTheme.k_LobbyBrowser
             };
 
             m_LoadSceneGroupEvent.Raise(context);

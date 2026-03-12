@@ -1,6 +1,7 @@
 using FQParty.Common.Constant;
 using FQParty.Session.Common;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 using Unity.Properties;
 using UnityEngine;
 using UnityEngine.UIElements;
@@ -8,13 +9,12 @@ using UnityEngine.UIElements;
 namespace FQParty.Session.Network
 {
     [UxmlElement]
-    public partial class CreateSessionElement : VisualElement
+    public partial class CreateLobbyElement : VisualElement
     {
-        private CreateSessionViewModel m_ViewModel;
+        private CreateLobbyViewModel m_ViewModel;
         private TextField m_SessionNameTextField;
-        private Button m_CreateSessionButton;
+        private Button m_CreateLobbyButton;
 
-        
         [CreateProperty, UxmlAttribute]
         public string CreateButtonText
         {
@@ -22,9 +22,9 @@ namespace FQParty.Session.Network
             set
             {
                 m_CreateButtonText = value;
-                if (m_CreateSessionButton != null)
+                if (m_CreateLobbyButton != null)
                 {
-                    m_CreateSessionButton.text = value;
+                    m_CreateLobbyButton.text = value;
                 }
             }
         }
@@ -65,7 +65,7 @@ namespace FQParty.Session.Network
         }
         private SessionSettingSO m_SessionSettings;
 
-        public CreateSessionElement()
+        public CreateLobbyElement()
         {
             AddToClassList(UITheme.ContainerHorizontal);
 
@@ -82,7 +82,7 @@ namespace FQParty.Session.Network
         {
             var enabledBinding = new DataBinding
             {
-                dataSourcePath = new PropertyPath(nameof(m_ViewModel.CanRegisterSession)),
+                dataSourcePath = new PropertyPath(nameof(m_ViewModel.CanRegisterLobby)),
                 bindingMode = BindingMode.ToTarget
             };
 
@@ -130,14 +130,14 @@ namespace FQParty.Session.Network
                 bindingMode = BindingMode.ToTarget
             };
             createSessionButton.SetBinding(new BindingId(nameof(enabledSelf)), createSessionBinding);
-            createSessionButton.clicked += CreateSession;
+            createSessionButton.clicked += CreateLobbyAsync;
             Add(createSessionButton);
             m_ViewModelBindings.Add(createSessionBinding);
 
-            m_CreateSessionButton = createSessionButton;
+            m_CreateLobbyButton = createSessionButton;
         }
 
-        void CreateSession()
+        public async void CreateLobbyAsync()
         {
             if (!SessionSettings)
             {
@@ -150,7 +150,7 @@ namespace FQParty.Session.Network
                 return;
             }
 
-            _ = m_ViewModel.CreateSessionAsync(SessionSettings.ToSessionOptions());
+            await m_ViewModel.CreateLobbyAsync();
         }
 
 
@@ -158,7 +158,7 @@ namespace FQParty.Session.Network
         {
             CleanupBindings();
 
-            m_ViewModel = new CreateSessionViewModel(SessionSettings?.SessionType);
+            m_ViewModel = new CreateLobbyViewModel(SessionSettings?.SessionType);
             foreach (var binding in m_ViewModelBindings)
             {
                 binding.dataSource = m_ViewModel;

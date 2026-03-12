@@ -1,4 +1,3 @@
-using FQParty.Services;
 using FQParty.SceneManagement;
 using FQParty.Common.Constant;
 
@@ -9,8 +8,6 @@ namespace FQParty.ConnectionManagement
     /// </summary>
     class OfflineState : ConnectionState
     {
-        ServiceProvider m_ServiceProvider;
-
         public override void Enter()
         {
             m_ConnectionManager.NetworkManager.Shutdown();
@@ -21,14 +18,16 @@ namespace FQParty.ConnectionManagement
 
         public override void Exit() { }
 
-        public override void StartClientSession(string playerName)
+        public override void StartClientSession()
         {
-            m_ConnectionManager.ChangeState(m_ConnectionManager.m_ClientConnecting);
+            var connectionMethod = new ConnectionMethodSteam(m_ConnectionManager);
+            m_ConnectionManager.ChangeState(m_ConnectionManager.m_ClientConnecting.Configure(connectionMethod));
         }
 
-        public override void StartHostSession(string playerName)
+        public override void StartHostSession()
         {
-            m_ConnectionManager.ChangeState(m_ConnectionManager.m_StartingHost);
+            var connectionMethod = new ConnectionMethodSteam(m_ConnectionManager);
+            m_ConnectionManager.ChangeState(m_ConnectionManager.m_StartingHost.Configure(connectionMethod));
         }
     }
 }

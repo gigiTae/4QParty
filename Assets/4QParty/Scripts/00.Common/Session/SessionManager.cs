@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using UnityEditor.Build.Reporting;
 using UnityEngine;
 
 namespace FQParty.Common.Session
@@ -21,6 +22,7 @@ namespace FQParty.Common.Session
     /// </summary>
     public class SessionManager<T> where T : struct, ISessionPlayerData
     {
+
         // ½Ì±ÛÅæ »ý¼ºÀÚ
         SessionManager()
         {

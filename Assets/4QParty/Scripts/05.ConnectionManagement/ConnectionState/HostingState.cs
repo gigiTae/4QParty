@@ -4,6 +4,8 @@ using FQParty.Infrastructure;
 using FQParty.SceneManagement;
 using Unity.Netcode;
 using UnityEngine;
+using FQParty.SteamService;
+
 namespace FQParty.ConnectionManagement
 {
     class HostingState : OnlineState
@@ -30,7 +32,8 @@ namespace FQParty.ConnectionManagement
             SessionPlayerData? playerData = SessionManager<SessionPlayerData>.Instance.GetPlayerData(clientId);
 
             if (playerData != null)
-            {
+            {   
+                return;
                 m_ConnectionEventPublisher.Publish(new ConnectionEventMessage()
                 {
                     ConnectStatus = ConnectStatus.Success,

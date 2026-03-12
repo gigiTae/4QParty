@@ -11,7 +11,7 @@ using UnityEngine.UIElements;
 
 namespace FQParty.Session.Network
 {
-    public class SessionBrowserViewModel : INotifyBindablePropertyChanged, IDataSourceViewHashProvider, IDisposable
+    public class LobbyBrowserViewModel : INotifyBindablePropertyChanged, IDataSourceViewHashProvider, IDisposable
     {
         private SessionObserver m_SessionObserver;
         private ServiceObserver<IMultiplayerService> m_ServiceObserver;
@@ -22,10 +22,10 @@ namespace FQParty.Session.Network
         private int m_SelectedSessionIndex;
 
         private ISession m_Session;
-        private List<SessionInfoViewModel> m_Sessions;
+        private List<LobbyInfoViewModel> m_Sessions;
 
         [CreateProperty]
-        public List<SessionInfoViewModel> Sessions
+        public List<LobbyInfoViewModel> Sessions
         {
             get => m_Sessions;
             set
@@ -109,9 +109,9 @@ namespace FQParty.Session.Network
         }
 
 
-        public SessionBrowserViewModel(string sessionType)
+        public LobbyBrowserViewModel(string sessionType)
         {
-            Sessions = new List<SessionInfoViewModel>();
+            Sessions = new List<LobbyInfoViewModel>();
 
             m_SessionObserver = new SessionObserver(sessionType);
             m_SessionObserver.SessionAdded += OnSessionAdded;
@@ -188,7 +188,7 @@ namespace FQParty.Session.Network
                 Sessions.Clear();
                 for (var i = 0; (i < Math.Min(queryResult.Sessions.Count, numberOfMaxSessions)); i++)
                 {
-                    Sessions.Add(new SessionInfoViewModel(queryResult.Sessions[i]));
+                    Sessions.Add(new LobbyInfoViewModel(queryResult.Sessions[i]));
                 }
 
                 ++m_UpdateVersion;

@@ -1,7 +1,7 @@
-using Codice.Client.Common;
+using Netcode.Transports;
 using Steamworks;
-using System;
 using System.Threading.Tasks;
+using Unity.Netcode;
 using UnityEngine;
 
 namespace FQParty.ConnectionManagement
@@ -51,16 +51,9 @@ namespace FQParty.ConnectionManagement
     /// </summary>
     public class ConnectionMethodSteam : ConnectionMethodBase
     {
-        // Steam 접속에 필요한 추가 정보
-        private CSteamID m_TargetSteamID; // 호스트의 Steam ID
-        private CSteamID m_LobbyID;       // 참여 중인 로비 ID
-
-        public ConnectionMethodSteam(CSteamID targetSteamID, CSteamID lobbyID,
-            ConnectionManager connectionManager)
+        public ConnectionMethodSteam(ConnectionManager connectionManager)
             : base(connectionManager)
         {
-            m_TargetSteamID = targetSteamID;
-            m_LobbyID = lobbyID;
         }
 
         protected override void SetConnectionPayload()
@@ -78,6 +71,8 @@ namespace FQParty.ConnectionManagement
             byte[] payloadBytes = System.Text.Encoding.UTF8.GetBytes(jsonPayload);
 
             m_ConnectionManager.NetworkManager.NetworkConfig.ConnectionData = payloadBytes;
+            var transport = m_ConnectionManager.NetworkManager.GetComponent<SteamNetworkingSocketsTransport>();
+             transport.ConnectToSteamID = SteamUser.GetSteamID().m_SteamID;
         }
 
         public override void SetupHostConnection()
@@ -100,7 +95,7 @@ namespace FQParty.ConnectionManagement
 
             // 2. 로비가 여전히 유효한지 확인 (재접속 가능 여부 판단)
             // Steam 로비 데이터를 다시 읽어와서 호스트가 여전히 세션에 있는지 체크합니다.
-            bool isLobbyValid = SteamMatchmaking.RequestLobbyData(m_LobbyID);
+            bool isLobbyValid = SteamMatchmaking.RequestLobbyData(new CSteamID());
 
             if (!isLobbyValid)
             {
