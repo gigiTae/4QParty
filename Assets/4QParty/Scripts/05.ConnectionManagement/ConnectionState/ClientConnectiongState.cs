@@ -49,7 +49,10 @@ namespace FQParty.ConnectionManagement
         void ConnectClient()
         {
             m_ConnectionMethod.SetupClientConnection();
-            m_ConnectionManager.NetworkManager.StartClient();
+            if (m_ConnectionManager.NetworkManager.StartClient())
+            {
+                Debug.Log("StartClient");
+            }
         }
 
         public override void Exit() { }

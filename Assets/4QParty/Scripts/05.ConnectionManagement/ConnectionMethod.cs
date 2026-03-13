@@ -1,3 +1,4 @@
+using FQParty.SteamService;
 using Netcode.Transports;
 using Steamworks;
 using System.Threading.Tasks;
@@ -41,7 +42,7 @@ namespace FQParty.ConnectionManagement
         /// </returns>
         public abstract Task<(bool success, bool shouldTryAgain)> SetupClientReconnectionAsync();
 
-        protected abstract void SetConnectionPayload();
+        protected abstract void SetHostConnectionPayload();
 
         protected abstract string GetPlayerId();
     }
@@ -56,7 +57,11 @@ namespace FQParty.ConnectionManagement
         {
         }
 
-        protected override void SetConnectionPayload()
+        protected override void SetHostConnectionPayload()
+        {
+        }
+
+        public override void SetupHostConnection()
         {
             if (!SteamAPI.IsSteamRunning()) return;
 
@@ -72,17 +77,27 @@ namespace FQParty.ConnectionManagement
 
             m_ConnectionManager.NetworkManager.NetworkConfig.ConnectionData = payloadBytes;
             var transport = m_ConnectionManager.NetworkManager.GetComponent<SteamNetworkingSocketsTransport>();
-             transport.ConnectToSteamID = SteamUser.GetSteamID().m_SteamID;
-        }
-
-        public override void SetupHostConnection()
-        {
-            SetConnectionPayload();
+            transport.ConnectToSteamID = SteamUser.GetSteamID().m_SteamID;
         }
 
         public override void SetupClientConnection()
         {
-            SetConnectionPayload();
+            if (!SteamAPI.IsSteamRunning()) return;
+
+            ConnectionPayload payload = new()
+            {
+                Id = SteamUser.GetSteamID().m_SteamID,
+                PlayerName = SteamFriends.GetPersonaName(),
+                IsDebug = Debug.isDebugBuild
+            };
+
+            string jsonPayload = JsonUtility.ToJson(payload);
+            byte[] payloadBytes = System.Text.Encoding.UTF8.GetBytes(jsonPayload);
+
+            m_ConnectionManager.NetworkManager.NetworkConfig.ConnectionData = payloadBytes;
+            var transport = m_ConnectionManager.NetworkManager.GetComponent<SteamNetworkingSocketsTransport>();
+
+            transport.ConnectToSteamID = SteamManager.Instance.SteamLobbyService.LobbyData.HostID;
         }
 
         public override async Task<(bool success, bool shouldTryAgain)> SetupClientReconnectionAsync()

@@ -113,7 +113,6 @@ namespace FQParty.ConnectionManagement
                 connectionState.m_ConnectStatusPublisher = m_TempPublisher;
             }
 
-
             NetworkManager.OnConnectionEvent += OnConnectionEvent;
             NetworkManager.OnServerStarted += OnServerStarted;
             NetworkManager.ConnectionApprovalCallback += ApprovalCheck;
@@ -137,9 +136,11 @@ namespace FQParty.ConnectionManagement
 
         void OnConnectionEvent(NetworkManager networkManager, ConnectionEventData connectionEventData)
         {
+
             switch (connectionEventData.EventType)
             {
                 case ConnectionEvent.ClientConnected:
+                    Debug.Log("ClientConnected");
                     m_CurrentState.OnClientConnected(connectionEventData.ClientId);
                     break;
                 case ConnectionEvent.ClientDisconnected:

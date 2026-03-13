@@ -26,6 +26,16 @@ namespace FQParty.SteamService
 
         SteamSettingsSO m_SteamSettings;
 
+        public LobbyData LobbyData
+        {
+            get => m_LobbyData;
+            private set
+            {
+                m_LobbyData = value;
+            }
+        }
+        LobbyData m_LobbyData;
+
         public SteamLobbyService(SteamSettingsSO steamSettings)
         {
             m_SteamSettings = steamSettings;
@@ -119,7 +129,7 @@ namespace FQParty.SteamService
                 {
                     Debug.LogError($"Failed to join lobby. Response code: {callback.m_rgfChatPermissions}");
                 }
-                
+
                 LobbyData data = new LobbyData
                 {
                     IsSuccess = success,
@@ -130,6 +140,8 @@ namespace FQParty.SteamService
                     HostID = SteamMatchmaking.GetLobbyOwner(steamLobbyID).m_SteamID,
                     IsPrivate = false
                 };
+
+                m_LobbyData = data;
 
                 enterCallback.Dispose(); // 콜백 해제
                 tcs.SetResult(data);
