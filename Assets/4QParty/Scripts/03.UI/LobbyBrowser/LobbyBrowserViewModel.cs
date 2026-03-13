@@ -66,14 +66,16 @@ namespace FQParty.UI
         {
             List<LobbyData> lobbyDataList = await SteamManager.Instance.SteamLobbyService.GetLobbyList();
 
-            var newList = new List<LobbyDataViewModel>();
+            LobbyDataListViewModel.Clear();
 
             for (int i = 0; i < lobbyDataList.Count; i++)
             {
-                newList.Add(new LobbyDataViewModel(lobbyDataList[i]));
+                LobbyDataListViewModel.Add(new LobbyDataViewModel(lobbyDataList[i]));
             }
 
-            LobbyDataListViewModel = newList;
+            ++m_UpdateVersion;
+            Notify();
+            SelectedSessionIndex = -1;
         }
 
         public async Task JoinLobbyAsync()

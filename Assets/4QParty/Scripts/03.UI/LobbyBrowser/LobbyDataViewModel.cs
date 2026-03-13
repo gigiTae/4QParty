@@ -16,6 +16,12 @@ namespace FQParty.UI
             m_LobbyData = data;
         }
 
+        public void Refresh()
+        {
+            m_UpdateVersion++;
+            Notify(nameof(LobbyName));
+        }
+
         public string LobbyName
         {
             get => m_LobbyData.LobbyName;

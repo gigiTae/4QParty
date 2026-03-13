@@ -19,6 +19,11 @@ namespace FQParty.UI
 
         public LobbyBrowserElement()
         {
+            virtualizationMethod = CollectionVirtualizationMethod.FixedHeight;
+            fixedItemHeight = 40f;
+
+            bindingSourceSelectionMode = BindingSourceSelectionMode.AutoAssign;
+
             AddToClassList(UITheme.ScrollView);
 
             makeFooter = MakeFooter;
@@ -27,7 +32,7 @@ namespace FQParty.UI
             RegisterCallback<AttachToPanelEvent>(OnAttachToPanel);
             RegisterCallback<DetachFromPanelEvent>(OnDetachPanel);
         }
-
+        
         VisualElement MakeFooter()
         {
             var root = new VisualElement();
@@ -66,7 +71,7 @@ namespace FQParty.UI
                 bindingMode = BindingMode.ToTarget,
                 updateTrigger = BindingUpdateTrigger.OnSourceChanged,
             };
-            lobbyNameLabel.SetBinding(nameof(Label.text), db);
+            lobbyNameLabel.SetBinding(new BindingId(nameof(Label.text)), db);
 
             return root;
         }
