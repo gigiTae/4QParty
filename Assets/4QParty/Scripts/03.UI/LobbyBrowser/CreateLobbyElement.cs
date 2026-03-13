@@ -96,8 +96,6 @@ namespace FQParty.UI
 
             m_ViewModelBindings.Add(createLobbyBinding);
         }
-
-
         public async void OnCreateLobbyAsync()
         {
             await m_ViewModel.CreateLobbyAsync();
@@ -106,7 +104,7 @@ namespace FQParty.UI
         void MakeBackButton()
         {
             var backButton = new Button()
-            { text = BackText, };
+            { text = BackText };
 
             backButton.AddToClassList(UITheme.Button);
 

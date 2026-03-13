@@ -3,6 +3,7 @@ using Mono.Cecil;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using Unity.Properties;
+using UnityEditor;
 using UnityEngine;
 using UnityEngine.UIElements;
 
@@ -28,11 +29,25 @@ namespace FQParty.UI
 
             makeFooter = MakeFooter;
             makeItem = MaekDefaultItem;
+            bindItem = OnBindItem;
 
             RegisterCallback<AttachToPanelEvent>(OnAttachToPanel);
             RegisterCallback<DetachFromPanelEvent>(OnDetachPanel);
         }
-        
+
+        void OnBindItem(VisualElement element, int index)
+        {
+            // 솔직히 할만큼 했다 예제가 너무 부족하다 
+            var data = itemsSource[index] as LobbyDataViewModel;
+            if (data == null) return;
+
+            Label lobbyNameLabel = element.Q<Label>();
+            if(lobbyNameLabel != null)
+            {
+                lobbyNameLabel.text = data.LobbyName;
+            }
+        }
+
         VisualElement MakeFooter()
         {
             var root = new VisualElement();
@@ -63,16 +78,9 @@ namespace FQParty.UI
 
             var lobbyNameLabel = new Label();
             lobbyNameLabel.AddToClassList(UITheme.Label);
+
+            lobbyNameLabel.text = "LoobyName";
             root.Add(lobbyNameLabel);
-
-            var db = new DataBinding
-            {
-                dataSourcePath = PropertyPath.FromName(nameof(LobbyDataViewModel.LobbyName)),
-                bindingMode = BindingMode.ToTarget,
-                updateTrigger = BindingUpdateTrigger.OnSourceChanged,
-            };
-            lobbyNameLabel.SetBinding(new BindingId(nameof(Label.text)), db);
-
             return root;
         }
 

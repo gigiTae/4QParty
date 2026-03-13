@@ -50,10 +50,10 @@ namespace FQParty.SteamService
                 SteamMatchmaking.SetLobbyData(lobbyID, k_LobbyNameKey, lobbyName);
                 SteamMatchmaking.SetLobbyData(lobbyID, k_GameNameKey, k_GameName);
 
-                Debug.Log("CreateLobby");
+                Debug.Log($"Create LobbyID : {lobbyID} / LobbyName {lobbyName}");
 
                 createdCallback.Dispose(); // 사용 후 해제
-                
+
                 tcs.SetResult(data);
             });
 
@@ -84,7 +84,7 @@ namespace FQParty.SteamService
                         LobbyName = SteamMatchmaking.GetLobbyData(lobbyID, k_LobbyNameKey),
                         MaxPlayers = SteamMatchmaking.GetLobbyMemberLimit(lobbyID),
                         CurrentPlayers = SteamMatchmaking.GetNumLobbyMembers(lobbyID),
-                        IsPrivate = false 
+                        IsPrivate = false
                     });
                 }
 
@@ -113,8 +113,13 @@ namespace FQParty.SteamService
                 // 콜백으로 받은 ID가 내가 요청한 로비 ID와 일치하는지 확인
                 if (callback.m_ulSteamIDLobby != lobbyID) return;
 
-                bool success = (EChatRoomEnterResponse)callback.m_rgfChatPermissions == EChatRoomEnterResponse.k_EChatRoomEnterResponseSuccess;
+                bool success = (EChatRoomEnterResponse)callback.m_EChatRoomEnterResponse == EChatRoomEnterResponse.k_EChatRoomEnterResponseSuccess;
 
+                if (!success)
+                {
+                    Debug.LogError($"Failed to join lobby. Response code: {callback.m_rgfChatPermissions}");
+                }
+                
                 LobbyData data = new LobbyData
                 {
                     IsSuccess = success,
@@ -123,17 +128,8 @@ namespace FQParty.SteamService
                     MaxPlayers = SteamMatchmaking.GetLobbyMemberLimit(steamLobbyID),
                     CurrentPlayers = SteamMatchmaking.GetNumLobbyMembers(steamLobbyID),
                     HostID = SteamMatchmaking.GetLobbyOwner(steamLobbyID).m_SteamID,
-                    IsPrivate = false 
+                    IsPrivate = false
                 };
-
-                if (success)
-                {
-                    Debug.Log($"Successfully joined lobby: {data.LobbyName}");
-                }
-                else
-                {
-                    Debug.LogError($"Failed to join lobby. Response code: {callback.m_rgfChatPermissions}");
-                }
 
                 enterCallback.Dispose(); // 콜백 해제
                 tcs.SetResult(data);

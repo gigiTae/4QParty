@@ -14,18 +14,26 @@ namespace FQParty.UI
         public LobbyDataViewModel(LobbyData data)
         {
             m_LobbyData = data;
+            m_LobbyName = m_LobbyData.LobbyName;
         }
 
         public void Refresh()
         {
-            m_UpdateVersion++;
-            Notify(nameof(LobbyName));
+            ++m_UpdateVersion;
+            Notify();
         }
 
         public string LobbyName
         {
             get => m_LobbyData.LobbyName;
+            set
+            {
+                m_LobbyName = value;
+                ++m_UpdateVersion;
+                Notify();
+            }
         }
+        string m_LobbyName;
 
         public int CurrenPlayers
         {
@@ -41,6 +49,8 @@ namespace FQParty.UI
         {
             get => m_LobbyData.HostID;
         }
+
+        public ulong LobbyID => m_LobbyData.LobbyID;
 
         public void Dispose()
         {

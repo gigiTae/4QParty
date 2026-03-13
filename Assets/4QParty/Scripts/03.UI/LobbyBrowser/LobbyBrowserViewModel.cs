@@ -39,6 +39,8 @@ namespace FQParty.UI
             set
             {
                 m_SelectedAndAvailable = value;
+                ++m_UpdateVersion;
+                Notify();
             }
 
         }
@@ -70,7 +72,8 @@ namespace FQParty.UI
 
             for (int i = 0; i < lobbyDataList.Count; i++)
             {
-                LobbyDataListViewModel.Add(new LobbyDataViewModel(lobbyDataList[i]));
+                var lobbyDataViewModel = new LobbyDataViewModel(lobbyDataList[i]);
+                LobbyDataListViewModel.Add(lobbyDataViewModel);
             }
 
             ++m_UpdateVersion;
@@ -85,8 +88,8 @@ namespace FQParty.UI
                 return;
             }
 
-            ulong hostID = m_LobbyDataViewModelList[m_SelectedLobbyIndex].HostID;
-            LobbyData data = await SteamManager.Instance.SteamLobbyService.JoinLobby(hostID);
+            ulong lobbyID = m_LobbyDataViewModelList[m_SelectedLobbyIndex].LobbyID;
+            LobbyData data = await SteamManager.Instance.SteamLobbyService.JoinLobby(lobbyID);
 
             if (data.IsSuccess)
             {
@@ -94,7 +97,6 @@ namespace FQParty.UI
                 ConnectionManager.Instance.StartClientSession();
                 m_SelectedAndAvailable = false;
             }
-
         }
 
         private long m_UpdateVersion;
