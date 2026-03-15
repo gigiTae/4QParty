@@ -17,6 +17,18 @@ namespace FQParty.SceneManagement
 
         public readonly SceneGroupManager m_SceneGroupManager = new SceneGroupManager();
 
+        public override void OnNetworkSpawn()
+        {
+            base.OnNetworkSpawn();
+            m_SceneGroupManager.OnNetworkSpawn(NetworkManager.SceneManager);
+        }
+
+        public override void OnNetworkDespawn()
+        {
+            base.OnNetworkDespawn();
+            m_SceneGroupManager.OnNetworkDespawn();
+        }
+
         protected override void Awake()
         {
             base.Awake();

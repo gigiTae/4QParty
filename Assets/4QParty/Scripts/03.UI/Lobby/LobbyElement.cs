@@ -54,7 +54,7 @@ namespace FQParty.UI.Lobby
             {
                 text = "START GAME"
             };
-            //startGameButton.enabledSelf = false;
+            startGameButton.enabledSelf = false;
             m_StartGameButton = startGameButton;
             m_StartGameButton.clicked += () => OnStartGameClicked?.Invoke();
             Add(startGameButton);
