@@ -9,9 +9,9 @@ namespace FQParty.UI
 {
     public class LobbyDataViewModel : INotifyBindablePropertyChanged, IDataSourceViewHashProvider, IDisposable
     {
-        LobbyData m_LobbyData;
+        SteamLobbyData m_LobbyData;
 
-        public LobbyDataViewModel(LobbyData data)
+        public LobbyDataViewModel(SteamLobbyData data)
         {
             m_LobbyData = data;
             m_LobbyName = m_LobbyData.LobbyName;

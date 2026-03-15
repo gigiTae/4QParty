@@ -14,8 +14,6 @@ namespace FQParty.SteamService
     {
         [SerializeField] private SteamSettingsSO m_Settings;
         [SerializeField] NetworkManager m_NetworkManager;
-
-
         public SteamLobbyService SteamLobbyService
         {
             get => m_SteamLobbyService;
@@ -26,7 +24,6 @@ namespace FQParty.SteamService
         public bool IsInitialized { get => m_IsInitialized; }    
         private bool m_IsInitialized;
 
-
         protected override void Awake()
         {
             m_SteamLobbyService = new(m_Settings);
@@ -34,6 +31,12 @@ namespace FQParty.SteamService
             base.Awake();
             Initialize();
         }
+
+        private void OnDisable()
+        {
+            SteamAPI.Shutdown();
+        } 
+
 
         void Initialize()
         {

@@ -17,7 +17,7 @@ namespace FQParty.Session.Network
         ConnectionManager m_ConnectionManager;
 
         SessionObserver m_SessionObserver;
-        LobbyData m_LobbyData;
+        SteamLobbyData m_LobbyData;
         long m_UpdateVersion;
 
         [CreateProperty]
@@ -111,8 +111,7 @@ namespace FQParty.Session.Network
 
         public async Task CreateLobbyAsync()
         {
-            LobbyData data = await SteamManager.Instance.SteamLobbyService.CreateLobby(SessionName, false);
-
+            await SteamManager.Instance.SteamLobbyService.CreateLobbyAsync(SessionName, false);
             ConnectionManager.Instance.StartHostSession();
         }
 

@@ -34,7 +34,7 @@ namespace FQParty.UI
 
         public async Task CreateLobbyAsync()
         {
-            LobbyData data = await SteamManager.Instance.SteamLobbyService.CreateLobby(LobbyName, false);
+            await SteamManager.Instance.SteamLobbyService.CreateLobbyAsync(LobbyName, false);
             ConnectionManager.Instance.StartHostSession();
         }
 

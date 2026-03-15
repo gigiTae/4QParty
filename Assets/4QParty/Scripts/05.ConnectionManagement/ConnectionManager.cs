@@ -57,14 +57,12 @@ namespace FQParty.ConnectionManagement
     [Serializable]
     public class ConnectionPayload
     {
-        public ulong Id;
+        public ulong SteamID;
         public string PlayerName;
-        public bool IsDebug;
     }
 
     public class TempPublisher : IPublisher<ConnectStatus>
     {
-
         public void Publish(ConnectStatus message)
         {
            
@@ -140,7 +138,6 @@ namespace FQParty.ConnectionManagement
             switch (connectionEventData.EventType)
             {
                 case ConnectionEvent.ClientConnected:
-                    Debug.Log("ClientConnected");
                     m_CurrentState.OnClientConnected(connectionEventData.ClientId);
                     break;
                 case ConnectionEvent.ClientDisconnected:

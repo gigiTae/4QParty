@@ -9,6 +9,7 @@ namespace FQParty.Common.Constant
         public const string k_SettingGroup = "Setting";
         public const string k_LobbyBrowser = "LobbyBrowser";
         public const string k_Lobby = "Lobby";
-        public const string k_Game = "Game";
+        public const string k_GameGimmick = "GameGimmick";
+        public const string k_GamePlay = "GamePlay";
     }
 }

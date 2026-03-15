@@ -67,9 +67,8 @@ namespace FQParty.ConnectionManagement
 
             ConnectionPayload payload = new()
             {
-                Id = SteamUser.GetSteamID().m_SteamID,
+                SteamID = SteamUser.GetSteamID().m_SteamID,
                 PlayerName = SteamFriends.GetPersonaName(),
-                IsDebug = Debug.isDebugBuild
             };
 
             string jsonPayload = JsonUtility.ToJson(payload);
@@ -86,9 +85,8 @@ namespace FQParty.ConnectionManagement
 
             ConnectionPayload payload = new()
             {
-                Id = SteamUser.GetSteamID().m_SteamID,
+                SteamID = SteamUser.GetSteamID().m_SteamID,
                 PlayerName = SteamFriends.GetPersonaName(),
-                IsDebug = Debug.isDebugBuild
             };
 
             string jsonPayload = JsonUtility.ToJson(payload);
@@ -97,29 +95,11 @@ namespace FQParty.ConnectionManagement
             m_ConnectionManager.NetworkManager.NetworkConfig.ConnectionData = payloadBytes;
             var transport = m_ConnectionManager.NetworkManager.GetComponent<SteamNetworkingSocketsTransport>();
 
-            transport.ConnectToSteamID = SteamManager.Instance.SteamLobbyService.LobbyData.HostID;
+            transport.ConnectToSteamID = SteamManager.Instance.SteamLobbyService.CurrentLobby.LobbyData.HostID;
         }
 
         public override async Task<(bool success, bool shouldTryAgain)> SetupClientReconnectionAsync()
         {
-            // 1. Steam 자체가 실행 중인지 확인
-            if (!SteamAPI.IsSteamRunning())
-            {
-                return (false, false);
-            }
-
-            // 2. 로비가 여전히 유효한지 확인 (재접속 가능 여부 판단)
-            // Steam 로비 데이터를 다시 읽어와서 호스트가 여전히 세션에 있는지 체크합니다.
-            bool isLobbyValid = SteamMatchmaking.RequestLobbyData(new CSteamID());
-
-            if (!isLobbyValid)
-            {
-                Debug.Log("Steam 로비가 더 이상 유효하지 않습니다.");
-                return (false, false);
-            }
-
-            SetupClientConnection();
-
             await Task.Yield();
             return (true, true);
         }

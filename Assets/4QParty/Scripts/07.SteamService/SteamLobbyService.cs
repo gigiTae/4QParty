@@ -1,5 +1,6 @@
 using NUnit.Framework;
 using Steamworks;
+using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using UnityEngine;
@@ -7,157 +8,132 @@ using UnityEngine;
 
 namespace FQParty.SteamService
 {
-    public struct LobbyData
-    {
-        public bool IsSuccess;
-        public bool IsPrivate;
-        public string LobbyName;
-        public ulong LobbyID;
-        public ulong HostID;
-        public int MaxPlayers;
-        public int CurrentPlayers;
-    }
-
     public class SteamLobbyService
     {
-        const string k_LobbyNameKey = "LobbyName";
-        const string k_GameNameKey = "GameName";
-        const string k_GameName = "4QParty";
-
         SteamSettingsSO m_SteamSettings;
 
-        public LobbyData LobbyData
+        public SteamLobby CurrentLobby
         {
-            get => m_LobbyData;
-            private set
-            {
-                m_LobbyData = value;
-            }
+            get => m_CurrentLobby;
         }
-        LobbyData m_LobbyData;
+        SteamLobby m_CurrentLobby;
 
         public SteamLobbyService(SteamSettingsSO steamSettings)
         {
             m_SteamSettings = steamSettings;
         }
 
-        public async Task<LobbyData> CreateLobby(string lobbyName, bool isPrivate)
+        public void LeaveLobby()
         {
-            var tcs = new TaskCompletionSource<LobbyData>();
+            if(m_CurrentLobby !=null)
+            {
+                m_CurrentLobby.Dispose();
+                m_CurrentLobby = null;
+                Debug.Log($"{nameof(SteamLobbyService)} : LeaveLobby");
+            }
+        }
+
+        public async Task<SteamLobby> CreateLobbyAsync(string lobbyName, bool isPrivate)
+        {
+            var tcs = new TaskCompletionSource<SteamLobby>();
             Callback<LobbyCreated_t> createdCallback = null;
+
             createdCallback = Callback<LobbyCreated_t>.Create(callback =>
             {
-                LobbyData data = new()
+                if (callback.m_eResult != EResult.k_EResultOK)
                 {
-                    IsPrivate = isPrivate,
-                    LobbyName = lobbyName,
-                    IsSuccess = callback.m_eResult == EResult.k_EResultOK,
-                    LobbyID = callback.m_ulSteamIDLobby,
-                    MaxPlayers = m_SteamSettings.MaxPlayer
-                };
+                    Debug.LogError($"로비 생성 실패! 에러 코드: {callback.m_eResult}");
 
-                CSteamID lobbyID = new CSteamID(data.LobbyID);
-                SteamMatchmaking.SetLobbyData(lobbyID, k_LobbyNameKey, lobbyName);
-                SteamMatchmaking.SetLobbyData(lobbyID, k_GameNameKey, k_GameName);
+                    createdCallback.Dispose();
+                    tcs.SetResult(null); 
+                    return;
+                }
 
-                Debug.Log($"Create LobbyID : {lobbyID} / LobbyName {lobbyName}");
+                CSteamID lobbyID = new CSteamID(callback.m_ulSteamIDLobby);
+                SteamMatchmaking.SetLobbyData(lobbyID, SteamConstant.k_LobbyNameKey, lobbyName);
+                SteamMatchmaking.SetLobbyData(lobbyID, SteamConstant.k_GameNameKey, SteamConstant.k_GameName);
 
-                createdCallback.Dispose(); // 사용 후 해제
+                m_CurrentLobby = new SteamLobby(lobbyID);
 
-                tcs.SetResult(data);
+                createdCallback.Dispose();
+                tcs.SetResult(m_CurrentLobby);
             });
 
-            // 로비 생성 시작
-            SteamMatchmaking.CreateLobby(isPrivate ? ELobbyType.k_ELobbyTypePrivate : ELobbyType.k_ELobbyTypePublic, m_SteamSettings.MaxPlayer);
+            ELobbyType lobbyType = isPrivate ? ELobbyType.k_ELobbyTypePrivate : ELobbyType.k_ELobbyTypePublic;
+            SteamMatchmaking.CreateLobby(lobbyType, m_SteamSettings.MaxPlayer);
 
-            // 결과를 받을 때까지 여기서 대기 (비차단)
             return await tcs.Task;
         }
 
-        public async Task<List<LobbyData>> GetLobbyList()
+        public async Task<List<SteamLobbyData>> GetLobbyListAsync()
         {
-            var tcs = new TaskCompletionSource<List<LobbyData>>();
+            var tcs = new TaskCompletionSource<List<SteamLobbyData>>();
 
             Callback<LobbyMatchList_t> matchListCallback = null;
-            matchListCallback = Callback<LobbyMatchList_t>.Create(callback =>
+            matchListCallback = Callback<LobbyMatchList_t>.Create((Callback<LobbyMatchList_t>.DispatchDelegate)(callback =>
             {
-                List<LobbyData> lobbies = new List<LobbyData>();
+                List<SteamLobbyData> lobbies = new List<SteamLobbyData>();
 
                 for (int i = 0; i < callback.m_nLobbiesMatching; i++)
                 {
                     CSteamID lobbyID = SteamMatchmaking.GetLobbyByIndex(i);
 
-                    lobbies.Add(new LobbyData
+                    lobbies.Add(new SteamLobbyData
                     {
-                        IsSuccess = true,
                         LobbyID = lobbyID.m_SteamID,
-                        LobbyName = SteamMatchmaking.GetLobbyData(lobbyID, k_LobbyNameKey),
+                        LobbyName = SteamMatchmaking.GetLobbyData(lobbyID, SteamConstant.k_LobbyNameKey),
                         MaxPlayers = SteamMatchmaking.GetLobbyMemberLimit(lobbyID),
                         CurrentPlayers = SteamMatchmaking.GetNumLobbyMembers(lobbyID),
-                        IsPrivate = false
                     });
                 }
-
                 Debug.Log($"Lobby list retrieved: {lobbies.Count} lobbies found.");
 
-                matchListCallback.Dispose(); // 콜백 해제
+                matchListCallback.Dispose(); 
                 tcs.SetResult(lobbies);
-            });
+            }));
 
-            SteamMatchmaking.AddRequestLobbyListStringFilter(k_GameNameKey, k_GameName, ELobbyComparison.k_ELobbyComparisonEqual);
+            SteamMatchmaking.AddRequestLobbyListStringFilter(
+                SteamConstant.k_GameNameKey,
+                SteamConstant.k_GameName,
+                ELobbyComparison.k_ELobbyComparisonEqual);
 
-            // 로비 목록 요청 시작
             SteamMatchmaking.RequestLobbyList();
 
             return await tcs.Task;
         }
 
-        public async Task<LobbyData> JoinLobby(ulong lobbyID)
+        public async Task<SteamLobby> JoinLobbyAsync(ulong lobbyID)
         {
-            var tcs = new TaskCompletionSource<LobbyData>();
+            var tcs = new TaskCompletionSource<SteamLobby>();
             CSteamID steamLobbyID = new CSteamID(lobbyID);
 
             Callback<LobbyEnter_t> enterCallback = null;
-            enterCallback = Callback<LobbyEnter_t>.Create(callback =>
+            enterCallback = Callback<LobbyEnter_t>.Create((Callback<LobbyEnter_t>.DispatchDelegate)(callback =>
             {
-                // 콜백으로 받은 ID가 내가 요청한 로비 ID와 일치하는지 확인
-                if (callback.m_ulSteamIDLobby != lobbyID) return;
+                if (callback.m_ulSteamIDLobby != lobbyID)
+                {
+                    tcs.SetResult(null);
+                }
 
-                bool success = (EChatRoomEnterResponse)callback.m_EChatRoomEnterResponse == EChatRoomEnterResponse.k_EChatRoomEnterResponseSuccess;
+                bool success = (EChatRoomEnterResponse)callback.m_EChatRoomEnterResponse ==
+                EChatRoomEnterResponse.k_EChatRoomEnterResponseSuccess;
 
                 if (!success)
                 {
                     Debug.LogError($"Failed to join lobby. Response code: {callback.m_rgfChatPermissions}");
+                    tcs.SetResult(null);
                 }
 
-                LobbyData data = new LobbyData
-                {
-                    IsSuccess = success,
-                    LobbyID = callback.m_ulSteamIDLobby,
-                    LobbyName = SteamMatchmaking.GetLobbyData(steamLobbyID, k_LobbyNameKey),
-                    MaxPlayers = SteamMatchmaking.GetLobbyMemberLimit(steamLobbyID),
-                    CurrentPlayers = SteamMatchmaking.GetNumLobbyMembers(steamLobbyID),
-                    HostID = SteamMatchmaking.GetLobbyOwner(steamLobbyID).m_SteamID,
-                    IsPrivate = false
-                };
+                m_CurrentLobby = new SteamLobby(steamLobbyID);
 
-                m_LobbyData = data;
+                enterCallback.Dispose();
+                tcs.SetResult(m_CurrentLobby);
+            }));
 
-                enterCallback.Dispose(); // 콜백 해제
-                tcs.SetResult(data);
-            });
-
-            // 로비 참가 요청
             SteamMatchmaking.JoinLobby(steamLobbyID);
 
             return await tcs.Task;
         }
 
-        public void LeaveLobby(ulong lobbyID)
-        {
-            SteamMatchmaking.LeaveLobby(new CSteamID(lobbyID));
-        }
-
     }
-
 }

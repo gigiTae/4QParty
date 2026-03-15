@@ -43,7 +43,7 @@ namespace FQParty.ConnectionManagement
 
                 SessionManager<SessionPlayerData>.Instance.SetupConnectingPlayerSessionData(
                     clientId,
-                    connectionPayload.Id.ToString(),
+                    connectionPayload.SteamID.ToString(),
                     new SessionPlayerData()
                 );
 

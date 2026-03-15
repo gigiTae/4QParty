@@ -2,9 +2,10 @@ using FQParty.Common.Constant;
 using FQParty.Common.Session;
 using FQParty.Infrastructure;
 using FQParty.SceneManagement;
-using Unity.Netcode;
-using UnityEngine;
 using FQParty.SteamService;
+using Unity.Netcode;
+using UnityEditor.PackageManager;
+using UnityEngine;
 
 namespace FQParty.ConnectionManagement
 {
@@ -32,7 +33,7 @@ namespace FQParty.ConnectionManagement
             SessionPlayerData? playerData = SessionManager<SessionPlayerData>.Instance.GetPlayerData(clientId);
 
             if (playerData != null)
-            {   
+            {
                 return;
                 m_ConnectionEventPublisher.Publish(new ConnectionEventMessage()
                 {
@@ -69,34 +70,16 @@ namespace FQParty.ConnectionManagement
 
         public override void ApprovalCheck(NetworkManager.ConnectionApprovalRequest request, NetworkManager.ConnectionApprovalResponse response)
         {
+            response.Approved = true;
+
             var connectionData = request.Payload;
             var clientId = request.ClientNetworkId;
 
             var payload = System.Text.Encoding.UTF8.GetString(connectionData);
-            var connectionPayload = JsonUtility.FromJson<ConnectionPayload>(payload);
-            var gameReturnStatus = GetConnectStatus(connectionPayload);
-            
-            if(gameReturnStatus == ConnectStatus.Success)
-            {
-
-                return;
-            }
+            var connectionPayload = JsonUtility.FromJson<ConnectionPayload>(payload); 
 
 
         }
 
-
-        ConnectStatus GetConnectStatus(ConnectionPayload connectionPayload)
-        {
-            if (m_ConnectionManager.NetworkManager.ConnectedClientsIds.Count >= 4)
-            {
-                return ConnectStatus.ServerFull;
-            }
-
-            return ConnectStatus.Success;
-            //    return SessionManager<SessionPlayerData>.Instance.IsDuplicateConnection(connectionPayload.Id) ?
-            //        ConnectStatus.LoggedInAgain : ConnectStatus.Success;
-            //}
-        }
     }
 }

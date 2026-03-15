@@ -8,52 +8,51 @@ namespace FQParty.UI.Main
     public partial class MainMenuElement : VisualElement
     {
         private MainMenuViewModel m_ViewModel;
-        private Button m_StartButton;
-        private Button m_SettingButton;
-        private Button m_EndButton;
+        private Button m_StartLocalplayButton = new();
+        private Button m_StarMultiplayButton = new();
+        private Button m_SettingButton = new();
+        private Button m_EndButton = new();
 
         [CreateProperty, UxmlAttribute]
-        public string StartButtonText
+        public string StartLocalplayButtonText
         {
-            get => m_StartButtonText;
+            get => m_StartLocalplayButton.text;
             set
             {
-                if (m_StartButton != null)
-                {
-                    m_StartButton.text = value;
-                }
+                m_StartLocalplayButton.text = value;
             }
         }
-        private string m_StartButtonText;
 
+        [CreateProperty, UxmlAttribute]
+        public string StartMultiplayButtonText
+        {
+            get => m_StarMultiplayButton.text;
+            set
+            {
+                m_StarMultiplayButton.text = value;
+            }
+        }
+
+    
         [CreateProperty, UxmlAttribute]
         public string SettingButtonText
         {
-            get => m_SettingButtonText;
+            get => m_SettingButton.text;
             set
             {
-                if (m_SettingButton != null)
-                {
-                    m_SettingButton.text = value;
-                }
+                m_SettingButton.text = value;
             }
         }
-        private string m_SettingButtonText;
 
-        [CreateProperty, UxmlAttribute ]
+        [CreateProperty, UxmlAttribute]
         public string EndButtonText
         {
-            get => m_EndButtonText;
+            get => m_EndButton.text;
             set
             {
-                if (m_EndButton != null)
-                {
-                    m_EndButton.text = value;
-                }
+                m_EndButton.text = value;
             }
         }
-        private string m_EndButtonText;
-
 
         public MainMenuElement()
         {
@@ -64,11 +63,8 @@ namespace FQParty.UI.Main
 
         private void InitializeUI()
         {
-            m_StartButton = new Button { text = m_StartButtonText };
-            m_SettingButton = new Button { text = m_SettingButtonText };
-            m_EndButton = new Button { text = m_EndButtonText };
-
-            Add(m_StartButton);
+            Add(m_StartLocalplayButton);
+            Add(m_StarMultiplayButton);
             Add(m_SettingButton);
             Add(m_EndButton);
         }
@@ -77,7 +73,8 @@ namespace FQParty.UI.Main
         {
             if (m_ViewModel != null)
             {
-                m_StartButton.clicked -= m_ViewModel.StartGame;
+                m_StartLocalplayButton.clicked -= m_ViewModel.StartLocalplay;
+                m_StarMultiplayButton.clicked -= m_ViewModel.StartMultiplay;
                 m_SettingButton.clicked -= m_ViewModel.OpenSettings;
                 m_EndButton.clicked -= m_ViewModel.EndGame;
                 m_ViewModel = null;
@@ -93,7 +90,8 @@ namespace FQParty.UI.Main
             }
 
             m_ViewModel = viewModel;
-            m_StartButton.clicked += m_ViewModel.StartGame;
+            m_StartLocalplayButton.clicked += m_ViewModel.StartLocalplay;
+            m_StarMultiplayButton.clicked += m_ViewModel.StartMultiplay;
             m_SettingButton.clicked += m_ViewModel.OpenSettings;
             m_EndButton.clicked += m_ViewModel.EndGame;
         }

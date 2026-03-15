@@ -18,9 +18,6 @@ namespace FQParty.UI.Main
 
         private MainMenuViewModel m_ViewModel;
         private MainMenuElement m_View;
-
-        
-
         void Awake()
         {
             m_ViewModel = new MainMenuViewModel(m_LoadSceneGroupEvent);

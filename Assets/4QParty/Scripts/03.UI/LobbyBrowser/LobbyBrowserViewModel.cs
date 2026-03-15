@@ -66,7 +66,7 @@ namespace FQParty.UI
 
         public async Task RefreshLobbyListAsync()
         {
-            List<LobbyData> lobbyDataList = await SteamManager.Instance.SteamLobbyService.GetLobbyList();
+            List<SteamLobbyData> lobbyDataList = await SteamManager.Instance.SteamLobbyService.GetLobbyListAsync();
 
             LobbyDataListViewModel.Clear();
 
@@ -89,11 +89,10 @@ namespace FQParty.UI
             }
 
             ulong lobbyID = m_LobbyDataViewModelList[m_SelectedLobbyIndex].LobbyID;
-            LobbyData data = await SteamManager.Instance.SteamLobbyService.JoinLobby(lobbyID);
+            SteamLobby lobby = await SteamManager.Instance.SteamLobbyService.JoinLobbyAsync(lobbyID);
 
-            if (data.IsSuccess)
+            if (lobby != null)
             {
-                Debug.Log("JoinLobby");
                 ConnectionManager.Instance.StartClientSession();
                 m_SelectedAndAvailable = false;
             }

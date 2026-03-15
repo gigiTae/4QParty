@@ -15,10 +15,13 @@ namespace FQParty.UI.Main
             m_LoadSceneGroupEvent = evt;
         }
 
-        public void StartGame()
+        public void StartLocalplay()
         {
-            Debug.Log("StartGame");
 
+        }
+
+        public void StartMultiplay()
+        {
             LoadSceneGroupContext context = new()
             {
                 GroupName = SceneGroupTheme.k_LobbyBrowser
