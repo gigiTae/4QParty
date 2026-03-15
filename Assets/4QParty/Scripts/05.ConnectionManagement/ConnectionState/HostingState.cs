@@ -32,23 +32,23 @@ namespace FQParty.ConnectionManagement
 
         public override void OnClientConnected(ulong clientId)
         {
-            SessionPlayerData? playerData = SessionManager<SessionPlayerData>.Instance.GetPlayerData(clientId);
+            //SessionPlayerData? playerData = SessionManager<SessionPlayerData>.Instance.GetPlayerData(clientId);
 
-            if (playerData != null)
-            {
-                return;
-                m_ConnectionEventPublisher.Publish(new ConnectionEventMessage()
-                {
-                    ConnectStatus = ConnectStatus.Success,
-                    PlayerName = playerData.Value.PlayerName
-                });
-            }
-            else
-            {
-                Debug.LogError($"No player data associated with client {clientId}");
-                var reason = JsonUtility.ToJson(ConnectStatus.GenericDisconnect);
-                m_ConnectionManager.NetworkManager.DisconnectClient(clientId, reason);
-            }
+            //if (playerData != null)
+            //{
+            //    return;
+            //    m_ConnectionEventPublisher.Publish(new ConnectionEventMessage()
+            //    {
+            //        ConnectStatus = ConnectStatus.Success,
+            //        PlayerName = playerData.Value.PlayerName
+            //    });
+            //}
+            //else
+            //{
+            //    Debug.LogError($"No player data associated with client {clientId}");
+            //    var reason = JsonUtility.ToJson(ConnectStatus.GenericDisconnect);
+            // //    m_ConnectionManager.NetworkManager.DisconnectClient(clientId, reason);
+            //}
         }
 
         public override void OnUserRequestedShutdown()
