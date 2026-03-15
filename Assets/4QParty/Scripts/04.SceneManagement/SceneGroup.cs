@@ -13,7 +13,6 @@ namespace FQParty.SceneManagement
     {
         public string GroupName = "New Scene Group";
         public List<SceneData> Scenes;
-
         public string FindSceneNameByType(SceneType sceneType)
         {
             return Scenes.FirstOrDefault(scene => scene.SceneType == sceneType)?.Reference.Name;

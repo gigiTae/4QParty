@@ -4,6 +4,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Unity.Netcode;
 using UnityEngine;
 using UnityEngine.AddressableAssets;
 using UnityEngine.ResourceManagement.AsyncOperations;
@@ -18,21 +19,17 @@ namespace FQParty.SceneManagement
         public event Action<string> OnSceneUnloaded = delegate { };
         public event Action OnSceneGroupLoaded = delegate { };
 
-        // Addressable로 로드한 씬 그룹
-        readonly AsyncOperationHandleGroup m_HandleLoadGroup = new AsyncOperationHandleGroup(10);
-        readonly AsyncOperationHandleGroup m_HandleUnloadGroup = new AsyncOperationHandleGroup(10);
-
         SceneGroup m_ActiveSceneGroup;
+        NetworkSceneManager m_NetworkSceneManager;
 
-        public async Task LoadScenes(SceneGroup group, IProgress<float> progress, bool reloadDupScenes = false)
+        public async Task LoadSceneGroupAsync(SceneGroup group, bool reloadDupScenes = false)
         {
             m_ActiveSceneGroup = group;
             var loadedScenes = new List<string>();
 
-            await UnloadScenes();
+            await UnloadScenesAsync();
 
             int sceneCount = SceneManager.sceneCount;
-
             for (int i = 0; i < sceneCount; i++)
             {
                 loadedScenes.Add(SceneManager.GetSceneAt(i).name);
@@ -51,61 +48,49 @@ namespace FQParty.SceneManagement
                     var operation = SceneManager.LoadSceneAsync(sceneData.Reference.Path, LoadSceneMode.Additive);
                     operationGroup.Operations.Add(operation);
                 }
-                else if (sceneData.Reference.State == SceneReferenceState.Addressable)
-                {
-                    var sceneHandle = Addressables.LoadSceneAsync(sceneData.Reference.Path, LoadSceneMode.Additive);
-                    m_HandleLoadGroup.Handles.Add(sceneHandle);
-                }
 
                 OnSceneLoaded.Invoke(sceneData.Name);
             }
 
-            while (!operationGroup.IsDone || !m_HandleLoadGroup.IsDone)
+            while (!operationGroup.IsDone)
             {
-                progress?.Report((operationGroup.Progress + m_HandleLoadGroup.Progress) / 2);
                 await Task.Delay(100);
             }
 
             Scene activeScene = SceneManager.GetSceneByName(m_ActiveSceneGroup.FindSceneNameByType(SceneType.ActiveScene));
 
-            if (activeScene.IsValid())
+            if (activeScene.IsValid())  
             {
                 SceneManager.SetActiveScene(activeScene);
             }
 
+
+
             OnSceneGroupLoaded.Invoke();
         }
 
-        public async Task UnloadScenes()
+        public async Task UnloadScenesAsync()
         {
             Scene BootstrapperScene = SceneManager.GetSceneByName(SceneGroupTheme.k_Bootstrapper);
-            if (BootstrapperScene.IsValid())
-            {
-                SceneManager.SetActiveScene(BootstrapperScene);
-            }
-
-            m_HandleUnloadGroup.Handles.Clear();
 
             List<string> unloadScenes = new();
             string activeScene = SceneManager.GetActiveScene().name;
             int sceneCount = SceneManager.sceneCount;
 
-            // 언로드 (어드레서블 씬, 부트트랩씬 예외) 씬리스트 추가
             for (int i = 0; i < sceneCount; i++)
             {
                 var sceneAt = SceneManager.GetSceneAt(i);
                 if (!sceneAt.isLoaded) continue;
 
                 var sceneName = sceneAt.name;
-                if (sceneName.Equals(activeScene) || sceneName == SceneGroupTheme.k_Bootstrapper) continue;
-                if (m_HandleLoadGroup.Handles.Any(h => h.IsValid() && h.Result.Scene.name == sceneName)) continue;
+                if (sceneName == SceneGroupTheme.k_Bootstrapper) continue;
 
                 unloadScenes.Add(sceneName);
             }
 
             AsyncOperationGroup operationGroup = new(unloadScenes.Count);
 
-            // 일반 씬 언로딩 처리
+            // 씬 언로딩
             foreach (var scene in unloadScenes)
             {
                 AsyncOperation operation = SceneManager.UnloadSceneAsync(scene);
@@ -116,27 +101,12 @@ namespace FQParty.SceneManagement
                 OnSceneUnloaded.Invoke(scene);
             }
 
-
-            // 어드레서블 씬 언로드 처리
-            foreach (var handle in m_HandleLoadGroup.Handles)
-            {
-                if (handle.IsValid())
-                {
-                    AsyncOperationHandle<SceneInstance> unloadHandle = Addressables.UnloadSceneAsync(handle);
-                    m_HandleUnloadGroup.Handles.Add(unloadHandle);
-                }
-            }
-            m_HandleLoadGroup.Handles.Clear();
-
             // 작업이 끝날때까지 대기
-            while (!operationGroup.IsDone || !m_HandleUnloadGroup.IsDone)
+            while (!operationGroup.IsDone)
             {
                 await Task.Delay(100); // delay to avoid tight loop
             }
 
-            m_HandleUnloadGroup.Handles.Clear();
-
-            // Optional: UnloadUnusedAssets - unloads all unused assets from memory
             await Resources.UnloadUnusedAssets();
         }
     }

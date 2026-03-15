@@ -38,7 +38,6 @@ namespace FQParty.UI
             ConnectionManager.Instance.StartHostSession();
         }
 
-
         public void Dispose()
         {
 

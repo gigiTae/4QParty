@@ -5,26 +5,26 @@ namespace FQParty.Common.Persistance
     public class PersistanceSingleton<T> : MonoBehaviour where T : Component
     {
         public bool UnparentOnAwake = true;
-        public static bool HasInstance => instance != null;
-        public static T Current => instance;
+        public static bool HasInstance => m_Instance != null;
+        public static T Current => m_Instance;
 
-        protected static T instance;
+        protected static T m_Instance;
 
         public static T Instance
         {
             get
             {
-                if (instance == null)
+                if (m_Instance == null)
                 {
-                    instance = FindFirstObjectByType<T>();
-                    if (instance == null)
+                    m_Instance = FindFirstObjectByType<T>();
+                    if (m_Instance == null)
                     {
                         GameObject obj = new GameObject();
                         obj.name = typeof(T).Name + "AutoCreated";
-                        instance = obj.AddComponent<T>();
+                        m_Instance = obj.AddComponent<T>();
                     }
                 }
-                return instance;
+                return m_Instance;
             }
         }
 
@@ -42,15 +42,15 @@ namespace FQParty.Common.Persistance
                 transform.SetParent(null);
             }
 
-            if (instance == null)
+            if (m_Instance == null)
             {
-                instance = this as T;
+                m_Instance = this as T;
                 DontDestroyOnLoad(transform.gameObject);
                 enabled = true;
             }
             else
             {
-                if (this != instance)
+                if (this != m_Instance)
                 {
                     Destroy(this.gameObject);
                 }

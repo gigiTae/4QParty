@@ -52,7 +52,6 @@ namespace FQParty.UI.Lobby
                 m_SteamLobby.UpdateLobbyEvent -= RefreshElement;
             }
         }
-
         private void RefreshElement()
         {
             var lobbyData = m_SteamLobby.LobbyData;

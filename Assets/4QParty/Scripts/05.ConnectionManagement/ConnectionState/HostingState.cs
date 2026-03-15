@@ -16,10 +16,12 @@ namespace FQParty.ConnectionManagement
 
         public override void Enter()
         {
+            NetworkManager.Singleton.SceneManager.SetClientSynchronizationMode(UnityEngine.SceneManagement.LoadSceneMode.Additive);
+
             SceneLoader.Instance.LoadSceneGroup(new LoadSceneGroupContext()
             {
                 GroupName = SceneGroupTheme.k_Lobby,
-                UseNetworkSceneManager = false
+                UseNetworkSceneManager = true
             });
         }
 
@@ -77,8 +79,6 @@ namespace FQParty.ConnectionManagement
 
             var payload = System.Text.Encoding.UTF8.GetString(connectionData);
             var connectionPayload = JsonUtility.FromJson<ConnectionPayload>(payload); 
-
-
         }
 
     }

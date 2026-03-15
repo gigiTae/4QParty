@@ -64,11 +64,14 @@ namespace FQParty.SteamService
 
         void OnLobbyChatUpdate(LobbyChatUpdate_t callback)
         {
+            Debug.Log("Lobby Update");
+
             if (callback.m_ulSteamIDLobby == m_LobbyData.LobbyID)
             {
                 CSteamID lobbyID = new CSteamID(LobbyData.LobbyID);
 
                 m_LobbyData.CurrentPlayers = SteamMatchmaking.GetNumLobbyMembers(lobbyID);
+                m_LobbyData.PlayerDataList = GetCurrentLobbyMembers(lobbyID);
             }
 
             UpdateLobbyEvent.Invoke();
