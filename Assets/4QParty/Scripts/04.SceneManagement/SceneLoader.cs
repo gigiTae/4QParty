@@ -17,18 +17,6 @@ namespace FQParty.SceneManagement
 
         public readonly SceneGroupManager m_SceneGroupManager = new SceneGroupManager();
 
-        public override void OnNetworkSpawn()
-        {
-            base.OnNetworkSpawn();
-            m_SceneGroupManager.OnNetworkSpawn(NetworkManager.SceneManager);
-        }
-
-        public override void OnNetworkDespawn()
-        {
-            base.OnNetworkDespawn();
-            m_SceneGroupManager.OnNetworkDespawn();
-        }
-
         protected override void Awake()
         {
             base.Awake();
@@ -62,7 +50,7 @@ namespace FQParty.SceneManagement
 
             if(context.UseNetworkSceneManager)
             {
-                _ = LoadSceneGroupAsHost(index);
+                _ = LoadSceneGroupAsServer(index);
             }
             else 
             {
@@ -75,12 +63,12 @@ namespace FQParty.SceneManagement
             await LoadSceneGroup(0);
         }
 
-        private async Task LoadSceneGroupAsHost(int index)
+        private async Task LoadSceneGroupAsServer(int index)
         {
             if (!NetworkManager.IsServer) return;
 
             EnableLoadingScreenClientRpc(true);
-            await m_SceneGroupManager.LoadSceneGroupAsync(m_SceneGroupList.SceneGroups[index]);
+            await m_SceneGroupManager.LoadSceneGroupAsServerAsync(m_SceneGroupList.SceneGroups[index]);
             EnableLoadingScreenClientRpc(false);
         }
 
