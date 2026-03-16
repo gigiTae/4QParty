@@ -14,7 +14,6 @@ namespace FQParty.SceneManagement
         protected override void Awake()
         {
             base.Awake();
-
         }
 
         public virtual void Start()
@@ -43,7 +42,7 @@ namespace FQParty.SceneManagement
         {
             if (!IsSpawned || NetworkManager.ShutdownInProgress)
             {
-                m_LoadingScreen.EnableLoadingScreen();
+                m_LoadingScreen.EnableLoadingScreen(false);
             }
         }
 
@@ -165,6 +164,7 @@ namespace FQParty.SceneManagement
                     break;
             }
         }
+
         [Rpc(SendTo.SpecifiedInParams)]
         void ClientStopLoadingScreenRpc(RpcParams clientRpcParams = default)
         {
