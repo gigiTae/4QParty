@@ -15,7 +15,6 @@ namespace FQParty.ConnectionManagement
 
         public override void Enter()
         {
-            NetworkManager.Singleton.SceneManager.SetClientSynchronizationMode(UnityEngine.SceneManagement.LoadSceneMode.Additive);
             SceneLoader.Instance.LoadScene(SceneTheme.k_Lobby, true, UnityEngine.SceneManagement.LoadSceneMode.Single);
         }
 
