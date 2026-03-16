@@ -50,7 +50,7 @@ namespace FQParty.SceneManagement
 
             if(context.UseNetworkSceneManager)
             {
-                _ = LoadSceneGroupAsHost(index);
+                _ = LoadSceneGroupAsServer(index);
             }
             else 
             {
@@ -63,12 +63,12 @@ namespace FQParty.SceneManagement
             await LoadSceneGroup(0);
         }
 
-        private async Task LoadSceneGroupAsHost(int index)
+        private async Task LoadSceneGroupAsServer(int index)
         {
             if (!NetworkManager.IsServer) return;
 
             EnableLoadingScreenClientRpc(true);
-            await m_SceneGroupManager.LoadSceneGroupAsync(m_SceneGroupList.SceneGroups[index]);
+            await m_SceneGroupManager.LoadSceneGroupAsServerAsync(m_SceneGroupList.SceneGroups[index]);
             EnableLoadingScreenClientRpc(false);
         }
 
