@@ -12,8 +12,7 @@ namespace FQParty.ConnectionManagement
         {
             m_ConnectionManager.NetworkManager.Shutdown();
 
-            LoadSceneGroupContext contex = new() { GroupName = SceneGroupTheme.k_MainGroup, UseNetworkSceneManager = false };
-            SceneLoader.Instance.LoadSceneGroup(contex);
+            SceneLoader.Instance.LoadScene(SceneTheme.k_Main, false);
         }
 
         public override void Exit() { }

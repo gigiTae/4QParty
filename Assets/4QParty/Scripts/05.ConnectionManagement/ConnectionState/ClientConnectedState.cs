@@ -8,13 +8,7 @@ namespace FQParty.ConnectionManagement
     class ClientConnectedState : OnlineState
     {
         public override void Enter()
-        {
-            SceneLoader.Instance.LoadSceneGroup(new LoadSceneGroupContext()
-            {
-                GroupName = SceneGroupTheme.k_Lobby,
-                UseNetworkSceneManager = false
-            });
-        }
+        {}
 
         public override void Exit() { }
 

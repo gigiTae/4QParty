@@ -8,13 +8,6 @@ namespace FQParty.UI.Main
 {
     public class MainMenuViewModel
     {
-        private LoadSceneGroupEvent m_LoadSceneGroupEvent;
-
-        public MainMenuViewModel(LoadSceneGroupEvent evt)
-        {
-            m_LoadSceneGroupEvent = evt;
-        }
-
         public void StartLocalplay()
         {
 
@@ -22,21 +15,12 @@ namespace FQParty.UI.Main
 
         public void StartMultiplay()
         {
-            LoadSceneGroupContext context = new()
-            {
-                GroupName = SceneGroupTheme.k_LobbyBrowser
-            };
-
-            m_LoadSceneGroupEvent.Raise(context);
+            SceneLoader.Instance.LoadScene(SceneTheme.k_LobbyBrowser, false);
         }
 
         public void OpenSettings()
         {
-            LoadSceneGroupContext context = new()
-            {
-                GroupName = SceneGroupTheme.k_SettingGroup
-            };
-            m_LoadSceneGroupEvent.Raise(context);
+            SceneLoader.Instance.LoadScene(SceneTheme.k_Setting, false);
         }
 
         public void EndGame()

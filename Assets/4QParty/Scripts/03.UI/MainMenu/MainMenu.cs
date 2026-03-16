@@ -13,14 +13,11 @@ namespace FQParty.UI.Main
         [SerializeField]
         private UIDocument m_Document;
 
-        [SerializeField]
-        private LoadSceneGroupEvent m_LoadSceneGroupEvent;
-
         private MainMenuViewModel m_ViewModel;
         private MainMenuElement m_View;
         void Awake()
         {
-            m_ViewModel = new MainMenuViewModel(m_LoadSceneGroupEvent);
+            m_ViewModel = new MainMenuViewModel();
             m_View = m_Document.rootVisualElement.Q<MainMenuElement>();
             m_View?.SetViewModel(m_ViewModel);
         }

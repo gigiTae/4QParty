@@ -76,11 +76,7 @@ namespace FQParty.UI.Lobby
 
         public void StartGame()
         {
-            SceneLoader.Instance.LoadSceneGroup(new LoadSceneGroupContext()
-            {
-                GroupName = SceneGroupTheme.k_GamePlay,
-                UseNetworkSceneManager = true
-            });
+            SceneLoader.Instance.LoadScene(SceneTheme.k_GamePlay, true);
         }
 
         public void LeaveLobby()

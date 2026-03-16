@@ -13,16 +13,10 @@ namespace FQParty.ConnectionManagement
     {
         IPublisher<ConnectionEventMessage> m_ConnectionEventPublisher;
 
-
         public override void Enter()
         {
             NetworkManager.Singleton.SceneManager.SetClientSynchronizationMode(UnityEngine.SceneManagement.LoadSceneMode.Additive);
-
-            SceneLoader.Instance.LoadSceneGroup(new LoadSceneGroupContext()
-            {
-                GroupName = SceneGroupTheme.k_Lobby,
-                UseNetworkSceneManager = true
-            });
+            SceneLoader.Instance.LoadScene(SceneTheme.k_Lobby, true, UnityEngine.SceneManagement.LoadSceneMode.Single);
         }
 
         public override void Exit()
