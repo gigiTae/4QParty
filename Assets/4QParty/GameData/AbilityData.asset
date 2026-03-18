@@ -12,17 +12,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 525348303b7dc8b4a86973312f1549d2, type: 3}
   m_Name: AbilityData
   m_EditorClassIdentifier: FQParty.GamePlay::FQParty.GamePlay.Abilities.AbilityData
+  AbilityID: 13621066987372899431
   EffectList:
-  - rid: 2614228947333546074
-  - rid: 2614228947333546071
+  - rid: 2614228952910921826
   references:
     version: 2
     RefIds:
-    - rid: 2614228947333546071
-      type: {class: TestEffect, ns: FQParty.GamePlay.Abilities.Effects, asm: FQParty.GamePlay}
-      data:
-        Text: "\uC548\uB155\uD558\uC138\uC5EC"
-    - rid: 2614228947333546074
+    - rid: 2614228952910921826
       type: {class: DashEffect, ns: FQParty.GamePlay.Abilities.Effects, asm: FQParty.GamePlay}
       data:
         DashSpeed: 0

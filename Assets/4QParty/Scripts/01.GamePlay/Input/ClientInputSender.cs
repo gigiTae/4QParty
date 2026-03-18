@@ -13,8 +13,8 @@ namespace FQParty.GamePlay.Input
         [SerializeField]
         ServerCharacter m_ServerCharacter;
 
+        [SerializeField]
+        ClientCharacter m_ClientCharacter;
 
-        
     }
-
 }

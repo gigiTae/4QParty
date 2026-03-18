@@ -12,7 +12,6 @@ namespace FQParty.GamePlay.Character
 
         ServerAbilityCaster m_ServerAbilityCaster;
 
-
         public ClientCharacter ClientCharacter => m_ClientCharacter;
 
 

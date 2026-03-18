@@ -15,6 +15,7 @@ namespace FQParty.Editor
         static Dictionary<string, Type> TypeMap;
 
         public override void OnGUI(Rect position, SerializedProperty property, GUIContent label)
+
         {
             if (TypeMap == null) BuildTypeMap();
 
@@ -57,7 +58,6 @@ namespace FQParty.Editor
 
             EditorGUI.EndProperty();
         }
-
         public override float GetPropertyHeight(SerializedProperty property, GUIContent label)
         {
             return EditorGUI.GetPropertyHeight(property, label, true) + EditorGUIUtility.singleLineHeight;
