@@ -1,3 +1,4 @@
+using FQParty.GamePlay.Abilities.Effects;
 using FQParty.GamePlay.Input;
 using Unity.Netcode;
 using UnityEngine;
@@ -5,8 +6,10 @@ using UnityEngine;
 
 namespace FQParty.GamePlay.Character
 {
+
     [RequireComponent(typeof(CharacterController))]
-    public class CharacterMovement : NetworkBehaviour
+    public class ClientCharacterMovement : NetworkBehaviour,
+        IApplyEffect<IMobile>, IMobile
     {
         [SerializeField] CharacterSettingsSO m_Settings;
         [SerializeField] GamePlayInputReader m_GamePlayInputReader;
@@ -28,16 +31,6 @@ namespace FQParty.GamePlay.Character
         public override void OnDestroy()
         {
             base.OnDestroy();
-
-            if (m_GamePlayInputReader != null)
-            {
-                m_GamePlayInputReader.OnPlayerDashPerfomed -= OnDashInput;
-            }
-        }
-
-        void OnDashInput()
-        {
-            Debug.Log("Dash!");
         }
 
         void Update()
@@ -70,5 +63,17 @@ namespace FQParty.GamePlay.Character
             Vector3 motion = moveDirection * m_Settings.MoveSpeed * Time.deltaTime;
             m_CharacterController.Move(motion);
         }
+
+        public void Dash()
+        {
+            Debug.Log("Dash");
+        }
+
+        public void ApplyEffect(IEffect<IMobile> effect)
+        {
+
+        }
+
+
     }
 }

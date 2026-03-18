@@ -1,7 +1,9 @@
 {
     "name": "FQParty.Editor",
     "rootNamespace": "",
-    "references": [],
+    "references": [
+        "GUID:d5f6c3c77983d5440a2e871fb8c431cb"
+    ],
     "includePlatforms": [
         "Editor"
     ],

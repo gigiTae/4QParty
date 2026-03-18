@@ -23,7 +23,6 @@ namespace FQParty.GamePlay.Input
         {
             m_GamePlayInputAction.Player.Dash.performed -= HandleDash;
 
-
             m_GamePlayInputAction.Disable();
             m_GamePlayInputAction.Dispose();
             m_GamePlayInputAction = null;
