@@ -1,5 +1,5 @@
 using FQParty.GamePlay.Abilities;
-using FQParty.GamePlay.Abilities.AbilityCaster;
+using FQParty.GamePlay.Abilities.Effects;
 using Unity.Netcode;
 using UnityEngine;
 
@@ -9,16 +9,16 @@ namespace FQParty.GamePlay.Character
     public class ServerCharacter : NetworkBehaviour
     {
         [SerializeField] ClientCharacter m_ClientCharacter;
-
-        ServerAbilityCaster m_ServerAbilityCaster;
-
         public ClientCharacter ClientCharacter => m_ClientCharacter;
 
+        [SerializeField] AbilityDatabase m_Database;
 
         [Rpc(SendTo.Server)]
-        public void ServerCastAbilityRpc()
+        public void ServerStartAbilityRpc(AbilityPacket packet)
         {
-            Debug.Log("ServerCastAbility");
+            AbilityData datas = m_Database.Find(packet.AbilityID);
+           
+
         }
 
 

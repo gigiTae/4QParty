@@ -2123,6 +2123,9 @@ GameObject:
   - component: {fileID: 8260610648983065165}
   - component: {fileID: 1825860194919353117}
   - component: {fileID: 2929116544677487501}
+  - component: {fileID: 2277734276588850043}
+  - component: {fileID: 251113762293238480}
+  - component: {fileID: 4990310514425906067}
   m_Layer: 0
   m_Name: Player
   m_TagString: Untagged
@@ -2158,7 +2161,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d5a57f767e5e46a458fc5d3c628d0cbb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Unity.Netcode.Runtime::Unity.Netcode.NetworkObject
-  GlobalObjectIdHash: 1971417875
+  GlobalObjectIdHash: 234150877
   InScenePlacedSourceGlobalObjectIdHash: 234150877
   DeferredDespawnTick: 0
   Ownership: 1
@@ -2293,6 +2296,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: FQParty.GamePlay::FQParty.GamePlay.Character.ServerCharacter
   ShowTopMostFoldoutHeaderGroup: 1
   m_ClientCharacter: {fileID: 2929116544677487501}
+  m_Database: {fileID: 11400000, guid: b993c7e54b6535943ab1b7aae356bd07, type: 2}
 --- !u!114 &2929116544677487501
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2308,7 +2312,52 @@ MonoBehaviour:
   ShowTopMostFoldoutHeaderGroup: 1
   m_ServerCharacter: {fileID: 1825860194919353117}
   m_ClientCharacterMovement: {fileID: 1635064879165671414}
-  m_GamePlayInputReader: {fileID: 11400000, guid: 1ca3c0efb879c984a9354551da1ad06f, type: 2}
+  m_Database: {fileID: 11400000, guid: b993c7e54b6535943ab1b7aae356bd07, type: 2}
+--- !u!114 &2277734276588850043
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4950392468185354956}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 75d5830907b82d848994366df5e5b0c5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: FQParty.GamePlay::FQParty.GamePlay.Input.ClientInputSender
+  ShowTopMostFoldoutHeaderGroup: 1
+  m_GameInputReader: {fileID: 11400000, guid: 1ca3c0efb879c984a9354551da1ad06f, type: 2}
+  m_AbilityCaster: {fileID: 251113762293238480}
+  m_DashAbility: {fileID: 11400000, guid: f3288acc8465a8741bfd0e6d4c83972f, type: 2}
+  m_AttackAbility: {fileID: 11400000, guid: f3288acc8465a8741bfd0e6d4c83972f, type: 2}
+--- !u!114 &251113762293238480
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4950392468185354956}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1f2cae1f416c5c945881287ae215fc81, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: FQParty.GamePlay::AbilityCaster
+  ShowTopMostFoldoutHeaderGroup: 1
+  m_Database: {fileID: 11400000, guid: b993c7e54b6535943ab1b7aae356bd07, type: 2}
+  m_Handler: {fileID: 4990310514425906067}
+--- !u!114 &4990310514425906067
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4950392468185354956}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e68b72802a864a946b8a5655af6028cd, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: FQParty.GamePlay::FQParty.GamePlay.Abilities.AbilityHandler
+  m_Movement: {fileID: 1635064879165671414}
 --- !u!1 &5120724536234783804
 GameObject:
   m_ObjectHideFlags: 0

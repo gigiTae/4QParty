@@ -1,30 +1,48 @@
-using Codice.Client.BaseCommands;
 using System;
 using UnityEngine;
 
-
 namespace FQParty.GamePlay.Abilities.Effects
 {
-
-    public interface IMobile
+    public interface IDashable
     {
-        void Dash();
+        void StartDash(float speed, float duration);
+        void CancelDash();
+        void UpdateDash();
     }
 
-    public interface IApplyEffect<T> 
-    {
-        public void ApplyEffect(IEffect<T> effect);
-    }
 
     [Serializable]
-    public class DashEffect : IOwnerEffect<IMobile>
+    public class DashEffect : IEffect<IDashable>
     {
-        public float DashSpeed;
-        public float DashDuration;  
+        public override EffectNetType NetType => EffectNetType.OnlyOwner;
+        public override bool IsExpired => m_IsExpired;
 
-        public void Apply(IMobile target)
+        bool m_IsExpired = false;
+        public float DashSpeed = 10f;
+        public float DashDuration = 0.5f;
+        private float m_Timer = 0f;
+
+        public override void Start(IDashable target)
         {
-            target.Dash();
+            m_IsExpired = false;
+            m_Timer = 0f;
+            target.StartDash(DashSpeed, DashDuration);
+        }
+
+        public override void Update(IDashable target)
+        {
+            m_Timer += Time.deltaTime;
+            target.UpdateDash();
+
+            if(m_Timer >= DashDuration)
+            {
+                m_IsExpired = true;
+            }
+        }
+
+        public override void Cancel(IDashable target)
+        {
+            target.CancelDash();
         }
     }
 }

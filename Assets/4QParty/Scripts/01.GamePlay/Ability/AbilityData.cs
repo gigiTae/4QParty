@@ -1,5 +1,5 @@
-using Codice.Client.BaseCommands;
 using FQParty.GamePlay.Abilities.Effects;
+using FQParty.GamePlay.Abilities.Targeting;
 using System;
 using System.Collections.Generic;
 using UnityEngine;
@@ -13,8 +13,11 @@ namespace FQParty.GamePlay.Abilities
         [Tooltip("네트워크 전송 및 데이터 식별을 위한 고유 ID입니다. 0일 경우 자동으로 생성됩니다.")]
         public ulong AbilityID => m_AbilityID;
 
-        [Tooltip("Ability의 효과들을 설정합니다.")]
+        [Header("Effects")]
         [SerializeReference] public List<IEffect> EffectList;
+
+        [Header("Targeting")]
+        [SerializeReference] public TargetingStrategy TargetingStrategy;
 
         private void OnValidate()
         {
@@ -23,11 +26,10 @@ namespace FQParty.GamePlay.Abilities
                 m_AbilityID = GenerateRandomID();
             }
         }
-        private static ulong GenerateRandomID()
+        private ulong GenerateRandomID()
         {
             byte[] buffer = Guid.NewGuid().ToByteArray();
             return BitConverter.ToUInt64(buffer, 0);
         }
     }
-
 }

@@ -1,22 +1,38 @@
 using System;
+using UnityEditor.AdaptivePerformance.Editor;
 using UnityEngine;
+using UnityEngine.UI;
 
 
 namespace FQParty.GamePlay.Abilities.Effects
 {
-    public interface IEffect { }
-
-    public interface IEffect<TTarget> : IEffect
+    public enum EffectNetType
     {
-        void Apply(TTarget target);
+        OnlyOwner,
+        Server,
+        Client 
     }
 
-    public interface IServerEffect<TTarget> : IEffect<TTarget>
-    { }
+    public interface IEffect 
+    {
+        public EffectNetType NetType { get; }
+    }
 
-    public interface IClientEffect<TTarget> : IEffect<TTarget>
-    { }
+    public abstract class IEffect<TTarget> : IEffect
+    {
+        public virtual EffectNetType NetType { get; }
+        public abstract bool IsExpired { get; }
 
-    public interface IOwnerEffect<TTarget> : IEffect<TTarget>
-    { }
+        public abstract void Start(TTarget target);
+
+        public virtual void Update(TTarget target) { }
+
+        public virtual void Cancel(TTarget target) { }
+    }
+
+    public interface IApplyEffect<T>
+    {
+        public void ApplyEffect(IEffect<T> effect);
+    }
+
 }

@@ -8,7 +8,7 @@ namespace FQParty.GamePlay.Input
     [CreateAssetMenu(fileName = "GamePlayInputReader", menuName = "Input/GamePlayInputReader")]
     public class GamePlayInputReader : ScriptableObject
     {
-        public event Action OnPlayerDashPerfomed;
+        public event Action OnDashInput;
 
         GamePlayInputAction m_GamePlayInputAction;
         void OnEnable()
@@ -42,7 +42,7 @@ namespace FQParty.GamePlay.Input
 
         void HandleDash(InputAction.CallbackContext context)
         {
-            OnPlayerDashPerfomed.Invoke();
+            OnDashInput.Invoke();
         }
     }
 }
