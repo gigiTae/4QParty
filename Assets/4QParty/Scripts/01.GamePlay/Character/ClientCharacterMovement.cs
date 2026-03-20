@@ -1,4 +1,3 @@
-using FQParty.GamePlay.Abilities.Effects;
 using FQParty.GamePlay.Input;
 using Unity.Netcode;
 using UnityEngine;
@@ -13,7 +12,7 @@ namespace FQParty.GamePlay.Character
     }
 
     [RequireComponent(typeof(CharacterController))]
-    public class ClientCharacterMovement : NetworkBehaviour, IDashable
+    public class ClientCharacterMovement : NetworkBehaviour
     {
         [SerializeField] CharacterSettingsSO m_Settings;
         [SerializeField] GamePlayInputReader m_GamePlayInputReader;

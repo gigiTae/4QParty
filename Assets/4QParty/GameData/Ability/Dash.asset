@@ -24,5 +24,5 @@ MonoBehaviour:
     - rid: 2614228972568051796
       type: {class: DashEffect, ns: FQParty.GamePlay.Abilities.Effects, asm: FQParty.GamePlay}
       data:
-        DashSpeed: 30
+        DashSpeed: 20
         DashDuration: 0.1

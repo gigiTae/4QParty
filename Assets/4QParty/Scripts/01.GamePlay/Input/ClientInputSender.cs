@@ -1,5 +1,3 @@
-using FQParty.GamePlay.Abilities;
-using FQParty.GamePlay.Abilities.Effects;
 using FQParty.GamePlay.Character;
 using Unity.Netcode;
 using UnityEngine;
@@ -16,14 +14,6 @@ namespace FQParty.GamePlay.Input
         [SerializeField]
         GamePlayInputReader m_GameInputReader;
 
-        [SerializeField]
-        AbilityCaster m_AbilityCaster;
-
-        [SerializeField]
-        AbilityData m_DashAbility;
-
-        [SerializeField]
-        AbilityData m_AttackAbility;
         public override void OnNetworkSpawn()
         {
             base.OnNetworkSpawn();
@@ -35,7 +25,6 @@ namespace FQParty.GamePlay.Input
                     return;
                 }
             }
-            m_GameInputReader.OnDashInput += OnDashInput;
         }
 
         public override void OnNetworkDespawn()
@@ -43,12 +32,6 @@ namespace FQParty.GamePlay.Input
             base.OnNetworkDespawn();
         }
 
-        public void OnDashInput()
-        {
-            AbilityPacket packet;
-            packet.AbilityID = m_DashAbility.AbilityID;
-            m_AbilityCaster.CastAbility(packet);
-        }
 
 
     }
