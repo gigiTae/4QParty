@@ -1,0 +1,34 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4d757f26c8df8a649b32272acd61a3a5, type: 3}
+  m_Name: MeleeAttackAbility
+  m_EditorClassIdentifier: FQParty.GamePlay::FQParty.GamePlay.Abilities.MeleeAttackAbility
+  Config:
+    Logic: 0
+    DurationSeconds: 0
+    ExecTimeSeconds: 0
+    EffectDurationSeconds: 0
+    ReuseTimeSeconds: 0
+    AnimAnticipation: 
+    Anim: OnKick
+    Anim2: 
+    ReactAnim: 
+    AbilityInput: {fileID: 0}
+    AbilityInterruptible: 0
+    IsInterruptableBy: []
+    BlockingMode: 0
+  m_LayerMask:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_Offset: {x: 0, y: 0, z: 0}
+  m_HalfExtents: {x: 10, y: 10, z: 10}
+  m_Damage: 10

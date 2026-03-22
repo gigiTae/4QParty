@@ -1,0 +1,40 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c0ac1f7f96f19664aa159754e2870250, type: 3}
+  m_Name: EmoteAbility
+  m_EditorClassIdentifier: FQParty.GamePlay::FQParty.GamePlay.Abilities.EmoteAbility
+  Config:
+    Logic: 0
+    Amount: 0
+    Range: 0
+    DurationSeconds: 1
+    ExecTimeSeconds: 0
+    EffectDurationSeconds: 0
+    ReuseTimeSeconds: 0
+    AnimAnticipation: 
+    Anim: SillyDancing
+    Anim2: 
+    ReactAnim: 
+    OtherAnimatorVariable: 
+    SplashDamage: 0
+    MoveSpeed: 0
+    KnockbackSpeed: 0
+    KnockbackDuration: 0
+    Radius: 0
+    AbilityInput: {fileID: 0}
+    AbilityInterruptible: 1
+    IsInterruptableBy: []
+    BlockingMode: 0
+    Spawns: []
+    IsFriendly: 1
+    DisplayedName: 
+    Description: 

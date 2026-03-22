@@ -1,57 +1,62 @@
 using FQParty.GamePlay.Input;
 using Unity.Netcode;
 using UnityEngine;
+using UnityEngine.InputSystem;
 
 
 namespace FQParty.GamePlay.Character
 {
-    enum MoveState
-    {
-        Default,
-        Dash,
-    }
-
+    /// <summary>
+    /// 클라이언트 권한 Movement
+    /// </summary>
     [RequireComponent(typeof(CharacterController))]
-    public class ClientCharacterMovement : NetworkBehaviour
+    public class ClientPlayerCharacterMovement : CharacterMovement
     {
-        [SerializeField] CharacterSettingsSO m_Settings;
+        [SerializeField] CharacterSettings m_Settings;
         [SerializeField] GamePlayInputReader m_GamePlayInputReader;
         [SerializeField] CharacterController m_CharacterController;
         [SerializeField] Camera m_PlayerCameara;
+        [SerializeField] InputActionReference m_MoveInputActionReference;
 
-        MoveState m_MoveState = MoveState.Default;
+        public override void OnNetworkSpawn()
+        {
+        }
+        public override void OnNetworkDespawn()
+        {
+        }
+
+
         Vector3 m_DashDirection;
         float m_CurrentDashSpeed = 0f;
-
-
         void Awake()
         {
-            if (m_CharacterController == null)
-            {
-                m_CharacterController = GetComponent<CharacterController>();
-            }
-
             if (m_PlayerCameara == null)
             {
                 m_PlayerCameara = Camera.main;
             }
-        }
-        public override void OnDestroy()
-        {
-            base.OnDestroy();
         }
 
         void Update()
         {
             if (!IsOwner) return;
 
-            if (m_MoveState == MoveState.Default)
+            switch (m_State.Value)
             {
-                ApplyInput();
+                case MovementState.Moveable:
+                    UpdateInputMove();
+                    break;
+                case MovementState.Stop:
+                    break;
             }
         }
 
-        void ApplyInput()
+        void UpdateDash()
+        {
+            Vector3 motion = m_DashDirection * m_CurrentDashSpeed * Time.deltaTime;
+            m_CharacterController.Move(motion);
+        }
+
+        void UpdateInputMove()
         {
             Vector2 moveInput = m_GamePlayInputReader.PlayerMoveInput;
             Vector3 moveDirection = Vector3.zero;
@@ -77,22 +82,9 @@ namespace FQParty.GamePlay.Character
 
         public void StartDash(float speed, float duration)
         {
-            m_MoveState = MoveState.Dash;
             m_CurrentDashSpeed = speed;
             m_DashDirection = transform.forward;
         }
 
-        public void CancelDash()
-        {
-            Debug.Log("CancelDash");
-            m_MoveState = MoveState.Default;
-            m_CurrentDashSpeed = 0;
-        }
-
-        public void UpdateDash()
-        {
-            Vector3 motion = m_DashDirection * m_CurrentDashSpeed * Time.deltaTime;
-            m_CharacterController.Move(motion);
-        }
     }
 }

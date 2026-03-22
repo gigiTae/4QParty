@@ -2118,14 +2118,13 @@ GameObject:
   - component: {fileID: 417017778669717497}
   - component: {fileID: 923555160912699554}
   - component: {fileID: 6446203444162546041}
-  - component: {fileID: 208726931845093319}
-  - component: {fileID: 1635064879165671414}
   - component: {fileID: 8260610648983065165}
+  - component: {fileID: 1635064879165671414}
+  - component: {fileID: 208726931845093319}
   - component: {fileID: 1825860194919353117}
   - component: {fileID: 2929116544677487501}
   - component: {fileID: 2277734276588850043}
-  - component: {fileID: 251113762293238480}
-  - component: {fileID: 4990310514425906067}
+  - component: {fileID: 1357554448765932350}
   m_Layer: 0
   m_Name: Player
   m_TagString: Untagged
@@ -2161,7 +2160,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d5a57f767e5e46a458fc5d3c628d0cbb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Unity.Netcode.Runtime::Unity.Netcode.NetworkObject
-  GlobalObjectIdHash: 234150877
+  GlobalObjectIdHash: 1971417875
   InScenePlacedSourceGlobalObjectIdHash: 234150877
   DeferredDespawnTick: 0
   Ownership: 1
@@ -2220,6 +2219,77 @@ MonoBehaviour:
   SwitchTransformSpaceWhenParented: 0
   Interpolate: 1
   SlerpPosition: 0
+--- !u!114 &8260610648983065165
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4950392468185354956}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e8d0727d5ae3244e3b569694d3912374, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Unity.Netcode.Runtime::Unity.Netcode.Components.NetworkAnimator
+  ShowTopMostFoldoutHeaderGroup: 1
+  NetworkAnimatorExpanded: 0
+  AuthorityMode: 1
+  m_Animator: {fileID: 1996636624478705239}
+  TransitionStateInfoList:
+  - IsCrossFadeExit: 0
+    Layer: 0
+    OriginatingState: 2081823275
+    DestinationState: -890657550
+    TransitionDuration: 0.25
+    TriggerNameHash: -890657550
+    TransitionIndex: 0
+  - IsCrossFadeExit: 0
+    Layer: 0
+    OriginatingState: 2081823275
+    DestinationState: -1092128709
+    TransitionDuration: 0.25
+    TriggerNameHash: -160596207
+    TransitionIndex: 1
+  - IsCrossFadeExit: 0
+    Layer: 0
+    OriginatingState: 2081823275
+    DestinationState: 995914302
+    TransitionDuration: 0.25
+    TriggerNameHash: 1943436564
+    TransitionIndex: 2
+  AnimatorParameterEntries:
+    ParameterEntries:
+    - name: SillyDancing
+      NameHash: -890657550
+      Synchronize: 1
+      ParameterType: 9
+    - name: OnKick
+      NameHash: -160596207
+      Synchronize: 1
+      ParameterType: 9
+    - name: OnDash
+      NameHash: 1943436564
+      Synchronize: 1
+      ParameterType: 9
+  AnimatorParametersExpanded: 0
+--- !u!114 &1635064879165671414
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4950392468185354956}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d0419d381b1b9d049afc3bcf655752ec, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: FQParty.GamePlay::FQParty.GamePlay.Character.CharacterMovement
+  ShowTopMostFoldoutHeaderGroup: 1
+  m_Settings: {fileID: 11400000, guid: e1ead64f4e0ed374dbb84873f48e84f8, type: 2}
+  m_GamePlayInputReader: {fileID: 11400000, guid: 1ca3c0efb879c984a9354551da1ad06f, type: 2}
+  m_CharacterController: {fileID: 208726931845093319}
+  m_PlayerCameara: {fileID: 0}
+  m_MoveInputActionReference: {fileID: -1680190386980627800, guid: 9db0ac594d74c554ea0a7125617072de, type: 3}
 --- !u!143 &208726931845093319
 CharacterController:
   m_ObjectHideFlags: 0
@@ -2245,43 +2315,6 @@ CharacterController:
   m_SkinWidth: 0.08
   m_MinMoveDistance: 0.001
   m_Center: {x: 0, y: 0, z: 0}
---- !u!114 &1635064879165671414
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4950392468185354956}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: d0419d381b1b9d049afc3bcf655752ec, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: FQParty.GamePlay::FQParty.GamePlay.Character.CharacterMovement
-  ShowTopMostFoldoutHeaderGroup: 1
-  m_Settings: {fileID: 11400000, guid: e1ead64f4e0ed374dbb84873f48e84f8, type: 2}
-  m_GamePlayInputReader: {fileID: 11400000, guid: 1ca3c0efb879c984a9354551da1ad06f, type: 2}
-  m_CharacterController: {fileID: 208726931845093319}
-  m_PlayerCameara: {fileID: 0}
---- !u!114 &8260610648983065165
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4950392468185354956}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: e8d0727d5ae3244e3b569694d3912374, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Unity.Netcode.Runtime::Unity.Netcode.Components.NetworkAnimator
-  ShowTopMostFoldoutHeaderGroup: 1
-  NetworkAnimatorExpanded: 0
-  AuthorityMode: 1
-  m_Animator: {fileID: 1996636624478705239}
-  TransitionStateInfoList: []
-  AnimatorParameterEntries:
-    ParameterEntries: []
-  AnimatorParametersExpanded: 0
 --- !u!114 &1825860194919353117
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2296,7 +2329,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: FQParty.GamePlay::FQParty.GamePlay.Character.ServerCharacter
   ShowTopMostFoldoutHeaderGroup: 1
   m_ClientCharacter: {fileID: 2929116544677487501}
-  m_Database: {fileID: 11400000, guid: b993c7e54b6535943ab1b7aae356bd07, type: 2}
+  m_Movement: {fileID: 1635064879165671414}
+  m_CharacterStatus: {fileID: 1357554448765932350}
+  m_NetworkAnimator: {fileID: 8260610648983065165}
 --- !u!114 &2929116544677487501
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2312,7 +2347,6 @@ MonoBehaviour:
   ShowTopMostFoldoutHeaderGroup: 1
   m_ServerCharacter: {fileID: 1825860194919353117}
   m_ClientCharacterMovement: {fileID: 1635064879165671414}
-  m_Database: {fileID: 11400000, guid: b993c7e54b6535943ab1b7aae356bd07, type: 2}
 --- !u!114 &2277734276588850043
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2327,10 +2361,11 @@ MonoBehaviour:
   m_EditorClassIdentifier: FQParty.GamePlay::FQParty.GamePlay.Input.ClientInputSender
   ShowTopMostFoldoutHeaderGroup: 1
   m_GameInputReader: {fileID: 11400000, guid: 1ca3c0efb879c984a9354551da1ad06f, type: 2}
-  m_AbilityCaster: {fileID: 251113762293238480}
-  m_DashAbility: {fileID: 11400000, guid: f3288acc8465a8741bfd0e6d4c83972f, type: 2}
-  m_AttackAbility: {fileID: 11400000, guid: f3288acc8465a8741bfd0e6d4c83972f, type: 2}
---- !u!114 &251113762293238480
+  m_ServerCharacter: {fileID: 1825860194919353117}
+  m_EmoteAbility: {fileID: 11400000, guid: 7473af966f2672247ba8ac5615fe3fd0, type: 2}
+  m_DashAbility: {fileID: 11400000, guid: 9ad77807f5f09ab409805f23c9738405, type: 2}
+  m_AttackAbility: {fileID: 11400000, guid: 7473af966f2672247ba8ac5615fe3fd0, type: 2}
+--- !u!114 &1357554448765932350
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -2339,25 +2374,12 @@ MonoBehaviour:
   m_GameObject: {fileID: 4950392468185354956}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 1f2cae1f416c5c945881287ae215fc81, type: 3}
+  m_Script: {fileID: 11500000, guid: 10a95303c6265b345b68e7e080808e24, type: 3}
   m_Name: 
-  m_EditorClassIdentifier: FQParty.GamePlay::AbilityCaster
+  m_EditorClassIdentifier: FQParty.GamePlay::FQParty.GamePlay.Character.CharacterStatus
   ShowTopMostFoldoutHeaderGroup: 1
-  m_Database: {fileID: 11400000, guid: b993c7e54b6535943ab1b7aae356bd07, type: 2}
-  m_Handler: {fileID: 4990310514425906067}
---- !u!114 &4990310514425906067
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4950392468185354956}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: e68b72802a864a946b8a5655af6028cd, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: FQParty.GamePlay::FQParty.GamePlay.Abilities.AbilityHandler
-  m_Movement: {fileID: 1635064879165671414}
+  m_Settings: {fileID: 11400000, guid: e1ead64f4e0ed374dbb84873f48e84f8, type: 2}
+  m_ServerCharacter: {fileID: 1825860194919353117}
 --- !u!1 &5120724536234783804
 GameObject:
   m_ObjectHideFlags: 0

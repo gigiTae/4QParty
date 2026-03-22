@@ -9,23 +9,34 @@ namespace FQParty.GamePlay.Input
     public class GamePlayInputReader : ScriptableObject
     {
         public event Action OnDashInput;
+        public event Action OnAttackInput;
 
         GamePlayInputAction m_GamePlayInputAction;
         void OnEnable()
         {
             m_GamePlayInputAction = new GamePlayInputAction();
             m_GamePlayInputAction.Enable();
-
             m_GamePlayInputAction.Player.Dash.performed += HandleDash;
+            m_GamePlayInputAction.Player.Attack.performed += HandleAttack;
         }
 
         void OnDisable()
         {
-            m_GamePlayInputAction.Player.Dash.performed -= HandleDash;
+            if (m_GamePlayInputAction != null)
+            {
+                // 이벤트 해제
+                m_GamePlayInputAction.Player.Dash.performed -= HandleDash;
+                m_GamePlayInputAction.Player.Attack.performed -= HandleAttack;
+                m_GamePlayInputAction.Disable();
 
-            m_GamePlayInputAction.Disable();
-            m_GamePlayInputAction.Dispose();
-            m_GamePlayInputAction = null;
+                // [중요] 플레이 모드일 때만 Dispose(내부적으로 Destroy 호출)를 수행합니다.
+                if (Application.isPlaying)
+                {
+                    m_GamePlayInputAction.Dispose();
+                }
+
+                m_GamePlayInputAction = null;
+            }
         }
 
         public Vector2 PlayerMoveInput
@@ -40,9 +51,13 @@ namespace FQParty.GamePlay.Input
             }
         }
 
+        void HandleAttack(InputAction.CallbackContext context)
+        {
+            OnAttackInput?.Invoke();
+        }
         void HandleDash(InputAction.CallbackContext context)
         {
-            OnDashInput.Invoke();
+            OnDashInput?.Invoke();
         }
     }
 }

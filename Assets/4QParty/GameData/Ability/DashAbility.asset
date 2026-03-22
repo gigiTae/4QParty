@@ -1,0 +1,28 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 59a481199f787c34289a91864ce90db3, type: 3}
+  m_Name: DashAbility
+  m_EditorClassIdentifier: FQParty.GamePlay::FQParty.GamePlay.Abilities.DashAbility
+  Config:
+    Logic: 0
+    DurationSeconds: 0
+    ExecTimeSeconds: 0
+    EffectDurationSeconds: 0
+    ReuseTimeSeconds: 0
+    AnimAnticipation: 
+    Anim: OnDash
+    Anim2: 
+    ReactAnim: 
+    AbilityInput: {fileID: 0}
+    AbilityInterruptible: 0
+    IsInterruptableBy: []
+    BlockingMode: 0
