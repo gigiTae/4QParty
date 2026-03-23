@@ -276,9 +276,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: FQParty.GamePlay::FQParty.GamePlay.GameplayObjects.GameDataSource
   UnparentOnAwake: 1
-  m_CharacterData: []
   m_AbilityPrototypes:
-  - {fileID: 11400000, guid: 8cf46b4052988c84fb9c92e0605dad62, type: 2}
   - {fileID: 11400000, guid: 7473af966f2672247ba8ac5615fe3fd0, type: 2}
   - {fileID: 11400000, guid: 9ad77807f5f09ab409805f23c9738405, type: 2}
 --- !u!4 &835616018

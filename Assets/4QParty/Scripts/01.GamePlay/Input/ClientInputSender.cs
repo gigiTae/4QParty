@@ -97,7 +97,7 @@ namespace FQParty.GamePlay.Input
         void SendInput(AbilityRequestData ability)
         {
             AbilityInputEvent?.Invoke(ability);
-            m_ServerCharacter.ServerPlayAbilityRpc(ability);
+            m_ServerCharacter.RequestAbilityServerRpc(ability);
         }
 
         void FixedUpdate()

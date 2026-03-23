@@ -2,6 +2,7 @@ using FQParty.GamePlay.Abilities;
 using FQParty.GamePlay.GameplayObjects;
 using Unity.Netcode;
 using Unity.Netcode.Components;
+using UnityEditor.PackageManager.Requests;
 using UnityEngine;
 
 
@@ -23,7 +24,6 @@ namespace FQParty.GamePlay.Character
         NetworkAnimator m_NetworkAnimator;
        
         public ServerAbilityPlayer AbilityPlayer => m_ServerAbilityPlayer;
-
         ServerAbilityPlayer m_ServerAbilityPlayer;
 
         private void Awake()
@@ -33,20 +33,13 @@ namespace FQParty.GamePlay.Character
 
         void Update()
         {
-            m_ServerAbilityPlayer.OnUpdate();
+            m_ServerAbilityPlayer.OnUpdateAbility();
         }
 
         [Rpc(SendTo.Server)]
-        public void ServerPlayAbilityRpc(AbilityRequestData data)
+        public void RequestAbilityServerRpc(AbilityRequestData data)
         {
-            AbilityRequestData data1 = data;
-
-            PlayAbility(ref data1);
-        }
-
-        public void PlayAbility(ref AbilityRequestData ability)
-        {
-           m_ServerAbilityPlayer.PlayAbility(ref ability);  
+            m_ServerAbilityPlayer.RequestAbility(data);
         }
 
     }

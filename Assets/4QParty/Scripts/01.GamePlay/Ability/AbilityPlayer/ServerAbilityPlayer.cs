@@ -13,197 +13,149 @@ namespace FQParty.GamePlay.Abilities
     {
         ServerCharacter m_ServerCharacter;
 
-        List<Ability> m_Queue;
+        public Ability PlayingAbility => m_PlayingAbility;
+        Ability m_PlayingAbility;
+
+        Queue<Ability> m_PendingQueue;
 
         List<Ability> m_NonBlockingAbilities;
 
         Dictionary<AbilityID, float> m_LastUsedTimestamps;
 
-        /// <summary>
-        /// 어빌티 대기열(Abiltiy Queue)이 무한정 늘어나는 것을 방지하기 위해, 대기열의 총 재생 시간을 이 초(seconds) 단위 수치로 제한합니다.
-        /// 어빌리티는 무기한으로 중단(block)될 가능성이 있으므로 대기열의 정확한 시간 길이는 추정만 가능할 뿐입니다. 
-        /// 하지만 이 수치는 수많은 작은 어빌리티들이 과도하게 쌓이는 것을 방지하는 유용한 예측 지표가 됩니다.
-        /// </summary>
-        const float k_MaxQueueTimeDepth = 1.6f;
+        Queue<Ability> m_RequestQueue = new();
 
-        AbilityRequestData m_PendingSynthesizedAblity = new AbilityRequestData();
-        bool m_HasPendingSynthsizedAblity;
+        public void RequestAbility(AbilityRequestData data)
+        {
+            Ability ability = AbilityFactory.CreateAbilityFromData(ref data);
+
+            // Check Cooltime
+            float reuseTime = ability.Config.ReuseTimeSeconds;
+            if (reuseTime > 0 &&
+                m_LastUsedTimestamps.TryGetValue(ability.AbilityID, out float lastTimeUsed) &&
+                Time.time - lastTimeUsed < reuseTime)
+            {
+                Debug.Log("어빌리티 쿨타임");
+                return;
+            }
+
+            m_RequestQueue.Enqueue(ability);
+        }
 
         public ServerAbilityPlayer(ServerCharacter serverCharacter)
         {
             m_ServerCharacter = serverCharacter;
-            m_Queue = new();
+            m_PendingQueue = new();
             m_NonBlockingAbilities = new();
             m_LastUsedTimestamps = new();
         }
 
-        public void PlayAbility(ref AbilityRequestData ability)
+        public void PlayAbility(Ability ability)
         {
-            if (!ability.ShouldQueue && m_Queue.Count > 0 &&
-                (m_Queue[0].Config.IsInterruptible ||
-                m_Queue[0].Config.CanBeInterruptedBy(ability.AbilityID)))
+            Debug.Log("PlayAbility");
+
+            switch (ability.Config.PlayType)
             {
-                ClearAbility(false);
-            }
-
-            if (GetQueueTimeDepth() >= k_MaxQueueTimeDepth)
-            {
-                return;
-            }
-
-            var newAbility = AbilityFactory.CreateAbilityFromData(ref ability);
-
-            m_Queue.Add(newAbility);
-            if (m_Queue.Count == 1)
-            {
-                StartAbility();
-            }
-        }
-
-        void StartAbility()
-        {
-            if (m_Queue.Count == 0) return;
-
-            float reuseTime = m_Queue[0].Config.ReuseTimeSeconds;
-            if (reuseTime > 0 &&
-                m_LastUsedTimestamps.TryGetValue(m_Queue[0].AbilityID, out float lastTimeUsed) &&
-                Time.time - lastTimeUsed > reuseTime)
-            {
-                AdvanceQueue(false);
-                return;
-            }
-
-            m_Queue[0].TimeStarted = Time.time;
-            bool play = m_Queue[0].OnStart(m_ServerCharacter);
-
-            if (play == AbilityConclusion.Stop)
-            {
-                AdvanceQueue(false);
-                return;
-            }
-
-
-            m_LastUsedTimestamps[m_Queue[0].AbilityID] = Time.time;
-
-            if (m_Queue[0].Config.ExecTimeSeconds == 0 && m_Queue[0].Config.BlockingMode == BlockingModeType.OnlyDuringExecTime)
-            {
-                m_NonBlockingAbilities.Add(m_Queue[0]);
-                AdvanceQueue(false);
-                return;
-            }
-        }
-
-        void AdvanceQueue(bool endRemoved)
-        {
-            if (m_Queue.Count > 0)
-            {
-                if (endRemoved)
-                {
-                    m_Queue[0].End(m_ServerCharacter);
-                    if (m_Queue[0].ChainIntoNewAction(ref m_PendingSynthesizedAblity))
+                case AbilityPlayType.Cancel:
                     {
-                        m_HasPendingSynthsizedAblity = true;
+                        CancelPlayingAbility();
+                        m_PendingQueue.Enqueue(ability);
+                        break;
                     }
-                }
-                var ability = m_Queue[0];
-                m_Queue.RemoveAt(0);
+                case AbilityPlayType.Queue:
+                    {
+                        m_PendingQueue.Enqueue(ability);
+                        break;
+                    }
+                case AbilityPlayType.NonBlocking:
+                    {
+                        StartAbility(ability);
+                        m_NonBlockingAbilities.Add(ability);
+                        break;
+                    }
+            }
+        }
+
+        AbilityConclusion StartAbility(Ability ability)
+        {
+            ability.TimeStarted = Time.time;
+            m_LastUsedTimestamps[ability.AbilityID] = Time.time;
+            return ability.OnStart(m_ServerCharacter);
+        }
+
+        public void OnUpdateAbility()
+        {
+            ProcessRequsetAbility();
+
+            AbilityConclusion conclusion = AbilityConclusion.Continue;
+
+            if (m_PlayingAbility != null)
+            {
+                conclusion = m_PlayingAbility.OnUpdate(m_ServerCharacter);
+            }
+            else if (m_PendingQueue.Count > 0)
+            {
+                Ability ability = m_PendingQueue.Dequeue();
+                conclusion = StartAbility(ability);
+                m_PlayingAbility = ability;
+            }
+
+            if (conclusion == AbilityConclusion.Stop)
+            {
+                m_PlayingAbility.End(m_ServerCharacter);
+                TryReturnAbility(m_PlayingAbility);
+                m_PlayingAbility = null;
+            }
+
+            foreach (var nonBlockAbility in m_NonBlockingAbilities)
+            {
+                nonBlockAbility.OnUpdate(m_ServerCharacter);
+            }
+        }
+
+
+        void ProcessRequsetAbility()
+        {
+            int count = m_RequestQueue.Count;
+
+            if (count == 0) return;
+
+            for (int i = 0; i < count; i++)
+            {
+                var data = m_RequestQueue.Dequeue();
+                PlayAbility(data);
+            }
+        }
+
+        public void CancelPlayingAbility()
+        {
+            var removedAbilities = ListPool<Ability>.Get();
+
+            if (m_PlayingAbility != null)
+            {
+                m_PlayingAbility.Cancel(m_ServerCharacter);
+                removedAbilities.Add(m_PlayingAbility);
+                m_PlayingAbility = null;
+            }
+
+            foreach (var ability in m_PendingQueue)
+            {
+                removedAbilities.Add(ability);
+            }
+            m_PendingQueue.Clear();
+
+            foreach (var ability in removedAbilities)
+            {
                 TryReturnAbility(ability);
             }
 
-            if (!m_HasPendingSynthsizedAblity || m_PendingSynthesizedAblity.ShouldQueue)
-            {
-                StartAbility();
-            }
-        }
-
-        public void OnUpdate()
-        {
-            if (m_HasPendingSynthsizedAblity)
-            {
-                m_HasPendingSynthsizedAblity = false;
-                PlayAbility(ref m_PendingSynthesizedAblity);
-            }
-
-            if (m_Queue.Count > 0 && m_Queue[0].ShouldBecomeNonBlocking())
-            {
-                m_NonBlockingAbilities.Add(m_Queue[0]);
-                AdvanceQueue(false);
-            }
-
-            if (m_Queue.Count > 0)
-            {
-            }
-
-        }
-
-
-        bool UpdateAbility(Ability ability)
-        {
-            bool keepGoing = ability.OnUpdate(m_ServerCharacter);
-            bool exiprable = ability.Config.DurationSeconds > 0f;
-            float timeElased = Time.time - ability.TimeStarted;
-            bool timeExipred = exiprable && timeElased >= ability.Config.DurationSeconds;
-            return keepGoing && !timeExipred;
-        }
-
-        float GetQueueTimeDepth()
-        {
-            if (m_Queue.Count == 0)
-            {
-                return 0f;
-            }
-
-            float totalTime = 0;
-            foreach (var ability in m_Queue)
-            {
-                var config = ability.Config;
-                float actionTime = config.BlockingMode == BlockingModeType.OnlyDuringExecTime ? config.ExecTimeSeconds :
-                             config.BlockingMode == BlockingModeType.EntireDuration ? config.DurationSeconds :
-                             throw new System.Exception($"Unrecognized blocking mode: {config.BlockingMode}");
-
-                totalTime += actionTime;
-            }
-
-
-            return totalTime - m_Queue[0].TimeRunning;
-        }
-
-        public void ClearAbility(bool cancelNonBlocking)
-        {
-            if (m_Queue.Count > 0)
-            {
-                m_LastUsedTimestamps.Remove(m_Queue[0].AbilityID);
-                m_Queue[0].Cancel(m_ServerCharacter);
-            }
-
-            //clear the ability queue
-            {
-                var removedAbilities = ListPool<Ability>.Get();
-
-                foreach (var ability in m_Queue)
-                {
-                    removedAbilities.Add(ability);
-                }
-
-                m_Queue.Clear();
-
-                foreach (var ability in removedAbilities)
-                {
-                    TryReturnAbility(ability);
-                }
-
-                ListPool<Ability>.Release(removedAbilities);
-            }
+            ListPool<Ability>.Release(removedAbilities);
         }
 
         void TryReturnAbility(Ability ability)
         {
-            if (m_Queue.Contains(ability))
-            {
-                return;
-            }
-
-            if (m_NonBlockingAbilities.Contains(ability))
+            if (m_PlayingAbility == ability ||
+                m_PendingQueue.Contains(ability) ||
+                m_NonBlockingAbilities.Contains(ability))
             {
                 return;
             }

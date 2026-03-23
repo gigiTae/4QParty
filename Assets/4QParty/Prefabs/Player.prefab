@@ -2271,6 +2271,10 @@ MonoBehaviour:
       NameHash: 1943436564
       Synchronize: 1
       ParameterType: 9
+    - name: IsDead
+      NameHash: 1270110494
+      Synchronize: 1
+      ParameterType: 4
   AnimatorParametersExpanded: 0
 --- !u!114 &1635064879165671414
 MonoBehaviour:

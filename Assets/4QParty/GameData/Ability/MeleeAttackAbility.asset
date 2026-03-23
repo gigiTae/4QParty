@@ -16,19 +16,23 @@ MonoBehaviour:
     Logic: 0
     DurationSeconds: 0
     ExecTimeSeconds: 0
-    EffectDurationSeconds: 0
     ReuseTimeSeconds: 0
-    AnimAnticipation: 
-    Anim: OnKick
-    Anim2: 
-    ReactAnim: 
     AbilityInput: {fileID: 0}
-    AbilityInterruptible: 0
-    IsInterruptableBy: []
+    PlayType: 0
+    IsInterruptible: 0
     BlockingMode: 0
+  m_Effects:
+  - rid: 2614229058820767831
   m_LayerMask:
     serializedVersion: 2
     m_Bits: 4294967295
   m_Offset: {x: 0, y: 0, z: 0}
   m_HalfExtents: {x: 10, y: 10, z: 10}
   m_Damage: 10
+  references:
+    version: 2
+    RefIds:
+    - rid: 2614229058820767831
+      type: {class: AnimationEffect, ns: FQParty.GamePlay.Abilities.Effects, asm: FQParty.GamePlay}
+      data:
+        Animation: OnKick

@@ -17,8 +17,10 @@ namespace FQParty.GamePlay.Abilities
         [Header("Effect")]
         [SerializeField] float m_Damage;
 
-        public override bool OnStart(ServerCharacter serverCharacter)
+        public override AbilityConclusion OnStart(ServerCharacter serverCharacter)
         {
+            base.OnStart(serverCharacter);
+
             serverCharacter.CharacterMovement.SetMovementStateServerRpc(CharacterMovement.MovementState.Stop);
 
             var targets = DetectTarget(serverCharacter);
@@ -28,17 +30,20 @@ namespace FQParty.GamePlay.Abilities
                 target.ReceiveDamage(serverCharacter, m_Damage);
             }
 
-            return AbilityConclusion.Stop;
+            return AbilityConclusion.Continue;
         }
 
-        public override bool OnUpdate(ServerCharacter serverCharacter)
+        public override AbilityConclusion OnUpdate(ServerCharacter serverCharacter)
         {
+            base.OnUpdate(serverCharacter);
+
             return AbilityConclusion.Stop;
         }
 
         public override void Cancel(ServerCharacter serverCharacter)
         {
-            Debug.Log("Cancel");
+            base.Cancel(serverCharacter);   
+
             serverCharacter.CharacterMovement.SetMovementStateServerRpc(CharacterMovement.MovementState.Moveable);
         }
 

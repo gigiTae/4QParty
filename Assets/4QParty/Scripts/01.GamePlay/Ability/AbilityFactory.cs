@@ -21,7 +21,7 @@ namespace FQParty.GamePlay.Abilities
             }
 
             return abilityPool; 
-        }
+        } 
 
         public static Ability CreateAbilityFromData(ref AbilityRequestData data)
         {

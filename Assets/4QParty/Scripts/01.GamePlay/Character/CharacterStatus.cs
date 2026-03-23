@@ -22,15 +22,14 @@ namespace FQParty.GamePlay.Character
         NetworkVariable<CharacterStatement> m_Statement = new(CharacterStatement.Alive);
         NetworkVariable<float> m_CurrentHp = new();
         NetworkVariable<float> m_AttackPower = new();
-
         public float MaxHp => m_Settings.MaxHp;
-        
+
         public override void OnNetworkSpawn()
         {
             if (IsServer)
             {
                 m_CurrentHp.Value = m_Settings.MaxHp;
-                m_AttackPower.Value = m_Settings.AttackPower; 
+                m_AttackPower.Value = m_Settings.AttackPower;
             }
         }
         public override void OnNetworkDespawn()
@@ -53,6 +52,12 @@ namespace FQParty.GamePlay.Character
 
         private void OnGUI()
         {
+            string abilityName = ""; 
+            if (m_ServerCharacter.AbilityPlayer.PlayingAbility != null)
+            {
+                abilityName = m_ServerCharacter.AbilityPlayer.PlayingAbility.name;
+            }
+
             // 1. 월드 좌표를 스크린 좌표로 변환 (캐릭터 머리 위)
             Vector3 worldPos = transform.position + Vector3.up * 2.5f;
             Vector3 screenPos = Camera.main.WorldToScreenPoint(worldPos);
@@ -70,7 +75,7 @@ namespace FQParty.GamePlay.Character
             style.normal.textColor = m_CurrentHp.Value > 30 ? Color.green : Color.red;
 
             // 4. 화면에 HP 출력 (Y축은 GUI 좌표계상 반대이므로 변환)
-            string hpText = $"Hp: {m_CurrentHp.Value} / {MaxHp}";
+            string hpText = $"Hp: {m_CurrentHp.Value} / {MaxHp} \n {abilityName}";
             GUI.Label(new Rect(screenPos.x - 50, Screen.height - screenPos.y - 20, 100, 40), hpText, style);
         }
 

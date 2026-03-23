@@ -16,13 +16,21 @@ MonoBehaviour:
     Logic: 0
     DurationSeconds: 0
     ExecTimeSeconds: 0
-    EffectDurationSeconds: 0
-    ReuseTimeSeconds: 0
-    AnimAnticipation: 
-    Anim: OnDash
-    Anim2: 
-    ReactAnim: 
+    ReuseTimeSeconds: 2
     AbilityInput: {fileID: 0}
-    AbilityInterruptible: 0
-    IsInterruptableBy: []
+    PlayType: 1
+    IsInterruptible: 0
     BlockingMode: 0
+  m_Effects:
+  - rid: 2614229058820767830
+  - rid: 2614229058820767833
+  references:
+    version: 2
+    RefIds:
+    - rid: 2614229058820767830
+      type: {class: AnimationEffect, ns: FQParty.GamePlay.Abilities.Effects, asm: FQParty.GamePlay}
+      data:
+        Animation: OnDash
+    - rid: 2614229058820767833
+      type: {class: MovementEffect, ns: FQParty.GamePlay.Abilities.Effects, asm: FQParty.GamePlay}
+      data: 
