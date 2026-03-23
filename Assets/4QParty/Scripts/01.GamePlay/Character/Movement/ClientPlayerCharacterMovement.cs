@@ -4,13 +4,13 @@ using UnityEngine;
 using UnityEngine.InputSystem;
 
 
-namespace FQParty.GamePlay.Character
+namespace FQParty.GamePlay.Character.Movement
 {
     /// <summary>
     /// 클라이언트 권한 Movement
     /// </summary>
     [RequireComponent(typeof(CharacterController))]
-    public class ClientPlayerCharacterMovement : CharacterMovement
+    public class ClientPlayerCharacterMovement : CharacterMovement, IDashable
     {
         [SerializeField] CharacterSettings m_Settings;
         [SerializeField] GamePlayInputReader m_GamePlayInputReader;
@@ -25,9 +25,7 @@ namespace FQParty.GamePlay.Character
         {
         }
 
-
-        Vector3 m_DashDirection;
-        float m_CurrentDashSpeed = 0f;
+  
         void Awake()
         {
             if (m_PlayerCameara == null)
@@ -43,19 +41,25 @@ namespace FQParty.GamePlay.Character
             switch (m_State.Value)
             {
                 case MovementState.Moveable:
-                    UpdateInputMove();
-                    break;
+                    {
+                        if(m_OnDash)
+                        {
+                            UpdateDash();
+                        }
+                        else
+                        {
+                            UpdateInputMove();
+                        }
+
+                        break;
+                    }
                 case MovementState.Stop:
-                    break;
+                    {
+                        break;
+                    }
             }
         }
-
-        void UpdateDash()
-        {
-            Vector3 motion = m_DashDirection * m_CurrentDashSpeed * Time.deltaTime;
-            m_CharacterController.Move(motion);
-        }
-
+        
         void UpdateInputMove()
         {
             Vector2 moveInput = m_GamePlayInputReader.PlayerMoveInput;
@@ -80,10 +84,35 @@ namespace FQParty.GamePlay.Character
             m_CharacterController.Move(motion);
         }
 
+        Vector3 m_DashDirection;
+        float m_CurrentDashSpeed = 0f;
+        float m_DashDuration;
+        float m_StartDashTime;
+        bool m_OnDash = false;
+
         public void StartDash(float speed, float duration)
         {
+            m_DashDuration = duration;  
+            m_OnDash = true;
             m_CurrentDashSpeed = speed;
             m_DashDirection = transform.forward;
+            m_StartDashTime = Time.time;
+        }
+        
+        void UpdateDash()
+        {
+            Vector3 motion = m_DashDirection * m_CurrentDashSpeed * Time.deltaTime;
+            m_CharacterController.Move(motion);
+
+            if (Time.time - m_StartDashTime > m_DashDuration)
+            {
+                m_OnDash = false;
+            }   
+        }
+
+        public void CancelDash()
+        {
+            m_OnDash = false;
         }
 
     }

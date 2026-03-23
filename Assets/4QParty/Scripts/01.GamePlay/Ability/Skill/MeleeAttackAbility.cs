@@ -2,7 +2,7 @@ using FQParty.GamePlay.Character;
 using FQParty.GamePlay.GameplayObjects;
 using UnityEngine;
 using System.Collections.Generic;
-using Unity.Plastic.Antlr3.Runtime;
+using FQParty.GamePlay.Character.Movement;
 
 namespace FQParty.GamePlay.Abilities
 {
@@ -16,7 +16,6 @@ namespace FQParty.GamePlay.Abilities
 
         [Header("Effect")]
         [SerializeField] float m_Damage;
-
         public override AbilityConclusion OnStart(ServerCharacter serverCharacter)
         {
             base.OnStart(serverCharacter);

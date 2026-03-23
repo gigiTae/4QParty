@@ -1,8 +1,7 @@
 using FQParty.GamePlay.Abilities;
-using FQParty.GamePlay.GameplayObjects;
+using FQParty.GamePlay.Character.Movement;
 using Unity.Netcode;
 using Unity.Netcode.Components;
-using UnityEditor.PackageManager.Requests;
 using UnityEngine;
 
 
@@ -12,7 +11,6 @@ namespace FQParty.GamePlay.Character
     {
         public ClientCharacter ClientCharacter => m_ClientCharacter;
         [SerializeField] ClientCharacter m_ClientCharacter;
-
         public CharacterMovement CharacterMovement => m_Movement;
         [SerializeField] CharacterMovement m_Movement;
 

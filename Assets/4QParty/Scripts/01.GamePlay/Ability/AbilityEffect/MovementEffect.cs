@@ -1,7 +1,7 @@
 using FQParty.GamePlay.Character;
 using System;
 using UnityEngine;
-using static FQParty.GamePlay.Character.CharacterMovement;
+using static FQParty.GamePlay.Character.Movement.CharacterMovement;
 
 namespace FQParty.GamePlay.Abilities.Effects
 {

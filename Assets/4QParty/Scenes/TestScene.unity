@@ -335,7 +335,7 @@ MonoBehaviour:
   m_DisconnectTimeoutMS: 30000
   ConnectionData:
     Address: 127.0.0.1
-    Port: 1111
+    Port: 1217
     ServerListenAddress: 127.0.0.1
     ClientBindPort: 0
   DebugSimulator:
@@ -395,6 +395,71 @@ Transform:
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 497.6438, y: -105.40994, z: -369.1831}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &1132909811
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1132909813}
+  - component: {fileID: 1132909812}
+  m_Layer: 0
+  m_Name: Network Simulator
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &1132909812
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1132909811}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 98d9db9626104da59357651088226725, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Unity.Multiplayer.Tools.NetworkSimulator.Runtime::Unity.Multiplayer.Tools.NetworkSimulator.Runtime.NetworkSimulator
+  m_PresetAsset: {fileID: 0}
+  m_PresetReference:
+    rid: 2614229068744228958
+  m_Scenario:
+    rid: -2
+  m_IsScenarioSettingsFolded: 0
+  AutoRunScenario: 0
+  references:
+    version: 2
+    RefIds:
+    - rid: -2
+      type: {class: , ns: , asm: }
+    - rid: 2614229068744228958
+      type: {class: NetworkSimulatorPreset, ns: Unity.Multiplayer.Tools.NetworkSimulator.Runtime, asm: Unity.Multiplayer.Tools.NetworkSimulator.Runtime}
+      data:
+        <Name>k__BackingField: 
+        <Description>k__BackingField: 
+        <PacketDelayMs>k__BackingField: 0
+        <PacketJitterMs>k__BackingField: 0
+        <PacketLossInterval>k__BackingField: 0
+        <PacketLossPercent>k__BackingField: 0
+--- !u!4 &1132909813
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1132909811}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -672,3 +737,4 @@ SceneRoots:
   - {fileID: 961331793}
   - {fileID: 2091136663}
   - {fileID: 835616018}
+  - {fileID: 1132909813}

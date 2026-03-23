@@ -51,8 +51,6 @@ namespace FQParty.GamePlay.Abilities
 
         public void PlayAbility(Ability ability)
         {
-            Debug.Log("PlayAbility");
-
             switch (ability.Config.PlayType)
             {
                 case AbilityPlayType.Cancel:

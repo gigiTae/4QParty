@@ -1,3 +1,4 @@
+using FQParty.GamePlay.Character.Movement;
 using FQParty.GamePlay.Character;
 using UnityEngine;
 
@@ -7,12 +8,12 @@ namespace FQParty.GamePlay.Abilities
     [CreateAssetMenu(menuName = "Abilities/DashAbility")]
     public class DashAbility : Ability
     {
+        [SerializeField] float DashSpeed = 20f;
+        [SerializeField] float DashDuration = 1f;
+
         public override AbilityConclusion OnStart(ServerCharacter serverCharacter)
         {
             base.OnStart(serverCharacter);
-
-            serverCharacter.CharacterMovement.SetMovementStateServerRpc(CharacterMovement.MovementState.Stop);
-
             return AbilityConclusion.Continue;  
         }
 
@@ -20,16 +21,21 @@ namespace FQParty.GamePlay.Abilities
         {
             base.OnUpdate(serverCharacter);
 
-            return AbilityConclusion.Stop;    
+            return AbilityConclusion.Continue;    
         }
 
         public override void Cancel(ServerCharacter serverCharacter)
         {
             base.Cancel(serverCharacter);
-
-            serverCharacter.CharacterMovement.SetMovementStateServerRpc(CharacterMovement.MovementState.Moveable);
         }
 
+        public override void StartClientMove(ClientCharacter clientCharacter)
+        {
+            if (clientCharacter.CharacterMovement is IDashable dash)
+            {
+                dash.StartDash(DashSpeed, DashDuration);
+            }
+        }
     }
 
 }

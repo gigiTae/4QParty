@@ -23,17 +23,17 @@ namespace FQParty.GamePlay.Abilities
             {
                 var ability = m_PlayingAbilities[i];
                 bool keepGoing = ability.AnticipatedClient || ability.OnUpdateClient(ClientCharacter) == AbilityConclusion.Continue;
-      //          bool expirable = ability.Config.DurationSeconds > 0f;
-        //        bool timeExpired = expirable && ability.TimeRunning >= ability.Config.DurationSeconds;
-          //      bool timeOut = ability.AnticipatedClient && ability.TimeRunning >= k_AnticipationTimeoutSeconds;
+                //          bool expirable = ability.Config.DurationSeconds > 0f;
+                //        bool timeExpired = expirable && ability.TimeRunning >= ability.Config.DurationSeconds;
+                //      bool timeOut = ability.AnticipatedClient && ability.TimeRunning >= k_AnticipationTimeoutSeconds;
 
-           //     if (!keepGoing || timeExpired || timeOut)
+                //     if (!keepGoing || timeExpired || timeOut)
                 {
-             //       if (timeOut)
+                    //       if (timeOut)
                     {
                         ability.CancelClient(ClientCharacter);
                     }
-               //     else
+                    //     else
                     {
                         ability.EndClient(ClientCharacter);
                     }
@@ -56,14 +56,16 @@ namespace FQParty.GamePlay.Abilities
             }
         }
 
-        public void AnticipateAction(ref AbilityRequestData data)
+        public void AnticipateAbility(ref AbilityRequestData data)
         {
-            //if (!ClientCharacter.IsAnimating() && Action.ShouldClientAnticipate(ClientCharacter, ref data))
-            //{
-            //    var actionFX = AbilityFactory.CreateActionFromData(ref data);
-            //    actionFX.AnticipateActionClient(ClientCharacter);
-            //    m_PlayingAbilities.Add(actionFX);
-            //}
+            Ability ability = AbilityFactory.CreateAbilityFromData(ref data);
+            ability.AnticipateAbilityClient(ClientCharacter);
+        }
+
+        public void StartClientMoveAbility(ref AbilityRequestData data)
+        {
+            Ability ability = AbilityFactory.CreateAbilityFromData(ref data);
+            ability.StartClientMove(ClientCharacter);
         }
 
         public void PlayAbility(ref AbilityRequestData data)
@@ -71,14 +73,14 @@ namespace FQParty.GamePlay.Abilities
             var anticipatedAbilityIndex = FindAbility(data.AbilityID, true);
 
             var abilityFX = anticipatedAbilityIndex >= 0 ? m_PlayingAbilities[anticipatedAbilityIndex] : AbilityFactory.CreateAbilityFromData(ref data);
-            if(abilityFX.OnStartClient(ClientCharacter) == AbilityConclusion.Continue )
+            if (abilityFX.OnStartClient(ClientCharacter) == AbilityConclusion.Continue)
             {
-                if(anticipatedAbilityIndex < 0)
+                if (anticipatedAbilityIndex < 0)
                 {
                     m_PlayingAbilities.Add(abilityFX);
                 }
             }
-            else if(anticipatedAbilityIndex >=0)
+            else if (anticipatedAbilityIndex >= 0)
             {
                 var removedAbility = m_PlayingAbilities[anticipatedAbilityIndex];
                 m_PlayingAbilities.RemoveAt(anticipatedAbilityIndex);
@@ -89,7 +91,7 @@ namespace FQParty.GamePlay.Abilities
 
         public void CancelAllAbilities()
         {
-            foreach(var ability in m_PlayingAbilities)
+            foreach (var ability in m_PlayingAbilities)
             {
                 ability.CancelClient(ClientCharacter);
                 AbilityFactory.ReturnAbility(ability);

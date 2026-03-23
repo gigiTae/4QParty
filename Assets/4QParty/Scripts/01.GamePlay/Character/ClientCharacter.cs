@@ -1,4 +1,5 @@
 using FQParty.GamePlay.Abilities;
+using FQParty.GamePlay.Character.Movement;
 using FQParty.GamePlay.Input;
 using Unity.Netcode;
 using UnityEngine;
@@ -9,19 +10,21 @@ namespace FQParty.GamePlay.Character
     public class ClientCharacter : NetworkBehaviour
     {
         [SerializeField] ServerCharacter m_ServerCharacter;
-        [SerializeField] ClientPlayerCharacterMovement m_ClientCharacterMovement;
+
+        public CharacterMovement CharacterMovement => m_CharacterMovement;
+        [SerializeField] CharacterMovement m_CharacterMovement;
 
         ClientAbilityPlayer m_ClientAbilityPlayer;
 
         [Rpc(SendTo.ClientsAndHost)]
-        public void ClientPlayAbilityRpc(AbilityRequestData data)
+        public void PlayAbilityClientRpc(AbilityRequestData data)
         {
             AbilityRequestData data1 = data;
             m_ClientAbilityPlayer.PlayAbility(ref data1);
         }
 
         [Rpc(SendTo.ClientsAndHost)]
-        public void ClientCancelAllActionRpc()
+        public void CancelAllActionClientRpc()
         {
             m_ClientAbilityPlayer.CancelAllAbilities();
         }
@@ -30,33 +33,36 @@ namespace FQParty.GamePlay.Character
         {
             base.OnNetworkSpawn();
 
-            if(!IsClient)
+            if (!IsClient)
             {
-                enabled = false;    
+                enabled = false;
                 return;
             }
-            m_ClientAbilityPlayer = new ClientAbilityPlayer(this);  
+            m_ClientAbilityPlayer = new ClientAbilityPlayer(this);
 
-            if(m_ServerCharacter.IsOwner)
+            if (IsOwner)
             {
-                if(m_ServerCharacter.TryGetComponent(out ClientInputSender inputSender))
+                if (m_ServerCharacter.TryGetComponent(out ClientInputSender inputSender))
                 {
-                    if(!IsServer)
-                    {
-                        inputSender.AbilityInputEvent += OnAbilityInput;
-                    }
+                    inputSender.AbilityInputEvent += OnAbilityInput;
                 }
             }
         }
 
+
         void OnAbilityInput(AbilityRequestData data)
         {
-            m_ClientAbilityPlayer.AnticipateAction(ref data);   
+            if (!IsServer)
+            {
+                m_ClientAbilityPlayer.AnticipateAbility(ref data);
+            }
+
+            m_ClientAbilityPlayer.StartClientMoveAbility(ref data);
         }
 
         public override void OnNetworkDespawn()
         {
-            base.OnNetworkDespawn();    
+            base.OnNetworkDespawn();
 
         }
 

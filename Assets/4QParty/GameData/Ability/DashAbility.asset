@@ -13,9 +13,6 @@ MonoBehaviour:
   m_Name: DashAbility
   m_EditorClassIdentifier: FQParty.GamePlay::FQParty.GamePlay.Abilities.DashAbility
   Config:
-    Logic: 0
-    DurationSeconds: 0
-    ExecTimeSeconds: 0
     ReuseTimeSeconds: 2
     AbilityInput: {fileID: 0}
     PlayType: 1
@@ -23,7 +20,8 @@ MonoBehaviour:
     BlockingMode: 0
   m_Effects:
   - rid: 2614229058820767830
-  - rid: 2614229058820767833
+  DashSpeed: 20
+  DashDuration: 0.25
   references:
     version: 2
     RefIds:
@@ -31,6 +29,3 @@ MonoBehaviour:
       type: {class: AnimationEffect, ns: FQParty.GamePlay.Abilities.Effects, asm: FQParty.GamePlay}
       data:
         Animation: OnDash
-    - rid: 2614229058820767833
-      type: {class: MovementEffect, ns: FQParty.GamePlay.Abilities.Effects, asm: FQParty.GamePlay}
-      data: 

@@ -83,7 +83,7 @@ namespace FQParty.GamePlay.Abilities
         }
 
         public bool AnticipatedClient { get; protected set; }
-
+  
         public virtual AbilityConclusion OnStartClient(ClientCharacter clientCharacter)
         {
             return AbilityConclusion.Continue;
@@ -100,6 +100,15 @@ namespace FQParty.GamePlay.Abilities
         }
 
         public virtual void CancelClient(ClientCharacter clientCharacter) { }
+
+        public virtual void AnticipateAbilityClient(ClientCharacter clientCharacter)
+        {
+            AnticipatedClient = true;
+            TimeStarted = UnityEngine.Time.time;
+        }
+
+        public virtual void StartClientMove(ClientCharacter clientCharacter)
+        {}
 
     }
 
