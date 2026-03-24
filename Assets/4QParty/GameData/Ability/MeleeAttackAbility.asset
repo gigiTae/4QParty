@@ -13,16 +13,15 @@ MonoBehaviour:
   m_Name: MeleeAttackAbility
   m_EditorClassIdentifier: FQParty.GamePlay::FQParty.GamePlay.Abilities.MeleeAttackAbility
   Config:
-    Logic: 0
-    DurationSeconds: 0
-    ExecTimeSeconds: 0
     ReuseTimeSeconds: 0
     AbilityInput: {fileID: 0}
-    PlayType: 0
+    PlayType: 1
     IsInterruptible: 0
     BlockingMode: 0
+    EndPolicy: 1
   m_Effects:
   - rid: 2614229058820767831
+  - rid: 2614229081665044573
   m_LayerMask:
     serializedVersion: 2
     m_Bits: 4294967295
@@ -36,3 +35,8 @@ MonoBehaviour:
       type: {class: AnimationEffect, ns: FQParty.GamePlay.Abilities.Effects, asm: FQParty.GamePlay}
       data:
         Animation: OnKick
+        StateName: Kick
+    - rid: 2614229081665044573
+      type: {class: MovementBlockEffect, ns: FQParty.GamePlay.Abilities.Effects, asm: FQParty.GamePlay}
+      data:
+        m_BlockDuration: 1

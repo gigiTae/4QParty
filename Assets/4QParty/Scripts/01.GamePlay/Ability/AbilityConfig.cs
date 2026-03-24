@@ -22,5 +22,8 @@ namespace FQParty.GamePlay.Abilities
 
         [Tooltip("차단 모드 (실행 단계 동안만 다른 액션을 막을지, 전체 지속 시간 동안 막을지 결정)")]
         public BlockingModeType BlockingMode;
+
+        [Tooltip("어빌리터 종료조건")]
+        public AbilityEndPolicy EndPolicy = AbilityEndPolicy.AnyEffectCompleted;
     }
 }

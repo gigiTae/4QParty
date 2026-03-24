@@ -15,7 +15,7 @@ namespace FQParty.GamePlay.Abilities
             if (!s_AbilityPools.TryGetValue(abilityID, out var abilityPool))
             {
                 abilityPool = new ObjectPool<Ability>(
-                    createFunc: () => Object.Instantiate(GameDataSource.Instance.GetAbilityPrototypeByID(abilityID)),
+                    createFunc: () => GameDataSource.Instance.GetAbilityPrototypeByID(abilityID).Clone(),
                     actionOnRelease: ability => ability.Reset(),
                     actionOnDestroy: Object.Destroy);
             }

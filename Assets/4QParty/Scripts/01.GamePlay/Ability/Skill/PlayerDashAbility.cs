@@ -5,23 +5,20 @@ using UnityEngine;
 
 namespace FQParty.GamePlay.Abilities
 {
-    [CreateAssetMenu(menuName = "Abilities/DashAbility")]
-    public class DashAbility : Ability
+    [CreateAssetMenu(menuName = "Abilities/PlayerDash")]
+    public class PlayerDashAbility : Ability
     {
         [SerializeField] float DashSpeed = 20f;
         [SerializeField] float DashDuration = 1f;
 
-        public override AbilityConclusion OnStart(ServerCharacter serverCharacter)
+        public override void OnStart(ServerCharacter serverCharacter)
         {
             base.OnStart(serverCharacter);
-            return AbilityConclusion.Continue;  
         }
 
-        public override AbilityConclusion OnUpdate(ServerCharacter serverCharacter)
+        public override void OnUpdate(ServerCharacter serverCharacter)
         {
             base.OnUpdate(serverCharacter);
-
-            return AbilityConclusion.Continue;    
         }
 
         public override void Cancel(ServerCharacter serverCharacter)

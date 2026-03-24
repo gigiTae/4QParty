@@ -47,7 +47,6 @@ namespace FQParty.GamePlay.Character
             if (!IsServer) return;
 
             m_CurrentHp.Value = Mathf.Max(0, m_CurrentHp.Value - value);
-            Debug.Log($"[Server] Damage Received: {value}, Current HP: {m_CurrentHp.Value}");
         }
 
         private void OnGUI()

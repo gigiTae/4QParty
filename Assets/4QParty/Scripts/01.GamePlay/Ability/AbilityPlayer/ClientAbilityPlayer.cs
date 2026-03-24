@@ -1,28 +1,25 @@
 using UnityEngine;
 using System.Collections.Generic;
 using FQParty.GamePlay.Character;
+using Unity.Netcode;
 
 namespace FQParty.GamePlay.Abilities
 {
-    public sealed class ClientAbilityPlayer
+    public sealed class ClientAbilityPlayer : NetworkBehaviour
     {
         private List<Ability> m_PlayingAbilities = new();
 
         private const float k_AnticipationTimeoutSeconds = 1;
 
-        public ClientCharacter ClientCharacter { get; private set; }
+        [SerializeField]
+        ClientCharacter m_ClientCharacter;
 
-        public ClientAbilityPlayer(ClientCharacter clientCharacter)
-        {
-            ClientCharacter = clientCharacter;
-        }
-
-        public void OnUpdate()
+        public void Update()
         {
             for (int i = m_PlayingAbilities.Count - 1; i >= 0; --i)
             {
                 var ability = m_PlayingAbilities[i];
-                bool keepGoing = ability.AnticipatedClient || ability.OnUpdateClient(ClientCharacter) == AbilityConclusion.Continue;
+                bool keepGoing = ability.AnticipatedClient || ability.OnUpdateClient(m_ClientCharacter) == AbilityConclusion.Continue;
                 //          bool expirable = ability.Config.DurationSeconds > 0f;
                 //        bool timeExpired = expirable && ability.TimeRunning >= ability.Config.DurationSeconds;
                 //      bool timeOut = ability.AnticipatedClient && ability.TimeRunning >= k_AnticipationTimeoutSeconds;
@@ -31,11 +28,11 @@ namespace FQParty.GamePlay.Abilities
                 {
                     //       if (timeOut)
                     {
-                        ability.CancelClient(ClientCharacter);
+                        ability.CancelClient(m_ClientCharacter);
                     }
                     //     else
                     {
-                        ability.EndClient(ClientCharacter);
+                        ability.EndClient(m_ClientCharacter);
                     }
 
                     m_PlayingAbilities.RemoveAt(i);
@@ -55,17 +52,16 @@ namespace FQParty.GamePlay.Abilities
             {
             }
         }
-
         public void AnticipateAbility(ref AbilityRequestData data)
         {
             Ability ability = AbilityFactory.CreateAbilityFromData(ref data);
-            ability.AnticipateAbilityClient(ClientCharacter);
+            ability.AnticipateAbilityClient(m_ClientCharacter);
         }
 
         public void StartClientMoveAbility(ref AbilityRequestData data)
         {
             Ability ability = AbilityFactory.CreateAbilityFromData(ref data);
-            ability.StartClientMove(ClientCharacter);
+            ability.StartClientMove(m_ClientCharacter);
         }
 
         public void PlayAbility(ref AbilityRequestData data)
@@ -73,7 +69,7 @@ namespace FQParty.GamePlay.Abilities
             var anticipatedAbilityIndex = FindAbility(data.AbilityID, true);
 
             var abilityFX = anticipatedAbilityIndex >= 0 ? m_PlayingAbilities[anticipatedAbilityIndex] : AbilityFactory.CreateAbilityFromData(ref data);
-            if (abilityFX.OnStartClient(ClientCharacter) == AbilityConclusion.Continue)
+            if (abilityFX.OnStartClient(m_ClientCharacter) == AbilityConclusion.Continue)
             {
                 if (anticipatedAbilityIndex < 0)
                 {
@@ -86,14 +82,13 @@ namespace FQParty.GamePlay.Abilities
                 m_PlayingAbilities.RemoveAt(anticipatedAbilityIndex);
                 AbilityFactory.ReturnAbility(removedAbility);
             }
-
         }
 
         public void CancelAllAbilities()
         {
             foreach (var ability in m_PlayingAbilities)
             {
-                ability.CancelClient(ClientCharacter);
+                ability.CancelClient(m_ClientCharacter);
                 AbilityFactory.ReturnAbility(ability);
             }
             m_PlayingAbilities.Clear();
@@ -106,7 +101,7 @@ namespace FQParty.GamePlay.Abilities
                 if (m_PlayingAbilities[i].AbilityID == abilityID)
                 {
                     var ability = m_PlayingAbilities[i];
-                    ability.CancelClient(ClientCharacter);
+                    ability.CancelClient(m_ClientCharacter);
                     m_PlayingAbilities.RemoveAt(i);
                     AbilityFactory.ReturnAbility(ability);
                 }

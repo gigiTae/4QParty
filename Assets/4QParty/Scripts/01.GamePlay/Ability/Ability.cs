@@ -2,8 +2,9 @@ using FQParty.GamePlay.Abilities.Effects;
 using FQParty.GamePlay.Character;
 using NUnit.Framework;
 using System;
-using UnityEngine;
 using System.Collections.Generic;
+using System.Linq;
+using UnityEngine;
 
 
 namespace FQParty.GamePlay.Abilities
@@ -38,24 +39,33 @@ namespace FQParty.GamePlay.Abilities
             TimeStarted = 0;
         }
 
-        public virtual AbilityConclusion OnStart(ServerCharacter serverCharacter)
+        public virtual void OnStart(ServerCharacter serverCharacter)
         {
-            foreach (var effect in m_Effects) 
+            foreach (var effect in m_Effects)
             {
                 effect.OnStart(serverCharacter, this);
             }
-
-            return AbilityConclusion.Continue;
         }
 
-        public virtual AbilityConclusion OnUpdate(ServerCharacter serverCharacter)
+        public virtual void OnUpdate(ServerCharacter serverCharacter)
         {
             foreach (var effect in m_Effects)
             {
                 effect.OnUpdate(serverCharacter, this);
             }
+        }
+        public virtual AbilityConclusion IsEnd()
+        {
+            if (m_Effects.Count == 0) return AbilityConclusion.Stop;
 
-            return AbilityConclusion.Continue;
+            bool shouldStop = Config.EndPolicy switch
+            {
+                AbilityEndPolicy.AnyEffectCompleted => m_Effects.Any(e => !e.IsActive),
+                AbilityEndPolicy.AllEffectCompleted => m_Effects.All(e => !e.IsActive),
+                _ => true
+            };
+
+            return shouldStop ? AbilityConclusion.Stop : AbilityConclusion.Continue;
         }
 
         /// <summary>
@@ -65,7 +75,7 @@ namespace FQParty.GamePlay.Abilities
         {
             Cancel(serverCharacter);
 
-            foreach(var effect in m_Effects)
+            foreach (var effect in m_Effects)
             {
                 effect.End(serverCharacter, this);
             }
@@ -83,7 +93,7 @@ namespace FQParty.GamePlay.Abilities
         }
 
         public bool AnticipatedClient { get; protected set; }
-  
+
         public virtual AbilityConclusion OnStartClient(ClientCharacter clientCharacter)
         {
             return AbilityConclusion.Continue;
@@ -104,12 +114,33 @@ namespace FQParty.GamePlay.Abilities
         public virtual void AnticipateAbilityClient(ClientCharacter clientCharacter)
         {
             AnticipatedClient = true;
-            TimeStarted = UnityEngine.Time.time;
+            TimeStarted = Time.time;
         }
 
         public virtual void StartClientMove(ClientCharacter clientCharacter)
-        {}
+        { }
 
+        public void OnAnimationStateExit(Animator animator, AnimatorStateInfo stateInfo, int layerIndex)
+        {
+            foreach (var effect in m_Effects)
+            {
+                effect.OnAnimationStateExit(animator, stateInfo, layerIndex);
+            }
+        }
+
+        public virtual Ability Clone()
+        {
+            Ability ability = Instantiate(this);
+
+            List<AbilityEffect> effectList = new();
+
+            foreach(var effect in m_Effects)
+            {
+                effectList.Add(effect.Clone());
+            }
+            ability.m_Effects = effectList;
+            return ability;
+        }
     }
 
 }

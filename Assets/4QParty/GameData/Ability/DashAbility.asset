@@ -18,6 +18,7 @@ MonoBehaviour:
     PlayType: 1
     IsInterruptible: 0
     BlockingMode: 0
+    EndPolicy: 0
   m_Effects:
   - rid: 2614229058820767830
   DashSpeed: 20
@@ -29,3 +30,4 @@ MonoBehaviour:
       type: {class: AnimationEffect, ns: FQParty.GamePlay.Abilities.Effects, asm: FQParty.GamePlay}
       data:
         Animation: OnDash
+        StateName: Dash

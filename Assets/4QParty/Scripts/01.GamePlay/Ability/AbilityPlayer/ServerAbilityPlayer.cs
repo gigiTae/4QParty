@@ -1,53 +1,53 @@
-using Codice.Client.Common.Connection;
-using Codice.Client.Common.WebApi.Responses;
 using FQParty.GamePlay.Character;
-using Mono.Cecil.Cil;
 using System.Collections.Generic;
+using Unity.Netcode;
 using UnityEngine;
 using UnityEngine.Pool;
-using static PlasticGui.WorkspaceWindow.Merge.MergeInProgress;
+
 
 namespace FQParty.GamePlay.Abilities
 {
-    public class ServerAbilityPlayer
+    public class ServerAbilityPlayer : NetworkBehaviour
     {
-        ServerCharacter m_ServerCharacter;
-
+        [SerializeField] ServerCharacter m_ServerCharacter;
         public Ability PlayingAbility => m_PlayingAbility;
         Ability m_PlayingAbility;
 
-        Queue<Ability> m_PendingQueue;
+        public NetworkList<AbilityTimeStamp> LastUsedTimestamps => m_LastUsedTimestamps;
+        NetworkList<AbilityTimeStamp> m_LastUsedTimestamps = new();
 
-        List<Ability> m_NonBlockingAbilities;
-
-        Dictionary<AbilityID, float> m_LastUsedTimestamps;
-
+        Queue<Ability> m_PendingQueue = new();
+        List<Ability> m_NonBlockingAbilities = new();
         Queue<Ability> m_RequestQueue = new();
 
-        public void RequestAbility(AbilityRequestData data)
+        [Rpc(SendTo.Server)]
+        public void RequestAbilityServerRpc(AbilityRequestData data)
         {
             Ability ability = AbilityFactory.CreateAbilityFromData(ref data);
 
-            // Check Cooltime
-            float reuseTime = ability.Config.ReuseTimeSeconds;
-            if (reuseTime > 0 &&
-                m_LastUsedTimestamps.TryGetValue(ability.AbilityID, out float lastTimeUsed) &&
-                Time.time - lastTimeUsed < reuseTime)
-            {
-                Debug.Log("어빌리티 쿨타임");
-                return;
-            }
+            if (!CanRequsetAbility(ability)) return;
 
             m_RequestQueue.Enqueue(ability);
         }
 
-        public ServerAbilityPlayer(ServerCharacter serverCharacter)
+        public bool CanRequsetAbility(Ability ability)
         {
-            m_ServerCharacter = serverCharacter;
-            m_PendingQueue = new();
-            m_NonBlockingAbilities = new();
-            m_LastUsedTimestamps = new();
+            float reuseTime = ability.Config.ReuseTimeSeconds;
+
+            if (reuseTime <= 0f) return true;
+
+            foreach (AbilityTimeStamp timeStamp in m_LastUsedTimestamps)
+            {
+                if (timeStamp.ID == ability.AbilityID)
+                {
+                    float serverTime = NetworkManager.ServerTime.TimeAsFloat;
+                    return serverTime - timeStamp.LastUsedTime < reuseTime;
+                }
+            }
+
+            return true;
         }
+
 
         public void PlayAbility(Ability ability)
         {
@@ -75,12 +75,35 @@ namespace FQParty.GamePlay.Abilities
 
         AbilityConclusion StartAbility(Ability ability)
         {
-            ability.TimeStarted = Time.time;
-            m_LastUsedTimestamps[ability.AbilityID] = Time.time;
-            return ability.OnStart(m_ServerCharacter);
+            ability.TimeStarted = NetworkManager.ServerTime.TimeAsFloat;
+            AddTimeStamp(ability.AbilityID);
+            ability.OnStart(m_ServerCharacter);
+            return ability.IsEnd();
         }
 
-        public void OnUpdateAbility()
+        void AddTimeStamp(AbilityID abilityID)
+        {
+            for (int i = 0; i < m_LastUsedTimestamps.Count; ++i)
+            {
+                if (m_LastUsedTimestamps[i].ID == abilityID)
+                {
+                    m_LastUsedTimestamps.Set(i, new AbilityTimeStamp()
+                    {
+                        ID = abilityID,
+                        LastUsedTime = NetworkManager.ServerTime.TimeAsFloat
+                    });
+                    return;
+                }
+            }
+
+            m_LastUsedTimestamps.Add(new AbilityTimeStamp
+            {
+                ID = abilityID,
+                LastUsedTime = NetworkManager.ServerTime.TimeAsFloat
+            });
+        }
+
+        public void Update()
         {
             ProcessRequsetAbility();
 
@@ -88,8 +111,10 @@ namespace FQParty.GamePlay.Abilities
 
             if (m_PlayingAbility != null)
             {
-                conclusion = m_PlayingAbility.OnUpdate(m_ServerCharacter);
+                m_PlayingAbility.OnUpdate(m_ServerCharacter);
+                conclusion = m_PlayingAbility.IsEnd();
             }
+            // 선입력된 액션을 실행합니다 
             else if (m_PendingQueue.Count > 0)
             {
                 Ability ability = m_PendingQueue.Dequeue();
@@ -161,6 +186,16 @@ namespace FQParty.GamePlay.Abilities
             AbilityFactory.ReturnAbility(ability);
         }
 
+        public void OnAnimationStateExit(Animator animator, AnimatorStateInfo stateInfo, int layerIndex)
+        {
+            m_PlayingAbility?.OnAnimationStateExit(animator, stateInfo, layerIndex);    
+
+            foreach(var nonBlockAbility in m_NonBlockingAbilities)
+            {
+                nonBlockAbility.OnAnimationStateExit(animator, stateInfo, layerIndex);
+            }
+
+        }
 
     }
 }

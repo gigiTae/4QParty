@@ -21,6 +21,9 @@ namespace FQParty.GamePlay.Input
         [SerializeField]
         ServerCharacter m_ServerCharacter;
 
+        [SerializeField]
+        ServerAbilityPlayer m_ServerAbilityPlayer;
+
         public event Action<AbilityRequestData> AbilityInputEvent;
 
         [SerializeField]
@@ -88,8 +91,6 @@ namespace FQParty.GamePlay.Input
 
         void OnEmoteAbilityStarted()
         {
-            Debug.Log("StartEmote");
-
             RequsetAbility(m_EmoteAbility.AbilityID, SkillTriggerStyle.Button);
         }
 
@@ -97,7 +98,7 @@ namespace FQParty.GamePlay.Input
         void SendInput(AbilityRequestData ability)
         {
             AbilityInputEvent?.Invoke(ability);
-            m_ServerCharacter.RequestAbilityServerRpc(ability);
+            m_ServerAbilityPlayer.RequestAbilityServerRpc(ability);  
         }
 
         void FixedUpdate()

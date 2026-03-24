@@ -14,7 +14,7 @@ namespace FQParty.GamePlay.Character
         public CharacterMovement CharacterMovement => m_CharacterMovement;
         [SerializeField] CharacterMovement m_CharacterMovement;
 
-        ClientAbilityPlayer m_ClientAbilityPlayer;
+        [SerializeField] ClientAbilityPlayer m_ClientAbilityPlayer;
 
         [Rpc(SendTo.ClientsAndHost)]
         public void PlayAbilityClientRpc(AbilityRequestData data)
@@ -38,7 +38,6 @@ namespace FQParty.GamePlay.Character
                 enabled = false;
                 return;
             }
-            m_ClientAbilityPlayer = new ClientAbilityPlayer(this);
 
             if (IsOwner)
             {
@@ -66,10 +65,6 @@ namespace FQParty.GamePlay.Character
 
         }
 
-        private void Update()
-        {
-            m_ClientAbilityPlayer.OnUpdate();
-        }
     }
 
 }
