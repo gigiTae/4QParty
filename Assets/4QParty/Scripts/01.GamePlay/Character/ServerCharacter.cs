@@ -17,7 +17,6 @@ namespace FQParty.GamePlay.Character
 
         public CharacterStatus CharacterStatus=> m_CharacterStatus;
         [SerializeField] CharacterStatus m_CharacterStatus;
-
         public NetworkAnimator NetworkAnimator => m_NetworkAnimator;
         [SerializeField] NetworkAnimator m_NetworkAnimator;
 

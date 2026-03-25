@@ -9,34 +9,38 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 4d757f26c8df8a649b32272acd61a3a5, type: 3}
+  m_Script: {fileID: 11500000, guid: 66a699340fb2efb4e894319365190321, type: 3}
   m_Name: MeleeAttackAbility
   m_EditorClassIdentifier: FQParty.GamePlay::FQParty.GamePlay.Abilities.MeleeAttackAbility
   Config:
     ReuseTimeSeconds: 0
     AbilityInput: {fileID: 0}
-    PlayType: 1
+    PlayType: 0
     IsInterruptible: 0
     BlockingMode: 0
     EndPolicy: 1
   m_Effects:
-  - rid: 2614229058820767831
-  - rid: 2614229081665044573
-  m_LayerMask:
-    serializedVersion: 2
-    m_Bits: 4294967295
-  m_Offset: {x: 0, y: 0, z: 0}
-  m_HalfExtents: {x: 10, y: 10, z: 10}
-  m_Damage: 10
+  - rid: 2614229088589578324
+  - rid: 2614229088589578325
+  - rid: 2614229088589578326
   references:
     version: 2
     RefIds:
-    - rid: 2614229058820767831
+    - rid: 2614229088589578324
+      type: {class: AttackEffect, ns: FQParty.GamePlay.Abilities.Effects, asm: FQParty.GamePlay}
+      data:
+        m_LayerMask:
+          serializedVersion: 2
+          m_Bits: 4294967295
+        m_Offset: {x: 0, y: 0, z: 2}
+        m_HalfExtents: {x: 1, y: 1, z: 1}
+        m_Damage: 1
+    - rid: 2614229088589578325
       type: {class: AnimationEffect, ns: FQParty.GamePlay.Abilities.Effects, asm: FQParty.GamePlay}
       data:
         Animation: OnKick
         StateName: Kick
-    - rid: 2614229081665044573
+    - rid: 2614229088589578326
       type: {class: MovementBlockEffect, ns: FQParty.GamePlay.Abilities.Effects, asm: FQParty.GamePlay}
       data:
         m_BlockDuration: 1

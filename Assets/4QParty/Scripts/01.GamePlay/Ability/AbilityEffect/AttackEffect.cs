@@ -1,26 +1,30 @@
+using FQParty.Common.DebugHelper;
 using FQParty.GamePlay.Character;
 using FQParty.GamePlay.GameplayObjects;
-using UnityEngine;
+using System;
 using System.Collections.Generic;
-using FQParty.GamePlay.Character.Movement;
+using UnityEditor.AdaptivePerformance.Editor;
+using UnityEngine;
 
-namespace FQParty.GamePlay.Abilities
+
+namespace FQParty.GamePlay.Abilities.Effects
 {
-    [CreateAssetMenu(menuName = "Abilities/MeleeAttack")]
-    public class MeleeAttackAbility : Ability
+    [Serializable]
+    public class AttackEffect : AbilityEffect
     {
-        [Header("충돌체 설정")]
+        bool m_IsActive = false;
+        public override bool IsActive => m_IsActive;
+
         [SerializeField] LayerMask m_LayerMask;
         [SerializeField] Vector3 m_Offset;
         [SerializeField] Vector3 m_HalfExtents;
-
-        [Header("Effect")]
         [SerializeField] float m_Damage;
-        public override void OnStart(ServerCharacter serverCharacter)
-        {
-            base.OnStart(serverCharacter);
 
+        public override void OnStart(ServerCharacter serverCharacter, Ability ability)
+        {
             var targets = DetectTarget(serverCharacter);
+
+            if (targets == null) return;
 
             foreach (var target in targets)
             {
@@ -30,14 +34,15 @@ namespace FQParty.GamePlay.Abilities
 
         IDamageable[] DetectTarget(ServerCharacter serverCharacter)
         {
-            Vector3 center = serverCharacter.transform.position + m_Offset;
-            Vector3 foward = serverCharacter.transform.forward;
             Quaternion rotation = serverCharacter.transform.rotation;
+            Vector3 rotatedOffset = rotation * m_Offset;
+            Vector3 center = serverCharacter.transform.position + rotatedOffset;
 
             var coliders = Physics.OverlapBox(center, m_HalfExtents, rotation, m_LayerMask);
 
             if (coliders.Length == 0)
             {
+                DebugGizumo.Instance.AddBox(center, m_HalfExtents * 2f, rotation, Color.green, 0.1f);
                 return null;
             }
 
@@ -52,9 +57,12 @@ namespace FQParty.GamePlay.Abilities
                     damageables.Add(target);
                 }
             }
+
+            DebugGizumo.Instance.AddBox(center, m_HalfExtents * 2f, rotation,
+                damageables.Count > 0 ? Color.red : Color.green, 0.1f);
+
             return damageables.Count > 0 ? damageables.ToArray() : null;
         }
-
     }
 
 }

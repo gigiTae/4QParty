@@ -47,8 +47,9 @@ namespace FQParty.ConnectionManagement
         protected abstract string GetPlayerId();
     }
 
+
     /// <summary>
-    /// UTP's Relay connection setup using the Session integration
+    /// Steam connection setup using the Session integration
     /// </summary>
     public class ConnectionMethodSteam : ConnectionMethodBase
     {

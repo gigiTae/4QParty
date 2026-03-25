@@ -2350,7 +2350,7 @@ MonoBehaviour:
   m_GameInputReader: {fileID: 11400000, guid: 1ca3c0efb879c984a9354551da1ad06f, type: 2}
   m_ServerCharacter: {fileID: 1825860194919353117}
   m_ServerAbilityPlayer: {fileID: 4053115238216986115}
-  m_EmoteAbility: {fileID: 11400000, guid: 7473af966f2672247ba8ac5615fe3fd0, type: 2}
+  m_InteractAbility: {fileID: 11400000, guid: 95cd512ae3cebbd4cadeb1a367d3c6f1, type: 2}
   m_DashAbility: {fileID: 11400000, guid: 9ad77807f5f09ab409805f23c9738405, type: 2}
   m_AttackAbility: {fileID: 11400000, guid: 7473af966f2672247ba8ac5615fe3fd0, type: 2}
 --- !u!114 &1357554448765932350

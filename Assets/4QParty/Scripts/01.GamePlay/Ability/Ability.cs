@@ -9,7 +9,8 @@ using UnityEngine;
 
 namespace FQParty.GamePlay.Abilities
 {
-    public abstract class Ability : ScriptableObject
+    [CreateAssetMenu(menuName = "Abilities/Ability")]
+    public class Ability : ScriptableObject
     {
         [NonSerialized]
         public AbilityID AbilityID;

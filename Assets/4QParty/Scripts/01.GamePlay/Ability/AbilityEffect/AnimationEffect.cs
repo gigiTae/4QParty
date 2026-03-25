@@ -11,7 +11,6 @@ namespace FQParty.GamePlay.Abilities.Effects
     {
         [SerializeField] public string Animation;
         [SerializeField] public string StateName;
-
         public override bool IsActive => m_IsActive;
         private bool m_IsActive;
 

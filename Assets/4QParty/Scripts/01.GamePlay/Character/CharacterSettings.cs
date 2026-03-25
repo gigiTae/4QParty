@@ -27,6 +27,5 @@ namespace FQParty.GamePlay.Character
 
         [Tooltip("상호작용 어빌리티")]
         public Ability InteractAbility;
-
     }
 }

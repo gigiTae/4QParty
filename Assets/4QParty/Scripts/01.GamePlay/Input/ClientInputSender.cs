@@ -27,13 +27,14 @@ namespace FQParty.GamePlay.Input
         public event Action<AbilityRequestData> AbilityInputEvent;
 
         [SerializeField]
-        Ability m_EmoteAbility;
+        Ability m_InteractAbility;
 
         [SerializeField]
         Ability m_DashAbility;
 
         [SerializeField]
         Ability m_AttackAbility;
+
 
         struct AbilityRequset
         {
@@ -68,20 +69,19 @@ namespace FQParty.GamePlay.Input
                 return;
             }
 
+            m_GameInputReader.OnAttackInput += OnAttackAbilityStarted;
             m_GameInputReader.OnDashInput += OnDashAbilityStarted;
-            m_GameInputReader.OnAttackInput += OnAttackStarted;
+            m_GameInputReader.OnInteractInput += OnInteractAbilityStarted;
         }
 
-        void OnAttackStarted()
-        {
-            RequsetAbility(m_AttackAbility.AbilityID, SkillTriggerStyle.Button);
-        }
 
         public override void OnNetworkDespawn()
         {
-            m_GameInputReader.OnDashInput -= OnEmoteAbilityStarted;
-            m_GameInputReader.OnAttackInput -= OnAttackStarted;
+            m_GameInputReader.OnAttackInput -= OnAttackAbilityStarted;
+            m_GameInputReader.OnDashInput -= OnDashAbilityStarted;
+            m_GameInputReader.OnInteractInput -= OnInteractAbilityStarted;
         }
+
 
 
         void OnDashAbilityStarted()
@@ -89,9 +89,14 @@ namespace FQParty.GamePlay.Input
             RequsetAbility(m_DashAbility.AbilityID, SkillTriggerStyle.Button);
         }
 
-        void OnEmoteAbilityStarted()
+        void OnAttackAbilityStarted()
         {
-            RequsetAbility(m_EmoteAbility.AbilityID, SkillTriggerStyle.Button);
+            RequsetAbility(m_AttackAbility.AbilityID, SkillTriggerStyle.Button);
+        }
+
+        void OnInteractAbilityStarted()
+        {
+            RequsetAbility(m_InteractAbility.AbilityID, SkillTriggerStyle.Button);
         }
 
 
