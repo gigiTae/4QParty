@@ -112,7 +112,7 @@ namespace FQParty.Session.Network
         public async Task CreateLobbyAsync()
         {
             await SteamManager.Instance.SteamLobbyService.CreateLobbyAsync(SessionName, false);
-            ConnectionManager.Instance.StartHostSession();
+            ConnectionManager.Instance.StartSteamHostSession();
         }
 
         public void Dispose()

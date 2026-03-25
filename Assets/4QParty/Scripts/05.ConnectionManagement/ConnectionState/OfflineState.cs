@@ -17,15 +17,27 @@ namespace FQParty.ConnectionManagement
 
         public override void Exit() { }
 
-        public override void StartClientSession()
+        public override void StartSteamClientSession()
         {
             var connectionMethod = new ConnectionMethodSteam(m_ConnectionManager);
             m_ConnectionManager.ChangeState(m_ConnectionManager.m_ClientConnecting.Configure(connectionMethod));
         }
 
-        public override void StartHostSession()
+        public override void StartSteamHostSession()
         {
             var connectionMethod = new ConnectionMethodSteam(m_ConnectionManager);
+            m_ConnectionManager.ChangeState(m_ConnectionManager.m_StartingHost.Configure(connectionMethod));
+        }
+
+        public override void StartUnityClientSession()
+        {
+            var connectionMethod = new ConnectionMethodUnityEditor(m_ConnectionManager);
+            m_ConnectionManager.ChangeState(m_ConnectionManager.m_ClientConnecting.Configure(connectionMethod));
+        }
+
+        public override void StartUnityHostSession()
+        {
+            var connectionMethod = new ConnectionMethodUnityEditor(m_ConnectionManager);
             m_ConnectionManager.ChangeState(m_ConnectionManager.m_StartingHost.Configure(connectionMethod));
         }
     }

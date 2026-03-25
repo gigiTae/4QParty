@@ -24,7 +24,6 @@ namespace FQParty.ConnectionManagement
 
         public override void OnServerStarted()
         {
-            //m_ConnectStatusPublisher.Publish(ConnectStatus.Success);
             m_ConnectionManager.ChangeState(m_ConnectionManager.m_Hosting);
         }
 
@@ -32,25 +31,28 @@ namespace FQParty.ConnectionManagement
 
         public override void ApprovalCheck(NetworkManager.ConnectionApprovalRequest request, NetworkManager.ConnectionApprovalResponse response)
         {
-            var connectionData = request.Payload;
-            var clientId = request.ClientNetworkId;
+            response.Approved = true;
+            return;
 
-            // LocalClientId와 현재 접속 요청을 보낸 ClientId가 같다면 자기 자신(호스트)입니다.
-            if (clientId == m_ConnectionManager.NetworkManager.LocalClientId)
-            {
-                var payloadJson = System.Text.Encoding.UTF8.GetString(connectionData);
-                var connectionPayload = JsonUtility.FromJson<ConnectionPayload>(payloadJson);
+            //var connectionData = request.Payload;
+            //var clientId = request.ClientNetworkId;
 
-                SessionManager<SessionPlayerData>.Instance.SetupConnectingPlayerSessionData(
-                    clientId,
-                    connectionPayload.SteamID.ToString(),
-                    new SessionPlayerData()
-                );
+            //// LocalClientId와 현재 접속 요청을 보낸 ClientId가 같다면 자기 자신(호스트)입니다.
+            //if (clientId == m_ConnectionManager.NetworkManager.LocalClientId)
+            //{
+            //    var payloadJson = System.Text.Encoding.UTF8.GetString(connectionData);
+            //    var connectionPayload = JsonUtility.FromJson<ConnectionPayload>(payloadJson);
 
-                // 승인 설정
-                response.Approved = true;
-                response.CreatePlayerObject = false;
-            }
+            //    SessionManager<SessionPlayerData>.Instance.SetupConnectingPlayerSessionData(
+            //        clientId,
+            //        connectionPayload.SteamID.ToString(),
+            //        new SessionPlayerData()
+            //    );
+
+            //    // 승인 설정
+            //    response.Approved = true;
+            //    response.CreatePlayerObject = false;
+            //}
         }
 
         void StartHost()

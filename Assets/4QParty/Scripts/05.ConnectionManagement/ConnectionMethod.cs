@@ -3,6 +3,7 @@ using Netcode.Transports;
 using Steamworks;
 using System.Threading.Tasks;
 using Unity.Netcode;
+using Unity.Netcode.Transports.UTP;
 using UnityEngine;
 
 namespace FQParty.ConnectionManagement
@@ -33,18 +34,35 @@ namespace FQParty.ConnectionManagement
         /// <returns></returns>
         public abstract void SetupClientConnection();
 
-        /// <summary>
-        /// Setup the client for reconnection prior to reconnecting
-        /// </summary>
-        /// <returns>
-        /// success = true if succeeded in setting up reconnection, false if failed.
-        /// shouldTryAgain = true if we should try again after failing, false if not.
-        /// </returns>
-        public abstract Task<(bool success, bool shouldTryAgain)> SetupClientReconnectionAsync();
-
-        protected abstract void SetHostConnectionPayload();
-
         protected abstract string GetPlayerId();
+    }
+
+    /// <summary>
+    /// Unity Editor 테스트 전용 
+    /// </summary>
+    public class ConnectionMethodUnityEditor : ConnectionMethodBase
+    {
+        public ConnectionMethodUnityEditor(ConnectionManager connectionManager)
+         : base(connectionManager)
+        {
+        }
+
+        public override void SetupClientConnection() 
+        {
+            var transport = m_ConnectionManager.NetworkManager.GetComponent<UnityTransport>();
+            m_ConnectionManager.NetworkManager.NetworkConfig.NetworkTransport = transport;
+        }
+
+        public override void SetupHostConnection() 
+        {
+            var transport = m_ConnectionManager.NetworkManager.GetComponent<UnityTransport>();
+            m_ConnectionManager.NetworkManager.NetworkConfig.NetworkTransport = transport;
+        }
+
+        protected override string GetPlayerId()
+        {
+            return "";
+        }
     }
 
 
@@ -58,9 +76,6 @@ namespace FQParty.ConnectionManagement
         {
         }
 
-        protected override void SetHostConnectionPayload()
-        {
-        }
 
         public override void SetupHostConnection()
         {
@@ -92,18 +107,14 @@ namespace FQParty.ConnectionManagement
 
             string jsonPayload = JsonUtility.ToJson(payload);
             byte[] payloadBytes = System.Text.Encoding.UTF8.GetBytes(jsonPayload);
-
             m_ConnectionManager.NetworkManager.NetworkConfig.ConnectionData = payloadBytes;
+
             var transport = m_ConnectionManager.NetworkManager.GetComponent<SteamNetworkingSocketsTransport>();
+            m_ConnectionManager.NetworkManager.NetworkConfig.NetworkTransport = transport;
 
             transport.ConnectToSteamID = SteamManager.Instance.SteamLobbyService.CurrentLobby.LobbyData.HostID;
         }
 
-        public override async Task<(bool success, bool shouldTryAgain)> SetupClientReconnectionAsync()
-        {
-            await Task.Yield();
-            return (true, true);
-        }
 
         protected override string GetPlayerId()
         {

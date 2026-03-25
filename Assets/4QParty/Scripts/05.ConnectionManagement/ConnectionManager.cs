@@ -69,8 +69,6 @@ namespace FQParty.ConnectionManagement
         }
     }
 
-
-
     public class ConnectionManager : PersistanceSingleton<ConnectionManager>
     {
         ConnectionState m_CurrentState;
@@ -79,14 +77,25 @@ namespace FQParty.ConnectionManagement
         NetworkManager m_NetworkManager = null;
         public NetworkManager NetworkManager => m_NetworkManager;
 
-        TempPublisher m_TempPublisher = new();
-
         internal readonly OfflineState m_Offline = new OfflineState();
         internal readonly ClientConnectingState m_ClientConnecting = new ClientConnectingState();
         internal readonly ClientConnectedState m_ClientConnected = new ClientConnectedState();
         internal readonly ClientReconnectingState m_ClientReconnecting = new ClientReconnectingState();
         internal readonly StartingHostState m_StartingHost = new StartingHostState();
         internal readonly HostingState m_Hosting = new HostingState();
+
+        // ====================== Test Region ====================================
+        TempPublisher m_TempPublisher = new();
+
+        internal enum ConnectionType
+        {
+            Steam,
+            Unity,
+        }
+
+        internal ConnectionType m_ConnectionType = ConnectionType.Steam;
+
+        // ====================== End Region =====================================
 
         internal void ChangeState(ConnectionState nextState)
         {
@@ -166,14 +175,28 @@ namespace FQParty.ConnectionManagement
             m_CurrentState.OnServerStopped();
         }
 
-        public void StartClientSession()
+        public void StartSteamClientSession()
         {
-            m_CurrentState.StartClientSession();
+            m_ConnectionType = ConnectionType.Steam;
+            m_CurrentState.StartSteamClientSession();
         }
 
-        public void StartHostSession()
+        public void StartSteamHostSession()
         {
-            m_CurrentState.StartHostSession();
+            m_ConnectionType = ConnectionType.Steam;
+            m_CurrentState.StartSteamHostSession();
+        }
+
+        public void StartUnityClientSession()
+        {
+            m_ConnectionType = ConnectionType.Unity;
+            m_CurrentState.StartUnityClientSession();
+        }
+
+        public void StartUnityHostSession()
+        {
+            m_ConnectionType = ConnectionType.Unity;
+            m_CurrentState.StartUnityHostSession();
         }
 
         public void RequestShutdown()

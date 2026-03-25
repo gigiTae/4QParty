@@ -1,42 +1,33 @@
+using FQParty.GamePlay.GameplayObjects;
 using System.Collections.Generic;
+using System.Linq;
 using Unity.Netcode;
 using UnityEngine;
+using UnityEngine.Rendering;
+using UnityEngine.UI;
 
 namespace FQParty.GamePlay.GameMode
 {
     public abstract class GameModeBase : NetworkBehaviour
     {
-        [SerializeField] protected GameObject m_SpwanPlayer;
-        [SerializeField] protected Transform[] m_SpawnPoints;
-
-        protected Dictionary<ulong, NetworkObject> m_PlayerObjects = new();
-
-        private void Awake()
+        void Awake()
         {
-        }
-
-        void OnEnable()
-        {
-        }
-
-        void OnDisable()
-        {
+            GameModeManager.Instance.Register(this);
         }
 
 
-        public override void OnNetworkSpawn()
-        {
 
+        /// <summary>
+        /// 클라이언트와 호스트가 모두(동기화, 씬로드)등이 완료되면 호출합니다
+        /// </summary>
+        public void OnLoadEventCompleted()
+        {
+            if (IsServer)
+            {
+                StartGameMode();
+            }
         }
 
-        public override void OnNetworkDespawn()
-        {
-
-        }
-        void OnSynchronizeComplete(ulong clientId)
-        {
-            Debug.Log("SynchornizeComplete");
-        }
-
+        protected abstract void StartGameMode();
     }
 }

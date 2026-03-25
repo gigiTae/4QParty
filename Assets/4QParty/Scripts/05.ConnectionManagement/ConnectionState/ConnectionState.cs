@@ -42,13 +42,23 @@ namespace FQParty.ConnectionManagement
         /// <summary>
         /// SerivceProvider 를 사용하여 세션 기반 클라이언트 연결을 시작합니다. 
         /// </summary>
-        public virtual void StartClientSession() { }
+        public virtual void StartSteamClientSession() { }
 
         /// <summary>
         /// SerivceProvider를 통해 세션을 생성하고 호스트 모드를 시작합니다. 
         /// </summary>
-        public virtual void StartHostSession() { }
+        public virtual void StartSteamHostSession() { }
 
+        /// <summary>
+        /// Unity Editor 전용 클라이언트 연결을 시작합니다.
+        /// </summary>
+        public virtual void StartUnityClientSession() { }
+
+        /// <summary>
+        /// Unity Editor 호스트 연결을 시작합니다.
+        /// </summary>
+        public virtual void StartUnityHostSession() {}
+        
         /// <summary>
         /// 사용자가 UI 등을 통해 명시적으로 연결 종료나 게임 나가기를 요청했을 때 호출됩니다. 
         /// </summary>

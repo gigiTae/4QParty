@@ -15,7 +15,14 @@ namespace FQParty.ConnectionManagement
 
         public override void Enter()
         {
-            SceneLoader.Instance.LoadScene(SceneTheme.k_Lobby, true, UnityEngine.SceneManagement.LoadSceneMode.Single);
+            if (m_ConnectionManager.m_ConnectionType == ConnectionManager.ConnectionType.Steam)
+            {
+                SceneLoader.Instance.LoadScene(SceneTheme.k_Lobby, true, UnityEngine.SceneManagement.LoadSceneMode.Single);
+            }
+            else
+            {
+                SceneLoader.Instance.LoadScene(SceneTheme.k_TestLobby, true, UnityEngine.SceneManagement.LoadSceneMode.Single);
+            }
         }
 
         public override void Exit()
@@ -71,7 +78,7 @@ namespace FQParty.ConnectionManagement
             var clientId = request.ClientNetworkId;
 
             var payload = System.Text.Encoding.UTF8.GetString(connectionData);
-            var connectionPayload = JsonUtility.FromJson<ConnectionPayload>(payload); 
+            var connectionPayload = JsonUtility.FromJson<ConnectionPayload>(payload);
         }
 
     }

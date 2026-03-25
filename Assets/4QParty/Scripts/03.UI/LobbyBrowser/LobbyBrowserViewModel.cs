@@ -93,7 +93,7 @@ namespace FQParty.UI
 
             if (lobby != null)
             {
-                ConnectionManager.Instance.StartClientSession();
+                ConnectionManager.Instance.StartSteamClientSession();
                 m_SelectedAndAvailable = false;
             }
         }

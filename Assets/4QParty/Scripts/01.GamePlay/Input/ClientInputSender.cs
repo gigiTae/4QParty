@@ -34,8 +34,6 @@ namespace FQParty.GamePlay.Input
 
         [SerializeField]
         Ability m_AttackAbility;
-
-
         struct AbilityRequset
         {
             public SkillTriggerStyle TriggerStyle;
@@ -83,7 +81,6 @@ namespace FQParty.GamePlay.Input
         }
 
 
-
         void OnDashAbilityStarted()
         {
             RequsetAbility(m_DashAbility.AbilityID, SkillTriggerStyle.Button);
@@ -91,7 +88,8 @@ namespace FQParty.GamePlay.Input
 
         void OnAttackAbilityStarted()
         {
-            RequsetAbility(m_AttackAbility.AbilityID, SkillTriggerStyle.Button);
+            if (m_AttackAbility != null)
+                RequsetAbility(m_AttackAbility.AbilityID, SkillTriggerStyle.Button);
         }
 
         void OnInteractAbilityStarted()
@@ -103,7 +101,7 @@ namespace FQParty.GamePlay.Input
         void SendInput(AbilityRequestData ability)
         {
             AbilityInputEvent?.Invoke(ability);
-            m_ServerAbilityPlayer.RequestAbilityServerRpc(ability);  
+            m_ServerAbilityPlayer.RequestAbilityServerRpc(ability);
         }
 
         void FixedUpdate()
@@ -120,7 +118,7 @@ namespace FQParty.GamePlay.Input
                 }
                 else if (!IsReleaseStyle(m_AbilityRequsets[i].TriggerStyle))
                 {
-                    var abilityPrototype = GameDataSource.Instance.GetAbilityPrototypeByID(m_AbilityRequsets[i].RequsetAbilityID);
+                    var abilityPrototype = GameDataManager.Instance.GetAbilityByID(m_AbilityRequsets[i].RequsetAbilityID);
 
                     // 어빌리티 설정에 AbilityInput이 있는 경우 
                     if (abilityPrototype.Config.AbilityInput != null)
@@ -165,7 +163,7 @@ namespace FQParty.GamePlay.Input
 
         public void RequsetAbility(AbilityID abilityID, SkillTriggerStyle triggerStyle, ulong targetId = 0)
         {
-            Assert.IsNotNull(GameDataSource.Instance.GetAbilityPrototypeByID(abilityID),
+            Assert.IsNotNull(GameDataManager.Instance.GetAbilityByID(abilityID),
              $"Ability with abilityID {abilityID} must be contained in the Ability prototypes of GameDataSource!");
 
             if (m_AbilityRequsetCount < m_AbilityRequsets.Length)

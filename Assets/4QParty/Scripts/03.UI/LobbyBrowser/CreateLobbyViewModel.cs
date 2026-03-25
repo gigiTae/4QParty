@@ -35,7 +35,7 @@ namespace FQParty.UI
         public async Task CreateLobbyAsync()
         {
             await SteamManager.Instance.SteamLobbyService.CreateLobbyAsync(LobbyName, false);
-            ConnectionManager.Instance.StartHostSession();
+            ConnectionManager.Instance.StartSteamHostSession();
         }
 
         public void Dispose()
