@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: DashAbility
   m_EditorClassIdentifier: FQParty.GamePlay::FQParty.GamePlay.Abilities.DashAbility
   Config:
-    ReuseTimeSeconds: 2
+    ReuseTimeSeconds: 0
     AbilityInput: {fileID: 0}
     PlayType: 1
     IsInterruptible: 0

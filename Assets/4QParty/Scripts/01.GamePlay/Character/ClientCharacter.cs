@@ -10,7 +10,6 @@ namespace FQParty.GamePlay.Character
     public class ClientCharacter : NetworkBehaviour
     {
         [SerializeField] ServerCharacter m_ServerCharacter;
-
         public CharacterMovement CharacterMovement => m_CharacterMovement;
         [SerializeField] CharacterMovement m_CharacterMovement;
 

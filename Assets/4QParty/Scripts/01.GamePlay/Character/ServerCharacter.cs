@@ -15,20 +15,14 @@ namespace FQParty.GamePlay.Character
         public CharacterMovement CharacterMovement => m_Movement;
         [SerializeField] CharacterMovement m_Movement;
 
-        public CharacterStatus CharacterStatus=> m_CharacterStatus;
+        public CharacterStatus CharacterStatus => m_CharacterStatus;
         [SerializeField] CharacterStatus m_CharacterStatus;
+
         public NetworkAnimator NetworkAnimator => m_NetworkAnimator;
         [SerializeField] NetworkAnimator m_NetworkAnimator;
 
         public ServerAbilityPlayer AbilityPlayer => m_ServerAbilityPlayer;
         [SerializeField] ServerAbilityPlayer m_ServerAbilityPlayer;
-
-        [Rpc(SendTo.Server)]
-        public void RequestAbilityServerRpc(AbilityRequestData data)
-        {
-            m_ServerAbilityPlayer.RequestAbilityServerRpc(data);
-        }
-
     }
 
 }

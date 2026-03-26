@@ -13,7 +13,7 @@ GameObject:
   - component: {fileID: 9200778585252958984}
   - component: {fileID: 1635064879165671414}
   - component: {fileID: 208726931845093319}
-  - component: {fileID: 1825860194919353117}
+  - component: {fileID: 908605504761178731}
   - component: {fileID: 2929116544677487501}
   - component: {fileID: 2277734276588850043}
   - component: {fileID: 1357554448765932350}
@@ -54,7 +54,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d5a57f767e5e46a458fc5d3c628d0cbb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Unity.Netcode.Runtime::Unity.Netcode.NetworkObject
-  GlobalObjectIdHash: 2587885355
+  GlobalObjectIdHash: 3681353403
   InScenePlacedSourceGlobalObjectIdHash: 234150877
   DeferredDespawnTick: 0
   Ownership: 1
@@ -156,7 +156,7 @@ CharacterController:
   m_SkinWidth: 0.08
   m_MinMoveDistance: 0.001
   m_Center: {x: 0, y: 0, z: 0}
---- !u!114 &1825860194919353117
+--- !u!114 &908605504761178731
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -165,9 +165,9 @@ MonoBehaviour:
   m_GameObject: {fileID: 4950392468185354956}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 6d785a526badb194eab74a89d0dff14d, type: 3}
+  m_Script: {fileID: 11500000, guid: 4d5d33d0ea6bf764d8b4bb412f6ae4ed, type: 3}
   m_Name: 
-  m_EditorClassIdentifier: FQParty.GamePlay::FQParty.GamePlay.Character.ServerCharacter
+  m_EditorClassIdentifier: FQParty.GamePlay::FQParty.GamePlay.Character.PlayerServerCharacter
   ShowTopMostFoldoutHeaderGroup: 1
   m_ClientCharacter: {fileID: 2929116544677487501}
   m_Movement: {fileID: 1635064879165671414}
@@ -187,7 +187,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: FQParty.GamePlay::FQParty.GamePlay.Character.ClientCharacter
   ShowTopMostFoldoutHeaderGroup: 1
-  m_ServerCharacter: {fileID: 1825860194919353117}
+  m_ServerCharacter: {fileID: 908605504761178731}
   m_CharacterMovement: {fileID: 1635064879165671414}
   m_ClientAbilityPlayer: {fileID: 4630263233460472499}
 --- !u!114 &2277734276588850043
@@ -204,7 +204,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: FQParty.GamePlay::FQParty.GamePlay.Input.ClientInputSender
   ShowTopMostFoldoutHeaderGroup: 1
   m_GameInputReader: {fileID: 11400000, guid: 1ca3c0efb879c984a9354551da1ad06f, type: 2}
-  m_ServerCharacter: {fileID: 1825860194919353117}
+  m_ServerCharacter: {fileID: 908605504761178731}
   m_ServerAbilityPlayer: {fileID: 4053115238216986115}
   m_InteractAbility: {fileID: 11400000, guid: 95cd512ae3cebbd4cadeb1a367d3c6f1, type: 2}
   m_DashAbility: {fileID: 11400000, guid: c80faa45c9e419d4088859b7da7f6476, type: 2}
@@ -223,7 +223,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: FQParty.GamePlay::FQParty.GamePlay.Character.CharacterStatus
   ShowTopMostFoldoutHeaderGroup: 1
   m_Settings: {fileID: 11400000, guid: e1ead64f4e0ed374dbb84873f48e84f8, type: 2}
-  m_ServerCharacter: {fileID: 1825860194919353117}
+  m_ServerCharacter: {fileID: 908605504761178731}
 --- !u!114 &4630263233460472499
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -251,7 +251,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: FQParty.GamePlay::FQParty.GamePlay.Abilities.ServerAbilityPlayer
   ShowTopMostFoldoutHeaderGroup: 0
-  m_ServerCharacter: {fileID: 1825860194919353117}
+  m_ServerCharacter: {fileID: 908605504761178731}
 --- !u!1 &5976063220255653522
 GameObject:
   m_ObjectHideFlags: 0

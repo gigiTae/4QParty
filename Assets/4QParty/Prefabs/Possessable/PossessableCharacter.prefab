@@ -449,7 +449,7 @@ Transform:
   m_GameObject: {fileID: 1846400023127371858}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: -0.06751001, y: 0, z: -1.2928001}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -2257,7 +2257,9 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 2552964156940946162}
+  - component: {fileID: 6067383394287957036}
   - component: {fileID: 9090670309184654841}
+  - component: {fileID: 2209227882165559233}
   m_Layer: 0
   m_Name: PossessableCharacter
   m_TagString: Untagged
@@ -2274,13 +2276,38 @@ Transform:
   m_GameObject: {fileID: 8731560188859812158}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0.21263, y: 0, z: 1.39224}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 7581446056308274783}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &6067383394287957036
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8731560188859812158}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d5a57f767e5e46a458fc5d3c628d0cbb, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Unity.Netcode.Runtime::Unity.Netcode.NetworkObject
+  GlobalObjectIdHash: 2284853166
+  InScenePlacedSourceGlobalObjectIdHash: 0
+  DeferredDespawnTick: 0
+  Ownership: 1
+  AlwaysReplicateAsRoot: 0
+  SynchronizeTransform: 1
+  ActiveSceneSynchronization: 0
+  SceneMigrationSynchronization: 1
+  SpawnWithObservers: 1
+  DontDestroyWithOwner: 0
+  AutoObjectParentSync: 1
+  SyncOwnerTransformWhenParented: 1
+  AllowOwnerToParent: 0
 --- !u!114 &9090670309184654841
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2293,7 +2320,30 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: af5dae5bf2bf2ae48977f883d3c1879f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: FQParty.GamePlay::FQParty.GamePlay.GameplayObjects.PossessableObject
+  ShowTopMostFoldoutHeaderGroup: 1
   m_PossessObject: {fileID: 4950392468185354956, guid: 5f05ae9f2d4f2ca47b300152b2683b6f, type: 3}
+  m_RequestPossessEvent: {fileID: 11400000, guid: 7b4a8aa0428b9aa4fb69f593ccfef7fb, type: 2}
+--- !u!135 &2209227882165559233
+SphereCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8731560188859812158}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 1
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Radius: 1
+  m_Center: {x: 0, y: 1, z: 0}
 --- !u!1 &8906804058761862910
 GameObject:
   m_ObjectHideFlags: 0

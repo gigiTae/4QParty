@@ -14,9 +14,7 @@ namespace FQParty.GamePlay.GameMode
         {
             GameModeManager.Instance.Register(this);
         }
-
-
-
+       
         /// <summary>
         /// 클라이언트와 호스트가 모두(동기화, 씬로드)등이 완료되면 호출합니다
         /// </summary>

@@ -22,7 +22,7 @@ MonoBehaviour:
   m_Effects:
   - rid: 2614229088589578324
   - rid: 2614229088589578325
-  - rid: 2614229088589578326
+  - rid: 2614229126710296662
   references:
     version: 2
     RefIds:
@@ -40,7 +40,7 @@ MonoBehaviour:
       data:
         Animation: OnKick
         StateName: Kick
-    - rid: 2614229088589578326
+    - rid: 2614229126710296662
       type: {class: MovementBlockEffect, ns: FQParty.GamePlay.Abilities.Effects, asm: FQParty.GamePlay}
       data:
         m_BlockDuration: 1

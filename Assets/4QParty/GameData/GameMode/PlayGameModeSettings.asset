@@ -1,0 +1,17 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 78bad44ea8397d34a95fa6fb6d67b981, type: 3}
+  m_Name: PlayGameModeSettings
+  m_EditorClassIdentifier: FQParty.GamePlay::FQParty.GamePlay.GameMode.PlayGameModeSettings
+  StartPlayerCharacter: {fileID: 4950392468185354956, guid: ba66461aee20f1849b85dd1242e29f4f, type: 3}
+  StartSpwanObjects: {fileID: 669706578700257208, guid: 98cca86949289fe4480c8e22683403b5, type: 3}
+  RequestPossessEvent: {fileID: 11400000, guid: 7b4a8aa0428b9aa4fb69f593ccfef7fb, type: 2}
