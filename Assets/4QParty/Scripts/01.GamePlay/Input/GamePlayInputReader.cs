@@ -1,34 +1,54 @@
 using System;
 using UnityEngine;
 using UnityEngine.InputSystem;
-using UnityEngine.UI;
 
 namespace FQParty.GamePlay.Input
 {
     [CreateAssetMenu(fileName = "GamePlayInputReader", menuName = "Input/GamePlayInputReader")]
     public class GamePlayInputReader : ScriptableObject
     {
-        public event Action OnInteractInput;
-        public event Action OnDashInput;
-        public event Action OnAttackInput;
+        public event Action InteractPerformedEvent;
+        public event Action InteractCanceledEvent;
+        public event Action DashPerformedEvent;
+        public event Action DashCanceledEvent;
+        public event Action AttackPerformedEvent;
+        public event Action AttackCanceledEvent;
 
-        GamePlayInputAction m_GamePlayInputAction;
+        private GamePlayInputAction m_GamePlayInputAction;
+
         void OnEnable()
         {
-            m_GamePlayInputAction = new GamePlayInputAction();
+            if (m_GamePlayInputAction == null)
+            {
+                m_GamePlayInputAction = new GamePlayInputAction();
+            }
+
             m_GamePlayInputAction.Enable();
-            m_GamePlayInputAction.Player.Dash.performed += HandleDash;
-            m_GamePlayInputAction.Player.Attack.performed += HandleAttack;
-            m_GamePlayInputAction.Player.Interact.performed += HandleInteract;
+
+            m_GamePlayInputAction.Player.Dash.performed += OnDashPerformed;
+            m_GamePlayInputAction.Player.Dash.canceled += OnDashCanceled;
+
+            m_GamePlayInputAction.Player.Attack.performed += OnAttackPerformed;
+            m_GamePlayInputAction.Player.Attack.canceled += OnAttackCanceled;
+
+            m_GamePlayInputAction.Player.Interact.performed += OnInteractPerformed;
+            m_GamePlayInputAction.Player.Interact.canceled += OnInteractCanceled;
         }
 
         void OnDisable()
         {
             if (m_GamePlayInputAction != null)
             {
-                m_GamePlayInputAction.Player.Dash.performed -= HandleDash;
-                m_GamePlayInputAction.Player.Attack.performed -= HandleAttack;
-                m_GamePlayInputAction.Player.Interact.performed -= HandleInteract;
+                // 이벤트 연결 해제 (메모리 누수 방지)
+                m_GamePlayInputAction.Player.Dash.performed -= OnDashPerformed;
+                m_GamePlayInputAction.Player.Dash.canceled -= OnDashCanceled;
+
+                m_GamePlayInputAction.Player.Attack.performed -= OnAttackPerformed;
+                m_GamePlayInputAction.Player.Attack.canceled -= OnAttackCanceled;
+
+                m_GamePlayInputAction.Player.Interact.performed -= OnInteractPerformed;
+                m_GamePlayInputAction.Player.Interact.canceled -= OnInteractCanceled;
+
                 m_GamePlayInputAction.Disable();
 
                 if (Application.isPlaying)
@@ -44,7 +64,8 @@ namespace FQParty.GamePlay.Input
         {
             get
             {
-                if (!m_GamePlayInputAction.Player.enabled)
+                // 안전한 접근을 위해 null 체크 추가
+                if (m_GamePlayInputAction == null || !m_GamePlayInputAction.Player.enabled)
                 {
                     return Vector2.zero;
                 }
@@ -52,17 +73,22 @@ namespace FQParty.GamePlay.Input
             }
         }
 
-        void HandleAttack(InputAction.CallbackContext context)
+        private void OnDashPerformed(InputAction.CallbackContext context) => DashPerformedEvent?.Invoke();
+        private void OnDashCanceled(InputAction.CallbackContext context) => DashCanceledEvent?.Invoke();
+
+        private void OnAttackPerformed(InputAction.CallbackContext context) => AttackPerformedEvent?.Invoke();
+        private void OnAttackCanceled(InputAction.CallbackContext context) => AttackCanceledEvent?.Invoke();
+
+        private void OnInteractPerformed(InputAction.CallbackContext context) => InteractPerformedEvent?.Invoke();
+        private void OnInteractCanceled(InputAction.CallbackContext context) => InteractCanceledEvent?.Invoke();
+
+        public Vector2 GetMouseDirection(Transform target)
         {
-            OnAttackInput?.Invoke();
-        }
-        void HandleDash(InputAction.CallbackContext context)
-        {
-            OnDashInput?.Invoke();
-        }
-        void HandleInteract(InputAction.CallbackContext context)
-        {
-            OnInteractInput?.Invoke();
+            Vector2 mouseScreenPos = Mouse.current.position.ReadValue();
+            Vector2 targetScreenPos = Camera.main.WorldToScreenPoint(target.position);
+
+            Vector2 direction = (mouseScreenPos - targetScreenPos).normalized;
+            return direction;
         }
     }
 }

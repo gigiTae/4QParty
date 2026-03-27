@@ -3,7 +3,6 @@ using UnityEngine;
 
 namespace FQParty.GamePlay.Character
 {
-
     [CreateAssetMenu(fileName = "CharacterSettings", menuName = "GamePlay/CharacterSettings")]
     public class CharacterSettings : ScriptableObject
     {

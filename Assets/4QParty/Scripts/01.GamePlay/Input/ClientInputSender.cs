@@ -12,51 +12,30 @@ namespace FQParty.GamePlay.Input
     /// <summary>
     /// 입력을 받아서 어빌리티를 실행하는 객체
     /// </summary>
-    [RequireComponent(typeof(ServerCharacter))]
+    [RequireComponent(typeof(ServerAbilityPlayer))]
     public class ClientInputSender : NetworkBehaviour
     {
-        [SerializeField]
-        GamePlayInputReader m_GameInputReader;
-
-        [SerializeField]
-        ServerCharacter m_ServerCharacter;
-
-        [SerializeField]
-        ServerAbilityPlayer m_ServerAbilityPlayer;
-
         public event Action<AbilityRequestData> AbilityInputEvent;
 
-        [SerializeField]
-        Ability m_InteractAbility;
+        ServerAbilityPlayer m_ServerAbilityPlayer;
 
-        [SerializeField]
-        Ability m_DashAbility;
+        [SerializeField] GamePlayInputReader m_GameInputReader;
+        [SerializeField] Ability m_InteractAbility;
+        [SerializeField] Ability m_DashAbility;
+        [SerializeField] Ability m_AttackAbility;
 
-        [SerializeField]
-        Ability m_AttackAbility;
         struct AbilityRequset
         {
-            public SkillTriggerStyle TriggerStyle;
             public AbilityID RequsetAbilityID;
-            public ulong TargetID;
         }
 
         readonly AbilityRequset[] m_AbilityRequsets = new AbilityRequset[5];
 
         int m_AbilityRequsetCount;
 
-        BaseAbiltiyInput m_CurrentAbilityInput;
-
-        public enum SkillTriggerStyle
+        public void Awake()
         {
-            None,
-            Button,
-            ButtonRelease,
-        }
-
-        bool IsReleaseStyle(SkillTriggerStyle style)
-        {
-            return style == SkillTriggerStyle.ButtonRelease;
+            m_ServerAbilityPlayer = GetComponent<ServerAbilityPlayer>();
         }
 
         public override void OnNetworkSpawn()
@@ -67,36 +46,33 @@ namespace FQParty.GamePlay.Input
                 return;
             }
 
-            m_GameInputReader.OnAttackInput += OnAttackAbilityStarted;
-            m_GameInputReader.OnDashInput += OnDashAbilityStarted;
-            m_GameInputReader.OnInteractInput += OnInteractAbilityStarted;
+            m_GameInputReader.AttackPerformedEvent += OnAttackAbilityStarted;
+            m_GameInputReader.DashPerformedEvent += OnDashAbilityStarted;
+            m_GameInputReader.InteractPerformedEvent += OnInteractAbilityStarted;
         }
-
 
         public override void OnNetworkDespawn()
         {
-            m_GameInputReader.OnAttackInput -= OnAttackAbilityStarted;
-            m_GameInputReader.OnDashInput -= OnDashAbilityStarted;
-            m_GameInputReader.OnInteractInput -= OnInteractAbilityStarted;
+            m_GameInputReader.AttackPerformedEvent -= OnAttackAbilityStarted;
+            m_GameInputReader.DashPerformedEvent -= OnDashAbilityStarted;
+            m_GameInputReader.InteractPerformedEvent -= OnInteractAbilityStarted;
         }
-
 
         void OnDashAbilityStarted()
         {
-            RequsetAbility(m_DashAbility.AbilityID, SkillTriggerStyle.Button);
+            RequsetAbility(m_DashAbility.AbilityID);
         }
 
         void OnAttackAbilityStarted()
         {
             if (m_AttackAbility != null)
-                RequsetAbility(m_AttackAbility.AbilityID, SkillTriggerStyle.Button);
+                RequsetAbility(m_AttackAbility.AbilityID);
         }
 
         void OnInteractAbilityStarted()
         {
-            RequsetAbility(m_InteractAbility.AbilityID, SkillTriggerStyle.Button);
+            RequsetAbility(m_InteractAbility.AbilityID);
         }
-
 
         void SendInput(AbilityRequestData ability)
         {
@@ -108,60 +84,22 @@ namespace FQParty.GamePlay.Input
         {
             for (int i = 0; i < m_AbilityRequsetCount; ++i)
             {
-                // 현재 활성화된 스킬입력 확인
-                if (m_CurrentAbilityInput != null)
-                {
-                    if (IsReleaseStyle(m_AbilityRequsets[i].TriggerStyle))
-                    {
-                        m_CurrentAbilityInput.OnReleaseKey();
-                    }
-                }
-                else if (!IsReleaseStyle(m_AbilityRequsets[i].TriggerStyle))
-                {
-                    var abilityPrototype = GameDataManager.Instance.GetAbilityByID(m_AbilityRequsets[i].RequsetAbilityID);
-
-                    // 어빌리티 설정에 AbilityInput이 있는 경우 
-                    if (abilityPrototype.Config.AbilityInput != null)
-                    {
-                        var skillPlayer = Instantiate(abilityPrototype.Config.AbilityInput);
-                        skillPlayer.Initiate(m_ServerCharacter, transform.position, abilityPrototype.AbilityID, SendInput, FinishAbilityInput);
-                        m_CurrentAbilityInput = skillPlayer;
-                    }
-                    else
-                    {
-                        PerformAbility(abilityPrototype.AbilityID, m_AbilityRequsets[i].TriggerStyle, m_AbilityRequsets[i].TargetID);
-                    }
-                }
+                var ability = GameDataManager.Instance.GetAbilityByID(m_AbilityRequsets[i].RequsetAbilityID);
+                PerformAbility(ability.AbilityID);
             }
 
             m_AbilityRequsetCount = 0;
+
         }
 
-        void FinishAbilityInput()
+        void PerformAbility(AbilityID abilityID)
         {
-            m_CurrentAbilityInput = null;
-        }
-
-        void PerformAbility(AbilityID abilityID, SkillTriggerStyle triggerStyle, ulong targetID)
-        {
-            Transform hitTransform = null;
-
-            if (targetID != 0)
-            {
-                NetworkObject targetNetObj;
-                if (NetworkManager.Singleton.SpawnManager.SpawnedObjects.TryGetValue(targetID, out targetNetObj))
-                {
-                    hitTransform = targetNetObj.transform;
-                }
-            }
-
             var data = new AbilityRequestData();
             data.AbilityID = abilityID;
-
             SendInput(data);
         }
 
-        public void RequsetAbility(AbilityID abilityID, SkillTriggerStyle triggerStyle, ulong targetId = 0)
+        public void RequsetAbility(AbilityID abilityID)
         {
             Assert.IsNotNull(GameDataManager.Instance.GetAbilityByID(abilityID),
              $"Ability with abilityID {abilityID} must be contained in the Ability prototypes of GameDataSource!");
@@ -169,11 +107,10 @@ namespace FQParty.GamePlay.Input
             if (m_AbilityRequsetCount < m_AbilityRequsets.Length)
             {
                 m_AbilityRequsets[m_AbilityRequsetCount].RequsetAbilityID = abilityID;
-                m_AbilityRequsets[m_AbilityRequsetCount].TriggerStyle = triggerStyle;
-                m_AbilityRequsets[m_AbilityRequsetCount].TargetID = targetId;
                 m_AbilityRequsetCount++;
             }
         }
+
 
     }
 }

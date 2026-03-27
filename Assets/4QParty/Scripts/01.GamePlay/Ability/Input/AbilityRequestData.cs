@@ -7,9 +7,8 @@ namespace FQParty.GamePlay.Abilities
 {
     public struct AbilityRequestData : INetworkSerializable
     {
-        public AbilityID AbilityID;        // 게임 내 전체 액션 리스트에서의 인덱스 - 런타임에 인스턴스 참조를 복구하기 위한 용도
-        public bool ShouldQueue;         // true인 경우 어빌리티를 대기열에 추가, false인 경우 현재 어빌리티를 취소하고 즉시 실행
-     
+        public AbilityID AbilityID;      
+
         [Flags]
         private enum PackFlags
         {
