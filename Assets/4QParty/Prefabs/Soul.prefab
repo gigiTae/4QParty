@@ -203,12 +203,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: FQParty.GamePlay::FQParty.GamePlay.Input.ClientInputSender
   ShowTopMostFoldoutHeaderGroup: 1
+  m_PlayerCharacterSettings: {fileID: 11400000, guid: 841c4b0b1cd417d41bc40cfa0373d4c2, type: 2}
   m_GameInputReader: {fileID: 11400000, guid: 1ca3c0efb879c984a9354551da1ad06f, type: 2}
-  m_ServerCharacter: {fileID: 908605504761178731}
-  m_ServerAbilityPlayer: {fileID: 4053115238216986115}
-  m_InteractAbility: {fileID: 11400000, guid: 95cd512ae3cebbd4cadeb1a367d3c6f1, type: 2}
-  m_DashAbility: {fileID: 11400000, guid: c80faa45c9e419d4088859b7da7f6476, type: 2}
-  m_AttackAbility: {fileID: 0}
 --- !u!114 &1357554448765932350
 MonoBehaviour:
   m_ObjectHideFlags: 0

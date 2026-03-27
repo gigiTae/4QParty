@@ -7,38 +7,14 @@ namespace FQParty.GamePlay.Abilities
 {
     public sealed class ClientAbilityPlayer : NetworkBehaviour
     {
-        private List<Ability> m_PlayingAbilities = new();
+        List<Ability> m_PlayingAbilities = new();
 
-        private const float k_AnticipationTimeoutSeconds = 1;
 
         [SerializeField]
         ClientCharacter m_ClientCharacter;
 
         public void Update()
         {
-            for (int i = m_PlayingAbilities.Count - 1; i >= 0; --i)
-            {
-                var ability = m_PlayingAbilities[i];
-                bool keepGoing = ability.AnticipatedClient || ability.OnUpdateClient(m_ClientCharacter) == AbilityConclusion.Continue;
-                //          bool expirable = ability.Config.DurationSeconds > 0f;
-                //        bool timeExpired = expirable && ability.TimeRunning >= ability.Config.DurationSeconds;
-                //      bool timeOut = ability.AnticipatedClient && ability.TimeRunning >= k_AnticipationTimeoutSeconds;
-
-                //     if (!keepGoing || timeExpired || timeOut)
-                {
-                    //       if (timeOut)
-                    {
-                        ability.CancelClient(m_ClientCharacter);
-                    }
-                    //     else
-                    {
-                        ability.EndClient(m_ClientCharacter);
-                    }
-
-                    m_PlayingAbilities.RemoveAt(i);
-                    AbilityFactory.ReturnAbility(ability);
-                }
-            }
         }
 
         private int FindAbility(AbilityID abilityID, bool anticipatedOnly)

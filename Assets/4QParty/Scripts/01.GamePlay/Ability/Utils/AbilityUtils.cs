@@ -5,14 +5,14 @@ using UnityEngine;
 
 namespace FQParty.GamePlay.Abilities
 {
-    public struct AbilityTimeStamp : INetworkSerializeByMemcpy ,IEquatable<AbilityTimeStamp>
+    public struct AbilityTimeStamp : INetworkSerializeByMemcpy, IEquatable<AbilityTimeStamp>
     {
         public AbilityID ID;
         public float LastUsedTime;
 
         public bool Equals(AbilityTimeStamp other)
         {
-            return ID == other.ID && LastUsedTime == other.LastUsedTime;    
+            return ID == other.ID && LastUsedTime == other.LastUsedTime;
         }
     }
 
@@ -43,14 +43,11 @@ namespace FQParty.GamePlay.Abilities
         NonBlocking, // 병렬 실행
     }
 
-    [Serializable]
-    public enum AbilityInputType
+    [Flags, Serializable]
+    public enum AbilityInputOptions
     {
-        Trigger, 
-        TriggerAndDirection,
-        Release,
-        ReleaseAndDirectionAndDuration,   
+        None = 0,
+        Direction = 1 << 0, // 어빌리티 시전 방향
+        Duration = 1 << 1, // Trigger->Release 시간
     }
-
-
 }

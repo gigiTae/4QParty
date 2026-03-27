@@ -1,4 +1,5 @@
 using FQParty.GamePlay.GameplayObjects;
+using FQParty.GamePlay.Settings;
 using Unity.Netcode;
 using UnityEngine;
 

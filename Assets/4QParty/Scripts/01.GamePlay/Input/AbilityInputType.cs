@@ -4,10 +4,10 @@ using UnityEngine;
 namespace FQParty.GamePlay.Input
 {
     [Serializable]
-    public enum AbilityInputType
+    public enum InputControllerType
     {
-        Trigger, // 버튼 누름  
-        Release, // 버튼 땜
-        TriggerAndDirection, // 버튼 누름과 방향
+        Gamepad,
+        KeyboradAndMouse,
     }
+
 }

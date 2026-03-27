@@ -1,3 +1,4 @@
+using FQParty.GamePlay.Settings;
 using UnityEngine;
 
 namespace FQParty.GamePlay.Cam

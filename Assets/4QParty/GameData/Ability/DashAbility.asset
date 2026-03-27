@@ -14,11 +14,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: FQParty.GamePlay::FQParty.GamePlay.Abilities.DashAbility
   Config:
     ReuseTimeSeconds: 0
-    AbilityInput: {fileID: 0}
     PlayType: 1
     IsInterruptible: 0
-    BlockingMode: 0
     EndPolicy: 0
+    InputOptions: 1
   m_Effects:
   - rid: 2614229058820767830
   DashSpeed: 20

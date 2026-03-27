@@ -1,0 +1,21 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5e147a19b9aeba041b0922db1f41ea15, type: 3}
+  m_Name: TestPlayerCharacterSettings
+  m_EditorClassIdentifier: FQParty.GamePlay::FQParty.GamePlay.Settings.PlayerCharacterSettings
+  m_CharacterSettings: {fileID: 11400000, guid: e1ead64f4e0ed374dbb84873f48e84f8, type: 2}
+  m_AttackPerformedAbility: {fileID: 11400000, guid: 7473af966f2672247ba8ac5615fe3fd0, type: 2}
+  m_AttackCanceledAbility: {fileID: 0}
+  m_InteractPerformedAbility: {fileID: 11400000, guid: 95cd512ae3cebbd4cadeb1a367d3c6f1, type: 2}
+  m_InteractCanceledAbility: {fileID: 0}
+  m_DashPerformedAbility: {fileID: 11400000, guid: 9ad77807f5f09ab409805f23c9738405, type: 2}
+  m_DashCanceledAbility: {fileID: 0}

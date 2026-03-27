@@ -8,7 +8,6 @@ namespace FQParty.GamePlay.Character
     public class PlayerServerCharacter : ServerCharacter
     {
         PlayerCamera m_PlayerCamera;
-
         public override void OnNetworkSpawn()
         {
             base.OnNetworkSpawn();

@@ -1,11 +1,10 @@
 using FQParty.GamePlay.Abilities;
-using FQParty.GamePlay.Character;
 using FQParty.GamePlay.GameplayObjects;
-using NUnit.Framework;
+using FQParty.GamePlay.Settings;
 using System;
 using Unity.Netcode;
 using UnityEngine;
-
+using UnityEngine.Assertions; // NUnit 대신 유니티용 어설션 사용 권장
 
 namespace FQParty.GamePlay.Input
 {
@@ -15,25 +14,18 @@ namespace FQParty.GamePlay.Input
     [RequireComponent(typeof(ServerAbilityPlayer))]
     public class ClientInputSender : NetworkBehaviour
     {
+        [Header("Settings")]
+        [SerializeField] private PlayerCharacterSettings m_PlayerCharacterSettings;
+        [SerializeField] private GamePlayInputReader m_GameInputReader;
+
+        private ServerAbilityPlayer m_ServerAbilityPlayer;
+        private InputControllerType m_InputControllerType = InputControllerType.Gamepad;
+
         public event Action<AbilityRequestData> AbilityInputEvent;
+        private readonly AbilityRequestData[] m_AbilityRequests = new AbilityRequestData[5];
+        private int m_AbilityRequestCount;
 
-        ServerAbilityPlayer m_ServerAbilityPlayer;
-
-        [SerializeField] GamePlayInputReader m_GameInputReader;
-        [SerializeField] Ability m_InteractAbility;
-        [SerializeField] Ability m_DashAbility;
-        [SerializeField] Ability m_AttackAbility;
-
-        struct AbilityRequset
-        {
-            public AbilityID RequsetAbilityID;
-        }
-
-        readonly AbilityRequset[] m_AbilityRequsets = new AbilityRequset[5];
-
-        int m_AbilityRequsetCount;
-
-        public void Awake()
+        private void Awake()
         {
             m_ServerAbilityPlayer = GetComponent<ServerAbilityPlayer>();
         }
@@ -46,71 +38,127 @@ namespace FQParty.GamePlay.Input
                 return;
             }
 
-            m_GameInputReader.AttackPerformedEvent += OnAttackAbilityStarted;
-            m_GameInputReader.DashPerformedEvent += OnDashAbilityStarted;
-            m_GameInputReader.InteractPerformedEvent += OnInteractAbilityStarted;
+            if (m_GameInputReader != null && m_PlayerCharacterSettings != null)
+            {
+                // Performed Events
+                m_GameInputReader.AttackPerformedEvent += OnAttackPerformed;
+                m_GameInputReader.DashPerformedEvent += OnDashPerformed;
+                m_GameInputReader.InteractPerformedEvent += OnInteractPerformed;
+
+                // Canceled Events 
+                m_GameInputReader.AttackCanceledEvent += OnAttackCanceled;
+                m_GameInputReader.DashCanceledEvent += OnDashCanceled;
+                m_GameInputReader.InteractCanceledEvent += OnInteractCanceled;
+            }
         }
 
         public override void OnNetworkDespawn()
         {
-            m_GameInputReader.AttackPerformedEvent -= OnAttackAbilityStarted;
-            m_GameInputReader.DashPerformedEvent -= OnDashAbilityStarted;
-            m_GameInputReader.InteractPerformedEvent -= OnInteractAbilityStarted;
-        }
-
-        void OnDashAbilityStarted()
-        {
-            RequsetAbility(m_DashAbility.AbilityID);
-        }
-
-        void OnAttackAbilityStarted()
-        {
-            if (m_AttackAbility != null)
-                RequsetAbility(m_AttackAbility.AbilityID);
-        }
-
-        void OnInteractAbilityStarted()
-        {
-            RequsetAbility(m_InteractAbility.AbilityID);
-        }
-
-        void SendInput(AbilityRequestData ability)
-        {
-            AbilityInputEvent?.Invoke(ability);
-            m_ServerAbilityPlayer.RequestAbilityServerRpc(ability);
-        }
-
-        void FixedUpdate()
-        {
-            for (int i = 0; i < m_AbilityRequsetCount; ++i)
+            if (m_GameInputReader != null)
             {
-                var ability = GameDataManager.Instance.GetAbilityByID(m_AbilityRequsets[i].RequsetAbilityID);
-                PerformAbility(ability.AbilityID);
+                m_GameInputReader.AttackPerformedEvent -= OnAttackPerformed;
+                m_GameInputReader.DashPerformedEvent -= OnDashPerformed;
+                m_GameInputReader.InteractPerformedEvent -= OnInteractPerformed;
+
+                m_GameInputReader.AttackCanceledEvent -= OnAttackCanceled;
+                m_GameInputReader.DashCanceledEvent -= OnDashCanceled;
+                m_GameInputReader.InteractCanceledEvent -= OnInteractCanceled;
+            }
+        }
+
+        #region Input Handlers
+
+        private void OnAttackPerformed() => RequestAbilityFromSettings(m_PlayerCharacterSettings.AttackPerformedAbility);
+        private void OnAttackCanceled() => RequestAbilityFromSettings(m_PlayerCharacterSettings.AttackCanceledAbility);
+
+        private void OnDashPerformed() => RequestAbilityFromSettings(m_PlayerCharacterSettings.DashPerformedAbility);
+        private void OnDashCanceled() => RequestAbilityFromSettings(m_PlayerCharacterSettings.DashCanceledAbility);
+
+        private void OnInteractPerformed() => RequestAbilityFromSettings(m_PlayerCharacterSettings.InteractPerformedAbility);
+        private void OnInteractCanceled() => RequestAbilityFromSettings(m_PlayerCharacterSettings.InteractCanceledAbility);
+
+        /// <summary>
+        /// 셋팅 데이터에 할당된 어빌리티가 있는지 확인 후 요청합니다.
+        /// </summary>
+        private void RequestAbilityFromSettings(Ability ability)
+        {
+            if (ability != null)
+            {
+                RequestAbility(ability);
+            }
+        }
+
+        #endregion
+
+        private void FixedUpdate()
+        {
+            // 한 프레임에 쌓인 요청들을 처리
+            for (int i = 0; i < m_AbilityRequestCount; ++i)
+            {
+                PerformAbility(m_AbilityRequests[i]);
             }
 
-            m_AbilityRequsetCount = 0;
-
+            m_AbilityRequestCount = 0;
         }
 
-        void PerformAbility(AbilityID abilityID)
+        private void PerformAbility(AbilityRequestData data)
         {
-            var data = new AbilityRequestData();
-            data.AbilityID = abilityID;
-            SendInput(data);
+            // 로컬 이벤트 발생 (UI나 이펙트 처리용)
+            AbilityInputEvent?.Invoke(data);
+
+            // 서버로 실행 요청 전달
+            m_ServerAbilityPlayer.RequestAbilityServerRpc(data);
         }
 
-        public void RequsetAbility(AbilityID abilityID)
+        public void RequestAbility(Ability ability)
         {
+            AbilityID abilityID = ability.AbilityID;
+
             Assert.IsNotNull(GameDataManager.Instance.GetAbilityByID(abilityID),
-             $"Ability with abilityID {abilityID} must be contained in the Ability prototypes of GameDataSource!");
+                $"Ability ID {abilityID}가 GameDataManager 프로토타입에 존재하지 않습니다!");
 
-            if (m_AbilityRequsetCount < m_AbilityRequsets.Length)
+            if (m_AbilityRequestCount >= m_AbilityRequests.Length)
             {
-                m_AbilityRequsets[m_AbilityRequsetCount].RequsetAbilityID = abilityID;
-                m_AbilityRequsetCount++;
+                Debug.LogWarning("Ability request queue is full!");
+                return;
             }
+
+            // 쿨타임 확인
+            bool canRequset = m_ServerAbilityPlayer.CanRequsetAbility(ability);
+            if (!canRequset) return;
+
+
+            // 입력 방향 정보
+            if (ability.Config.InputOptions.HasFlag(AbilityInputOptions.Direction))
+            {
+                m_AbilityRequests[m_AbilityRequestCount].Direction = GetDirectionInput();
+            }
+
+            // 입력 시간 정보
+            if(ability.Config.InputOptions.HasFlag(AbilityInputOptions.Duration))
+            {
+                m_AbilityRequests[m_AbilityRequestCount].Duration = 0f;
+            }
+           
+
+            m_AbilityRequests[m_AbilityRequestCount].AbilityID = ability.AbilityID;
+
+            m_AbilityRequestCount++;
         }
 
+        Vector2 GetDirectionInput()
+        {
+            Vector2 direction = Vector2.zero;
+            if (m_InputControllerType == InputControllerType.Gamepad)
+            {
+                direction = m_GameInputReader.PlayerMoveInput;
+            }
+            else if(m_InputControllerType == InputControllerType.KeyboradAndMouse)
+            {
+                direction = m_GameInputReader.GetMouseDirection(transform);
+            }
 
+            return direction;
+        }
     }
 }

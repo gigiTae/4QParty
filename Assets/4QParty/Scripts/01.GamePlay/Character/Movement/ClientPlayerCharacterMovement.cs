@@ -1,4 +1,5 @@
 using FQParty.GamePlay.Input;
+using FQParty.GamePlay.Settings;
 using Unity.Netcode;
 using UnityEngine;
 using UnityEngine.InputSystem;
@@ -16,7 +17,6 @@ namespace FQParty.GamePlay.Character.Movement
         [SerializeField] GamePlayInputReader m_GamePlayInputReader;
         [SerializeField] CharacterController m_CharacterController;
         [SerializeField] Camera m_PlayerCameara;
-        [SerializeField] InputActionReference m_MoveInputActionReference;
 
         public override void OnNetworkSpawn()
         {
@@ -50,7 +50,6 @@ namespace FQParty.GamePlay.Character.Movement
                         {
                             UpdateInputMove();
                         }
-
                         break;
                     }
                 case MovementState.Stop:
@@ -77,7 +76,7 @@ namespace FQParty.GamePlay.Character.Movement
                 moveDirection = (right * moveInput.x + foward * moveInput.y).normalized;
 
                 Quaternion targetRotation = Quaternion.LookRotation(moveDirection);
-                transform.rotation = Quaternion.Slerp(transform.rotation, targetRotation, 1.0f);
+                transform.rotation = targetRotation;
             }
 
             Vector3 motion = moveDirection * m_Settings.MoveSpeed * Time.deltaTime;
@@ -114,6 +113,5 @@ namespace FQParty.GamePlay.Character.Movement
         {
             m_OnDash = false;
         }
-
     }
 }

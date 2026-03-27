@@ -44,7 +44,6 @@ namespace FQParty.GamePlay.Abilities
                     return serverTime - timeStamp.LastUsedTime < reuseTime;
                 }
             }
-
             return true;
         }
 
@@ -114,7 +113,6 @@ namespace FQParty.GamePlay.Abilities
                 m_PlayingAbility.OnUpdate(m_ServerCharacter);
                 conclusion = m_PlayingAbility.IsEnd();
             }
-            // 선입력된 액션을 실행합니다 
             else if (m_PendingQueue.Count > 0)
             {
                 Ability ability = m_PendingQueue.Dequeue();
