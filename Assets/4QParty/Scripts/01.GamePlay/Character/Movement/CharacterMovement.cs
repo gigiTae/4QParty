@@ -14,12 +14,12 @@ namespace FQParty.GamePlay.Character.Movement
             Moveable, // 이동 가능 상태 
             Stop, // 정지
         }
-        protected NetworkVariable<MovementState> m_State = new(MovementState.Moveable);
+        protected NetworkVariable<MovementState> m_MovementState = new(MovementState.Moveable);
 
         [Rpc(SendTo.Server)]
         public virtual void SetMovementStateServerRpc(MovementState state)
         {
-            m_State.Value = state;
+            m_MovementState.Value = state;
         }
     }
 

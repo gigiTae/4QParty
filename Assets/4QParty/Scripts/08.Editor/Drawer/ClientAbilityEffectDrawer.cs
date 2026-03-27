@@ -7,8 +7,8 @@ using UnityEngine;
 
 namespace FQParty.Editor.Drawer
 {
-    [CustomPropertyDrawer(typeof(AbilityEffect), true)]
-    public class AbilityEffectDrawer : PropertyDrawer
+    [CustomPropertyDrawer(typeof(ClientAbilityEffect), true)]
+    public class ClientAbilityEffectDrawer : PropertyDrawer
     {
         static Dictionary<string, Type> typeMap;
 
@@ -63,7 +63,7 @@ namespace FQParty.Editor.Drawer
 
         static void BuildTypeMap()
         {
-            var baseType = typeof(AbilityEffect);
+            var baseType = typeof(ClientAbilityEffect);
             typeMap = AppDomain.CurrentDomain.GetAssemblies()
                 .SelectMany(asm =>
                 {

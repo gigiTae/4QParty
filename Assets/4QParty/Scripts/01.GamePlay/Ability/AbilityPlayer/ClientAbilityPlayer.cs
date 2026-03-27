@@ -1,89 +1,139 @@
-using UnityEngine;
-using System.Collections.Generic;
 using FQParty.GamePlay.Character;
+using System.Collections.Generic;
 using Unity.Netcode;
+using UnityEngine;
+using UnityEngine.Pool;
 
 namespace FQParty.GamePlay.Abilities
 {
     public sealed class ClientAbilityPlayer : NetworkBehaviour
     {
-        List<Ability> m_PlayingAbilities = new();
+        [SerializeField] ClientCharacter m_ClientCharacter;
 
+        public Ability PlayingAbility => m_PlayingAbility;
+        Ability m_PlayingAbility;
 
-        [SerializeField]
-        ClientCharacter m_ClientCharacter;
+        Queue<Ability> m_PendingQueue = new();
+        List<Ability> m_NonBlockingAbilities = new();
+        Queue<Ability> m_RequestQueue = new();
+
+        public void RequestAbility(AbilityRequestData data)
+        {
+            Ability ability = AbilityFactory.CreateAbilityFromData(ref data);
+
+            m_RequestQueue.Enqueue(ability);
+        }
+
+        public void PlayAbility(Ability ability)
+        {
+            switch (ability.Config.PlayType)
+            {
+                case AbilityPlayType.Cancel:
+                    {
+                        CancelPlayingAbility();
+                        m_PendingQueue.Enqueue(ability);
+                        break;
+                    }
+                case AbilityPlayType.Queue:
+                    {
+                        m_PendingQueue.Enqueue(ability);
+                        break;
+                    }
+                case AbilityPlayType.NonBlocking:
+                    {
+                        StartAbility(ability);
+                        m_NonBlockingAbilities.Add(ability);
+                        break;
+                    }
+            }
+        }
+
+        AbilityConclusion StartAbility(Ability ability)
+        {
+            ability.TimeStarted = NetworkManager.ServerTime.TimeAsFloat;
+            ability.OnStartClient(m_ClientCharacter);
+            return ability.IsEndClient();
+        }
 
         public void Update()
         {
-        }
+            ProcessRequsetAbility();
 
-        private int FindAbility(AbilityID abilityID, bool anticipatedOnly)
-        {
-            return m_PlayingAbilities.FindIndex(a => a.AbilityID == abilityID && (!anticipatedOnly || a.AnticipatedClient));
-        }
+            AbilityConclusion conclusion = AbilityConclusion.Continue;
 
-        public void OnAnimEvent(string id)
-        {
-            foreach (var abilityFx in m_PlayingAbilities)
+            if (m_PlayingAbility != null)
             {
+                m_PlayingAbility.OnUpdateClient(m_ClientCharacter);
+                conclusion = m_PlayingAbility.IsEndClient();
+            }
+            else if (m_PendingQueue.Count > 0)
+            {
+                Ability ability = m_PendingQueue.Dequeue();
+                conclusion = StartAbility(ability);     
+                m_PlayingAbility = ability;
+            }
+
+            if (conclusion == AbilityConclusion.Stop)
+            {
+                m_PlayingAbility.OnEndClient(m_ClientCharacter);
+                TryReturnAbility(m_PlayingAbility);
+                m_PlayingAbility = null;
+            }
+
+            foreach (var nonBlockAbility in m_NonBlockingAbilities)
+            {
+                nonBlockAbility.OnUpdateClient(m_ClientCharacter);
             }
         }
-        public void AnticipateAbility(ref AbilityRequestData data)
+        void ProcessRequsetAbility()
         {
-            Ability ability = AbilityFactory.CreateAbilityFromData(ref data);
-            ability.AnticipateAbilityClient(m_ClientCharacter);
-        }
+            int count = m_RequestQueue.Count;
 
-        public void StartClientMoveAbility(ref AbilityRequestData data)
-        {
-            Ability ability = AbilityFactory.CreateAbilityFromData(ref data);
-            ability.StartClientMove(m_ClientCharacter);
-        }
+            if (count == 0) return;
 
-        public void PlayAbility(ref AbilityRequestData data)
-        {
-            var anticipatedAbilityIndex = FindAbility(data.AbilityID, true);
-
-            var abilityFX = anticipatedAbilityIndex >= 0 ? m_PlayingAbilities[anticipatedAbilityIndex] : AbilityFactory.CreateAbilityFromData(ref data);
-            if (abilityFX.OnStartClient(m_ClientCharacter) == AbilityConclusion.Continue)
+            for (int i = 0; i < count; i++)
             {
-                if (anticipatedAbilityIndex < 0)
-                {
-                    m_PlayingAbilities.Add(abilityFX);
-                }
-            }
-            else if (anticipatedAbilityIndex >= 0)
-            {
-                var removedAbility = m_PlayingAbilities[anticipatedAbilityIndex];
-                m_PlayingAbilities.RemoveAt(anticipatedAbilityIndex);
-                AbilityFactory.ReturnAbility(removedAbility);
+                var data = m_RequestQueue.Dequeue();
+                PlayAbility(data);
             }
         }
 
-        public void CancelAllAbilities()
+        public void CancelPlayingAbility()
         {
-            foreach (var ability in m_PlayingAbilities)
+            var removedAbilities = ListPool<Ability>.Get();
+
+            if (m_PlayingAbility != null)
             {
-                ability.CancelClient(m_ClientCharacter);
-                AbilityFactory.ReturnAbility(ability);
+                m_PlayingAbility.OnCanceledClient(m_ClientCharacter);
+                removedAbilities.Add(m_PlayingAbility);
+                m_PlayingAbility = null;
             }
-            m_PlayingAbilities.Clear();
+
+            foreach (var ability in m_PendingQueue)
+            {
+                removedAbilities.Add(ability);
+            }
+            m_PendingQueue.Clear();
+
+            foreach (var ability in removedAbilities)
+            {
+                TryReturnAbility(ability);
+            }
+
+            ListPool<Ability>.Release(removedAbilities);
         }
 
-        public void CancelAllAbilitiesWithSameProtypeID(AbilityID abilityID)
+        void TryReturnAbility(Ability ability)
         {
-            for (int i = m_PlayingAbilities.Count - 1; i >= 0; --i)
+            if (m_PlayingAbility == ability ||
+                m_PendingQueue.Contains(ability) ||
+                m_NonBlockingAbilities.Contains(ability))
             {
-                if (m_PlayingAbilities[i].AbilityID == abilityID)
-                {
-                    var ability = m_PlayingAbilities[i];
-                    ability.CancelClient(m_ClientCharacter);
-                    m_PlayingAbilities.RemoveAt(i);
-                    AbilityFactory.ReturnAbility(ability);
-                }
+                return;
             }
-        }
 
+            AbilityFactory.ReturnAbility(ability);
+        }
 
     }
 

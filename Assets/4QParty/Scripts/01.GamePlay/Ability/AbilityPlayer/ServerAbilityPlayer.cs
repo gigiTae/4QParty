@@ -76,8 +76,8 @@ namespace FQParty.GamePlay.Abilities
         {
             ability.TimeStarted = NetworkManager.ServerTime.TimeAsFloat;
             AddTimeStamp(ability.AbilityID);
-            ability.OnStart(m_ServerCharacter);
-            return ability.IsEnd();
+            ability.OnStartServer(m_ServerCharacter);
+            return ability.IsEndServer();
         }
 
         void AddTimeStamp(AbilityID abilityID)
@@ -110,8 +110,8 @@ namespace FQParty.GamePlay.Abilities
 
             if (m_PlayingAbility != null)
             {
-                m_PlayingAbility.OnUpdate(m_ServerCharacter);
-                conclusion = m_PlayingAbility.IsEnd();
+                m_PlayingAbility.OnUpdateServer(m_ServerCharacter);
+                conclusion = m_PlayingAbility.IsEndServer();
             }
             else if (m_PendingQueue.Count > 0)
             {
@@ -122,14 +122,14 @@ namespace FQParty.GamePlay.Abilities
 
             if (conclusion == AbilityConclusion.Stop)
             {
-                m_PlayingAbility.End(m_ServerCharacter);
+                m_PlayingAbility.OnEndServer(m_ServerCharacter);
                 TryReturnAbility(m_PlayingAbility);
                 m_PlayingAbility = null;
             }
 
             foreach (var nonBlockAbility in m_NonBlockingAbilities)
             {
-                nonBlockAbility.OnUpdate(m_ServerCharacter);
+                nonBlockAbility.OnUpdateServer(m_ServerCharacter);
             }
         }
 
@@ -153,7 +153,7 @@ namespace FQParty.GamePlay.Abilities
 
             if (m_PlayingAbility != null)
             {
-                m_PlayingAbility.Cancel(m_ServerCharacter);
+                m_PlayingAbility.OnCanceledServer(m_ServerCharacter);
                 removedAbilities.Add(m_PlayingAbility);
                 m_PlayingAbility = null;
             }

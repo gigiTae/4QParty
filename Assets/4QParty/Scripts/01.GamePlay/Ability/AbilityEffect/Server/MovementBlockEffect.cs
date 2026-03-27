@@ -9,23 +9,19 @@ namespace FQParty.GamePlay.Abilities.Effects
     /// 이동 관련 이펙트를 설정합니다
     /// </summary>
     [Serializable]
-    public class MovementBlockEffect : AbilityEffect
+    public class MovementBlockEffect : ServerAbilityEffect
     {
         [SerializeField] float m_BlockDuration = 1f;
-        float m_StartTime = 0f;
-        bool m_IsActive;
-
         public override void OnStart(ServerCharacter serverCharacter, Ability ability)
         {
-            m_StartTime = Time.time;
-            m_IsActive = true;
             serverCharacter.CharacterMovement.SetMovementStateServerRpc(MovementState.Stop);
         }
+
         public override void OnUpdate(ServerCharacter serverCharacter, Ability ability)
         {
-            if (Time.time - m_StartTime > m_BlockDuration) 
+            if (ability.TimeRunning >= m_BlockDuration)
             {
-                m_IsActive = false;
+                IsActive = false;
                 serverCharacter.CharacterMovement.SetMovementStateServerRpc(MovementState.Moveable);
             }
         }
@@ -34,8 +30,6 @@ namespace FQParty.GamePlay.Abilities.Effects
         {
             serverCharacter.CharacterMovement.SetMovementStateServerRpc(MovementState.Moveable);
         }
-
-        public override bool IsActive => m_IsActive;
     }
 
 }

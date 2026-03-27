@@ -7,17 +7,13 @@ using UnityEngine;
 namespace FQParty.GamePlay.Abilities.Effects
 {
     [Serializable]
-    public class AnimationEffect : AbilityEffect
+    public class AnimationEffect : ServerAbilityEffect
     {
         [SerializeField] public string Animation;
         [SerializeField] public string StateName;
-        public override bool IsActive => m_IsActive;
-        private bool m_IsActive;
 
         public override void OnStart(ServerCharacter serverCharacter, Ability ability)
         {
-            this.GetType();
-            m_IsActive = true;
             serverCharacter.NetworkAnimator.SetTrigger(Animation);
         }
 
@@ -28,7 +24,7 @@ namespace FQParty.GamePlay.Abilities.Effects
         {
             if (stateInfo.IsName(StateName))
             {
-                m_IsActive = false;
+                IsActive = false;
             }
         }
     }

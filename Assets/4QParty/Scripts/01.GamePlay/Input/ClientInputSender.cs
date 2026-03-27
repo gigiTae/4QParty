@@ -11,23 +11,24 @@ namespace FQParty.GamePlay.Input
     /// <summary>
     /// 입력을 받아서 어빌리티를 실행하는 객체
     /// </summary>
-    [RequireComponent(typeof(ServerAbilityPlayer))]
+    [RequireComponent(typeof(ServerAbilityPlayer), typeof(ClientAbilityPlayer))]
     public class ClientInputSender : NetworkBehaviour
     {
         [Header("Settings")]
-        [SerializeField] private PlayerCharacterSettings m_PlayerCharacterSettings;
-        [SerializeField] private GamePlayInputReader m_GameInputReader;
+        [SerializeField] PlayerCharacterSettings m_PlayerCharacterSettings;
+        [SerializeField] GamePlayInputReader m_GameInputReader;
 
-        private ServerAbilityPlayer m_ServerAbilityPlayer;
-        private InputControllerType m_InputControllerType = InputControllerType.Gamepad;
+        ServerAbilityPlayer m_ServerAbilityPlayer;
+        ClientAbilityPlayer m_ClientAbilityPlayer;
+        InputControllerType m_InputControllerType = InputControllerType.KeyboradAndMouse;
 
-        public event Action<AbilityRequestData> AbilityInputEvent;
-        private readonly AbilityRequestData[] m_AbilityRequests = new AbilityRequestData[5];
-        private int m_AbilityRequestCount;
+        readonly AbilityRequestData[] m_AbilityRequests = new AbilityRequestData[5];
+        int m_AbilityRequestCount;
 
         private void Awake()
         {
             m_ServerAbilityPlayer = GetComponent<ServerAbilityPlayer>();
+            m_ClientAbilityPlayer = GetComponent<ClientAbilityPlayer>();    
         }
 
         public override void OnNetworkSpawn()
@@ -103,9 +104,9 @@ namespace FQParty.GamePlay.Input
 
         private void PerformAbility(AbilityRequestData data)
         {
-            // 로컬 이벤트 발생 (UI나 이펙트 처리용)
-            AbilityInputEvent?.Invoke(data);
-
+            // 클라이언트 실행
+            m_ClientAbilityPlayer.RequestAbility(data);
+    
             // 서버로 실행 요청 전달
             m_ServerAbilityPlayer.RequestAbilityServerRpc(data);
         }
@@ -135,25 +136,25 @@ namespace FQParty.GamePlay.Input
             }
 
             // 입력 시간 정보
-            if(ability.Config.InputOptions.HasFlag(AbilityInputOptions.Duration))
+            if (ability.Config.InputOptions.HasFlag(AbilityInputOptions.Duration))
             {
                 m_AbilityRequests[m_AbilityRequestCount].Duration = 0f;
             }
-           
+
 
             m_AbilityRequests[m_AbilityRequestCount].AbilityID = ability.AbilityID;
 
             m_AbilityRequestCount++;
         }
 
-        Vector2 GetDirectionInput()
+        public Vector2 GetDirectionInput()
         {
             Vector2 direction = Vector2.zero;
             if (m_InputControllerType == InputControllerType.Gamepad)
             {
                 direction = m_GameInputReader.PlayerMoveInput;
             }
-            else if(m_InputControllerType == InputControllerType.KeyboradAndMouse)
+            else if (m_InputControllerType == InputControllerType.KeyboradAndMouse)
             {
                 direction = m_GameInputReader.GetMouseDirection(transform);
             }

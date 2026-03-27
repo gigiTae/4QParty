@@ -17,5 +17,5 @@ MonoBehaviour:
   m_AttackCanceledAbility: {fileID: 0}
   m_InteractPerformedAbility: {fileID: 11400000, guid: 95cd512ae3cebbd4cadeb1a367d3c6f1, type: 2}
   m_InteractCanceledAbility: {fileID: 0}
-  m_DashPerformedAbility: {fileID: 11400000, guid: 9ad77807f5f09ab409805f23c9738405, type: 2}
-  m_DashCanceledAbility: {fileID: 0}
+  m_DashPerformedAbility: {fileID: 11400000, guid: 97d47825d7173644285f5ef58b083160, type: 2}
+  m_DashCanceledAbility: {fileID: 11400000, guid: 9ad77807f5f09ab409805f23c9738405, type: 2}

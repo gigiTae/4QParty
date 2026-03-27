@@ -3,6 +3,7 @@ using FQParty.GamePlay.Character;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using Unity.Netcode;
 using UnityEngine;
 
 namespace FQParty.GamePlay.Abilities
@@ -10,22 +11,22 @@ namespace FQParty.GamePlay.Abilities
     [CreateAssetMenu(menuName = "Abilities/Ability")]
     public class Ability : ScriptableObject
     {
-        #region Variables & Properties
-
         [Header("Settings")]
         [SerializeField] public AbilityConfig Config;
-        [SerializeReference] private List<AbilityEffect> m_Effects = new();
+        [SerializeReference] List<ServerAbilityEffect> m_ServerEffects = new();
+        [SerializeReference] List<ClientAbilityEffect> m_ClientEffects = new();
 
         [NonSerialized] public AbilityID AbilityID;
         protected AbilityRequestData m_Data;
-
         public float TimeStarted { get; set; }
-        public float TimeRunning => Time.time - TimeStarted;
-        public bool AnticipatedClient { get; protected set; }
+        public float TimeRunning
+        {
+            get
+            {
+                return NetworkManager.Singleton.ServerTime.TimeAsFloat - TimeStarted;
+            }
+        }
 
-        #endregion
-
-        #region Initialization & Lifecycle
 
         public void Initialize(ref AbilityRequestData data)
         {
@@ -38,38 +39,43 @@ namespace FQParty.GamePlay.Abilities
             m_Data = default;
             AbilityID = default;
             TimeStarted = 0;
-            AnticipatedClient = false;
         }
 
         public virtual Ability Clone()
         {
             Ability ability = Instantiate(this);
-            ability.m_Effects = m_Effects.Select(e => e.Clone()).ToList();
+            ability.m_ServerEffects = m_ServerEffects.Select(e => e.Clone()).ToList();
+            ability.m_ClientEffects = m_ClientEffects.Select(e => e.Clone()).ToList();
             return ability;
         }
 
-        #endregion
+        // ========================= Server =================================
 
-        #region Server Logic (Authority)
-
-        public virtual void OnStart(ServerCharacter serverCharacter)
+        public virtual void OnStartServer(ServerCharacter serverCharacter)
         {
-            m_Effects.ForEach(e => e.OnStart(serverCharacter, this));
-         }
-
-        public virtual void OnUpdate(ServerCharacter serverCharacter)
-        {
-            m_Effects.ForEach(e => e.OnUpdate(serverCharacter, this));
+            m_ServerEffects.ForEach(e =>
+            {
+                e.IsActive = true;
+                e.OnStart(serverCharacter, this);
+            });
         }
 
-        public virtual AbilityConclusion IsEnd()
+        public virtual void OnUpdateServer(ServerCharacter serverCharacter)
         {
-            if (m_Effects.Count == 0) return AbilityConclusion.Stop;
-
-            bool shouldStop = Config.EndPolicy switch
+            m_ServerEffects.ForEach(e =>
             {
-                AbilityEndPolicy.AnyEffectCompleted => m_Effects.Any(e => !e.IsActive),
-                AbilityEndPolicy.AllEffectCompleted => m_Effects.All(e => !e.IsActive),
+                if(e.IsActive) e.OnUpdate(serverCharacter, this);
+            });
+        }
+
+        public virtual AbilityConclusion IsEndServer()
+        {
+            if (m_ServerEffects.Count == 0) return AbilityConclusion.Stop;
+
+            bool shouldStop = Config.ServerEndPolicy switch
+            {
+                AbilityEndPolicy.AnyEffectCompleted => m_ServerEffects.Any(e => !e.IsActive),
+                AbilityEndPolicy.AllEffectCompleted => m_ServerEffects.All(e => !e.IsActive),
                 _ => true
             };
 
@@ -77,47 +83,65 @@ namespace FQParty.GamePlay.Abilities
         }
 
         /// <summary> 어빌리티가 정상 종료될 때 호출 </summary>
-        public virtual void End(ServerCharacter serverCharacter)
+        public virtual void OnEndServer(ServerCharacter serverCharacter)
         {
-            Cancel(serverCharacter);
-            m_Effects.ForEach(e => e.End(serverCharacter, this));
+            OnCanceledServer(serverCharacter);
+            m_ServerEffects.ForEach(e => e.End(serverCharacter, this));
         }
 
         /// <summary> 어빌리티가 강제 취소될 때 호출 </summary>
-        public virtual void Cancel(ServerCharacter serverCharacter)
+        public virtual void OnCanceledServer(ServerCharacter serverCharacter)
         {
-            m_Effects.ForEach(e => e.Cancel(serverCharacter, this));
+            m_ServerEffects.ForEach(e => e.Cancel(serverCharacter, this));
         }
 
-        #endregion
+        // ========================= Client =================================
 
-        #region Client Logic (Prediction/Visual)
-
-        public virtual void AnticipateAbilityClient(ClientCharacter clientCharacter)
+        public virtual void OnStartClient(ClientCharacter clientCharacter)
         {
-            AnticipatedClient = true;
-            TimeStarted = Time.time;
+            m_ClientEffects.ForEach(e =>
+            {
+                e.IsActive = true;
+                e.OnStart(clientCharacter, this);
+            });
         }
 
-        public virtual AbilityConclusion OnStartClient(ClientCharacter clientCharacter) => AbilityConclusion.Continue;
+        public virtual void OnUpdateClient(ClientCharacter clientCharacter)
+        {
+            m_ClientEffects.ForEach(e =>
+            {
+                if(e.IsActive) e.OnUpdate(clientCharacter, this);   
+            });
+        }
 
-        public virtual AbilityConclusion OnUpdateClient(ClientCharacter clientCharacter) => AbilityConclusion.Continue;
+        public virtual void OnEndClient(ClientCharacter clientCharacter)
+        {
+            OnCanceledClient(clientCharacter);
+            m_ClientEffects.ForEach(e => e.End(clientCharacter, this));
+        }
 
-        public virtual void EndClient(ClientCharacter clientCharacter) => CancelClient(clientCharacter);
+        public virtual void OnCanceledClient(ClientCharacter clientCharacter)
+        {
+            m_ClientEffects.ForEach(e => e.Cancel(clientCharacter, this));
+        }
+        public virtual AbilityConclusion IsEndClient()
+        {
+            if (m_ClientEffects.Count == 0) return AbilityConclusion.Stop;
 
-        public virtual void CancelClient(ClientCharacter clientCharacter) { }
+            bool shouldStop = Config.ClientEndPolicy switch
+            {
+                AbilityEndPolicy.AnyEffectCompleted => m_ClientEffects.Any(e => !e.IsActive),
+                AbilityEndPolicy.AllEffectCompleted => m_ClientEffects.All(e => !e.IsActive),
+                _ => true
+            };
 
-        public virtual void StartClientMove(ClientCharacter clientCharacter) { }
-
-        #endregion
-
-        #region Animation Callbacks
+            return shouldStop ? AbilityConclusion.Stop : AbilityConclusion.Continue;
+        }
 
         public void OnAnimationStateExit(Animator animator, AnimatorStateInfo stateInfo, int layerIndex)
         {
-            m_Effects.ForEach(e => e.OnAnimationStateExit(animator, stateInfo, layerIndex));
+            m_ServerEffects.ForEach(e => e.OnAnimationStateExit(animator, stateInfo, layerIndex));
         }
 
-        #endregion
     }
 }

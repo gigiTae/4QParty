@@ -9,24 +9,23 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 59a481199f787c34289a91864ce90db3, type: 3}
+  m_Script: {fileID: 11500000, guid: 66a699340fb2efb4e894319365190321, type: 3}
   m_Name: DashAbility
   m_EditorClassIdentifier: FQParty.GamePlay::FQParty.GamePlay.Abilities.DashAbility
   Config:
     ReuseTimeSeconds: 0
     PlayType: 1
-    IsInterruptible: 0
-    EndPolicy: 0
-    InputOptions: 1
-  m_Effects:
-  - rid: 2614229058820767830
-  DashSpeed: 20
-  DashDuration: 0.25
+    ServerEndPolicy: 0
+    ClientEndPolicy: 0
+    InputOptions: 0
+  m_ServerEffects: []
+  m_ClientEffects:
+  - rid: 2614229155745890393
   references:
     version: 2
     RefIds:
-    - rid: 2614229058820767830
-      type: {class: AnimationEffect, ns: FQParty.GamePlay.Abilities.Effects, asm: FQParty.GamePlay}
+    - rid: 2614229155745890393
+      type: {class: PlayerDashEffect, ns: FQParty.GamePlay.Abilities.Effects, asm: FQParty.GamePlay}
       data:
-        Animation: OnDash
-        StateName: Dash
+        DashDuration: 0.25
+        DashSpeed: 20

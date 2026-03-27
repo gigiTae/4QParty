@@ -8,13 +8,9 @@ using UnityEngine;
 namespace FQParty.GamePlay.Abilities.Effects
 {
     [Serializable]
-    public class InteractEffect : AbilityEffect
+    public class InteractEffect : ServerAbilityEffect
     {
-        bool m_IsActive = true;
         [SerializeField] float m_DetectRadius = 1f;
-
-        public override bool IsActive => m_IsActive;
-
         [SerializeField] LayerMask m_LayerMask;
 
         public override void OnStart(ServerCharacter serverCharacter, Ability ability)
@@ -26,7 +22,7 @@ namespace FQParty.GamePlay.Abilities.Effects
                 target.Interact(serverCharacter);
             }
 
-            m_IsActive = false;
+            IsActive = false;
         }
 
         IInteractable DetectTarget(ServerCharacter serverCharacter)

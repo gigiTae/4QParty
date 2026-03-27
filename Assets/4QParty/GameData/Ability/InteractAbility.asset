@@ -14,20 +14,20 @@ MonoBehaviour:
   m_EditorClassIdentifier: FQParty.GamePlay::FQParty.GamePlay.Abilities.Ability
   Config:
     ReuseTimeSeconds: 0
-    AbilityInput: {fileID: 0}
     PlayType: 1
-    IsInterruptible: 0
-    BlockingMode: 0
-    EndPolicy: 0
-  m_Effects:
-  - rid: 2614229092796465236
+    ServerEndPolicy: 0
+    ClientEndPolicy: 0
+    InputOptions: 0
+  m_ServerEffects:
+  - rid: 2614229155745890392
+  m_ClientEffects: []
   references:
     version: 2
     RefIds:
-    - rid: 2614229092796465236
+    - rid: 2614229155745890392
       type: {class: InteractEffect, ns: FQParty.GamePlay.Abilities.Effects, asm: FQParty.GamePlay}
       data:
-        m_DetectRadius: 2
+        m_DetectRadius: 1
         m_LayerMask:
           serializedVersion: 2
           m_Bits: 4294967295

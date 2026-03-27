@@ -10,17 +10,36 @@ using UnityEngine;
 namespace FQParty.GamePlay.Abilities.Effects
 {
     [Serializable]
-    public class AttackEffect : AbilityEffect
+    public class AttackEffect : ServerAbilityEffect
     {
-        bool m_IsActive = false;
-        public override bool IsActive => m_IsActive;
-
+        [Header("공격 콜라이더 설정")] 
         [SerializeField] LayerMask m_LayerMask;
         [SerializeField] Vector3 m_Offset;
         [SerializeField] Vector3 m_HalfExtents;
+
+        [Header("공격 설정")]
         [SerializeField] float m_Damage;
+        [SerializeField] float m_CastTime;
 
         public override void OnStart(ServerCharacter serverCharacter, Ability ability)
+        {
+            if(m_CastTime <= 0f)
+            {
+                CastAttack(serverCharacter);
+                IsActive = false;
+            }
+        }
+
+        public override void OnUpdate(ServerCharacter serverCharacter, Ability ability)
+        {
+            if(ability.TimeRunning >= m_CastTime)
+            {
+                CastAttack(serverCharacter);
+                IsActive = false;
+            }
+        }
+
+        void CastAttack(ServerCharacter serverCharacter)
         {
             var targets = DetectTarget(serverCharacter);
 

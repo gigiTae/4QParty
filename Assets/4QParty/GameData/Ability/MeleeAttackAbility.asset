@@ -14,33 +14,34 @@ MonoBehaviour:
   m_EditorClassIdentifier: FQParty.GamePlay::FQParty.GamePlay.Abilities.MeleeAttackAbility
   Config:
     ReuseTimeSeconds: 0
-    AbilityInput: {fileID: 0}
     PlayType: 0
-    IsInterruptible: 0
-    BlockingMode: 0
-    EndPolicy: 1
-  m_Effects:
-  - rid: 2614229088589578324
-  - rid: 2614229088589578325
-  - rid: 2614229126710296662
+    ServerEndPolicy: 1
+    ClientEndPolicy: 0
+    InputOptions: 0
+  m_ServerEffects:
+  - rid: 2614229155745890580
+  - rid: 2614229161994616918
+  m_ClientEffects: []
   references:
     version: 2
     RefIds:
-    - rid: 2614229088589578324
+    - rid: 2614229155745890580
       type: {class: AttackEffect, ns: FQParty.GamePlay.Abilities.Effects, asm: FQParty.GamePlay}
       data:
         m_LayerMask:
           serializedVersion: 2
           m_Bits: 4294967295
-        m_Offset: {x: 0, y: 0, z: 2}
+        m_Offset: {x: 0, y: 0, z: 0}
         m_HalfExtents: {x: 1, y: 1, z: 1}
         m_Damage: 1
-    - rid: 2614229088589578325
-      type: {class: AnimationEffect, ns: FQParty.GamePlay.Abilities.Effects, asm: FQParty.GamePlay}
+        m_CastTime: 1
+    - rid: 2614229161994616918
+      type: {class: AttackEffect, ns: FQParty.GamePlay.Abilities.Effects, asm: FQParty.GamePlay}
       data:
-        Animation: OnKick
-        StateName: Kick
-    - rid: 2614229126710296662
-      type: {class: MovementBlockEffect, ns: FQParty.GamePlay.Abilities.Effects, asm: FQParty.GamePlay}
-      data:
-        m_BlockDuration: 1
+        m_LayerMask:
+          serializedVersion: 2
+          m_Bits: 4294967295
+        m_Offset: {x: 0, y: 0, z: 0}
+        m_HalfExtents: {x: 1, y: 1, z: 1}
+        m_Damage: 12
+        m_CastTime: 2
