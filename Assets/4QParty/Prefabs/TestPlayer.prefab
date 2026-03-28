@@ -2162,7 +2162,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d5a57f767e5e46a458fc5d3c628d0cbb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Unity.Netcode.Runtime::Unity.Netcode.NetworkObject
-  GlobalObjectIdHash: 234150877
+  GlobalObjectIdHash: 1971417875
   InScenePlacedSourceGlobalObjectIdHash: 234150877
   DeferredDespawnTick: 0
   Ownership: 1
@@ -2270,11 +2270,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: FQParty.GamePlay::FQParty.GamePlay.Character.CharacterMovement
   ShowTopMostFoldoutHeaderGroup: 1
-  m_Settings: {fileID: 11400000, guid: e1ead64f4e0ed374dbb84873f48e84f8, type: 2}
   m_GamePlayInputReader: {fileID: 11400000, guid: 1ca3c0efb879c984a9354551da1ad06f, type: 2}
-  m_CharacterController: {fileID: 208726931845093319}
-  m_PlayerCameara: {fileID: 0}
-  m_MoveInputActionReference: {fileID: -1680190386980627800, guid: 9db0ac594d74c554ea0a7125617072de, type: 3}
+  m_Settings: {fileID: 11400000, guid: e1ead64f4e0ed374dbb84873f48e84f8, type: 2}
 --- !u!143 &208726931845093319
 CharacterController:
   m_ObjectHideFlags: 0
@@ -2313,9 +2310,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: FQParty.GamePlay::FQParty.GamePlay.Character.ClientCharacter
   ShowTopMostFoldoutHeaderGroup: 1
-  m_ServerCharacter: {fileID: -4801483828591128804}
   m_CharacterMovement: {fileID: 1635064879165671414}
-  m_ClientAbilityPlayer: {fileID: 4630263233460472499}
 --- !u!114 &2277734276588850043
 MonoBehaviour:
   m_ObjectHideFlags: 0

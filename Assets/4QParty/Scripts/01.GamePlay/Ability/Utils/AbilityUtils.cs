@@ -15,7 +15,6 @@ namespace FQParty.GamePlay.Abilities
             return ID == other.ID && LastUsedTime == other.LastUsedTime;
         }
     }
-
     public enum AbilityConclusion
     {
         Continue,

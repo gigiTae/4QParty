@@ -14,7 +14,7 @@ namespace FQParty.GamePlay.Settings
         [Tooltip("캐릭터 체력")]
         public float MaxHp = 100f;
 
-        [Tooltip("공격력 ex) AttackPower * 공격력 계산방식")]
-        public float AttackPower = 1f;
+        [Tooltip("공격력")]
+        public float AttackPower = 10f;
     }
 }

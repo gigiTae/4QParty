@@ -3,43 +3,45 @@ using FQParty.GamePlay.Character;
 using FQParty.GamePlay.GameplayObjects;
 using System;
 using System.Collections.Generic;
-using UnityEditor.AdaptivePerformance.Editor;
 using UnityEngine;
 
 
 namespace FQParty.GamePlay.Abilities.Effects
 {
     [Serializable]
-    public class AttackEffect : ServerAbilityEffect
+    public class ApplyAbilityEffect : ServerAbilityEffect
     {
-        [Header("공격 콜라이더 설정")] 
+        [Header("공격 콜라이더 설정")]
         [SerializeField] LayerMask m_LayerMask;
         [SerializeField] Vector3 m_Offset;
         [SerializeField] Vector3 m_HalfExtents;
 
-        [Header("공격 설정")]
-        [SerializeField] float m_Damage;
-        [SerializeField] float m_CastTime;
+        [Header("어빌리티 시전 설정")]
+        [SerializeField] float m_FireTime;
+
+        [Header("어빌리티 설정")]
+        [Tooltip("타겟에게 부여하는 어빌리티(상대에게 대미지, 스턴, 넉백등)")]
+        [SerializeField] Ability m_ApplyAbility;
 
         public override void OnStart(ServerCharacter serverCharacter, Ability ability)
         {
-            if(m_CastTime <= 0f)
+            if (m_FireTime <= 0f)
             {
-                CastAttack(serverCharacter);
+                ApplyAbilityToTarget(serverCharacter);
                 IsActive = false;
             }
         }
 
         public override void OnUpdate(ServerCharacter serverCharacter, Ability ability)
         {
-            if(ability.TimeRunning >= m_CastTime)
+            if (ability.TimeRunning >= m_FireTime)
             {
-                CastAttack(serverCharacter);
+                ApplyAbilityToTarget(serverCharacter);
                 IsActive = false;
             }
         }
 
-        void CastAttack(ServerCharacter serverCharacter)
+        void ApplyAbilityToTarget(ServerCharacter serverCharacter)
         {
             var targets = DetectTarget(serverCharacter);
 
@@ -47,11 +49,18 @@ namespace FQParty.GamePlay.Abilities.Effects
 
             foreach (var target in targets)
             {
-                target.ReceiveDamage(serverCharacter, m_Damage);
+                var ability = AbilityFactory.CreateAbilityFromID(m_ApplyAbility.AbilityID);
+
+                AbilityApplyData data = new AbilityApplyData()
+                {
+                   Caster = serverCharacter
+                };
+                ability.Resolve(data);
+                target.ApplyAbility(ability);
             }
         }
 
-        IDamageable[] DetectTarget(ServerCharacter serverCharacter)
+        IApplyAbility[] DetectTarget(ServerCharacter serverCharacter)
         {
             Quaternion rotation = serverCharacter.transform.rotation;
             Vector3 rotatedOffset = rotation * m_Offset;
@@ -65,11 +74,11 @@ namespace FQParty.GamePlay.Abilities.Effects
                 return null;
             }
 
-            var damageables = new List<IDamageable>();
+            var damageables = new List<IApplyAbility>();
 
             for (int i = 0; i < coliders.Length; i++)
             {
-                IDamageable target = coliders[i].GetComponent<IDamageable>();
+                IApplyAbility target = coliders[i].GetComponent<IApplyAbility>();
 
                 if (target != null)
                 {

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEditor;
 using UnityEngine;
 using UnityEngine.Pool;
+using UnityEngine.UI;
 
 namespace FQParty.GamePlay.Abilities
 {
@@ -29,6 +30,14 @@ namespace FQParty.GamePlay.Abilities
             ret.Initialize(ref data);   
             return ret; 
         }
+
+        public static Ability CreateAbilityFromID(AbilityID abilityID)
+        {
+            var ret = GetAbilityPool(abilityID).Get();
+            ret.AbilityID = abilityID;  
+            return ret;
+        }
+
 
         public static void ReturnAbility(Ability ability)
         {

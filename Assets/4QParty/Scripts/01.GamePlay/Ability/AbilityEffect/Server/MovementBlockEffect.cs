@@ -14,7 +14,7 @@ namespace FQParty.GamePlay.Abilities.Effects
         [SerializeField] float m_BlockDuration = 1f;
         public override void OnStart(ServerCharacter serverCharacter, Ability ability)
         {
-            serverCharacter.CharacterMovement.SetMovementStateServerRpc(MovementState.Stop);
+            serverCharacter.CharacterMovement.SetMovementStateServerRpc(ServerMovementState.Stop);
         }
 
         public override void OnUpdate(ServerCharacter serverCharacter, Ability ability)
@@ -22,13 +22,13 @@ namespace FQParty.GamePlay.Abilities.Effects
             if (ability.TimeRunning >= m_BlockDuration)
             {
                 IsActive = false;
-                serverCharacter.CharacterMovement.SetMovementStateServerRpc(MovementState.Moveable);
+                serverCharacter.CharacterMovement.SetMovementStateServerRpc(ServerMovementState.Moveable);
             }
         }
 
         public override void Cancel(ServerCharacter serverCharacter, Ability ability)
         {
-            serverCharacter.CharacterMovement.SetMovementStateServerRpc(MovementState.Moveable);
+            serverCharacter.CharacterMovement.SetMovementStateServerRpc(ServerMovementState.Moveable);
         }
     }
 

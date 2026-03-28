@@ -14,17 +14,14 @@ namespace FQParty.GamePlay.Abilities.Effects
         {
             if (clientCharacter.CharacterMovement is PlayerCharacterMovement movement)
             {
-                Debug.Log("Lock");
                 movement.LockMovement();
             }
-
         }
         public override void OnUpdate(ClientCharacter clientCharacter, Ability ability)
         {
             if (ability.TimeRunning >= LockDuration &&
                 clientCharacter.CharacterMovement is PlayerCharacterMovement movement)
             {
-                Debug.Log("UnLock");
                 IsActive = false;
                 movement.UnlockMovement();
             }

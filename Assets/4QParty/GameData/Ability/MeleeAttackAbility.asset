@@ -14,34 +14,23 @@ MonoBehaviour:
   m_EditorClassIdentifier: FQParty.GamePlay::FQParty.GamePlay.Abilities.MeleeAttackAbility
   Config:
     ReuseTimeSeconds: 0
-    PlayType: 0
+    PlayType: 1
     ServerEndPolicy: 1
-    ClientEndPolicy: 0
+    ClientEndPolicy: 1
     InputOptions: 0
   m_ServerEffects:
-  - rid: 2614229155745890580
-  - rid: 2614229161994616918
+  - rid: 2614229186428796928
   m_ClientEffects: []
   references:
     version: 2
     RefIds:
-    - rid: 2614229155745890580
-      type: {class: AttackEffect, ns: FQParty.GamePlay.Abilities.Effects, asm: FQParty.GamePlay}
+    - rid: 2614229186428796928
+      type: {class: ApplyAbilityEffect, ns: FQParty.GamePlay.Abilities.Effects, asm: FQParty.GamePlay}
       data:
         m_LayerMask:
           serializedVersion: 2
           m_Bits: 4294967295
-        m_Offset: {x: 0, y: 0, z: 0}
+        m_Offset: {x: 0, y: 0, z: 1}
         m_HalfExtents: {x: 1, y: 1, z: 1}
-        m_Damage: 1
-        m_CastTime: 1
-    - rid: 2614229161994616918
-      type: {class: AttackEffect, ns: FQParty.GamePlay.Abilities.Effects, asm: FQParty.GamePlay}
-      data:
-        m_LayerMask:
-          serializedVersion: 2
-          m_Bits: 4294967295
-        m_Offset: {x: 0, y: 0, z: 0}
-        m_HalfExtents: {x: 1, y: 1, z: 1}
-        m_Damage: 12
-        m_CastTime: 2
+        m_FireTime: 0
+        m_ApplyAbility: {fileID: 11400000, guid: dd271da8e59b3fe4bbf138dcfe615e0a, type: 2}

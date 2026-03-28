@@ -53,9 +53,8 @@ namespace FQParty.GamePlay.Character.Movement
 
             switch (m_MovementState.Value)
             {
-                case MovementState.Moveable:
+                case ServerMovementState.Moveable:
                     {
-
                         switch (m_PlayerMovementState)
                         {
                             case PlayerMovementState.Moveable:
@@ -70,7 +69,11 @@ namespace FQParty.GamePlay.Character.Movement
                         }
                         break;
                     }
-                case MovementState.Stop:
+                case ServerMovementState.Stop:
+                    {
+                        break;
+                    }
+                case ServerMovementState.Knockback:
                     {
                         break;
                     }
@@ -156,7 +159,6 @@ namespace FQParty.GamePlay.Character.Movement
         {
             m_PlayerMovementState = PlayerMovementState.Moveable;
         }
-
 
     }
 }

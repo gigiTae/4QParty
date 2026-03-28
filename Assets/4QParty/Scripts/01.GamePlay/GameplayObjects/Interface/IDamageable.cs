@@ -7,8 +7,7 @@ namespace FQParty.GamePlay.GameplayObjects
     public interface IDamageable
     {
         bool IsDamageable();
-
-        void ReceiveDamage(ServerCharacter serverCharacter, float value);
+        void TakeDamage(float damage);
     }
 
 }

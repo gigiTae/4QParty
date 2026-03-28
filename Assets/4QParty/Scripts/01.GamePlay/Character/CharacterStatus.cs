@@ -23,7 +23,9 @@ namespace FQParty.GamePlay.Character
         NetworkVariable<CharacterStatement> m_Statement = new(CharacterStatement.Alive);
         NetworkVariable<float> m_CurrentHp = new();
         NetworkVariable<float> m_AttackPower = new();
+ 
         public float MaxHp => m_Settings.MaxHp;
+        public float AttackPower => m_AttackPower.Value;
 
         public override void OnNetworkSpawn()
         {
@@ -43,11 +45,11 @@ namespace FQParty.GamePlay.Character
             return m_Statement.Value != CharacterStatement.Dead;
         }
 
-        public void ReceiveDamage(ServerCharacter serverCharacter, float value)
+        public void TakeDamage(float damage)
         {
             if (!IsServer) return;
 
-            m_CurrentHp.Value = Mathf.Max(0, m_CurrentHp.Value - value);
+            m_CurrentHp.Value = Mathf.Max(0, m_CurrentHp.Value - damage);
         }
 
         private void OnGUI()

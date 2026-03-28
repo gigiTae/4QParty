@@ -20,7 +20,6 @@ namespace FQParty.GamePlay.Abilities
         public void RequestAbility(AbilityRequestData data)
         {
             Ability ability = AbilityFactory.CreateAbilityFromData(ref data);
-
             m_RequestQueue.Enqueue(ability);
         }
 

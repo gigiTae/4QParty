@@ -9,7 +9,7 @@ using UnityEngine;
 namespace FQParty.GamePlay.Abilities
 {
     [CreateAssetMenu(menuName = "Abilities/Ability")]
-    public class Ability : ScriptableObject
+    public class Ability : ScriptableObject, IResolver
     {
         [Header("Settings")]
         [SerializeField] public AbilityConfig Config;
@@ -64,7 +64,7 @@ namespace FQParty.GamePlay.Abilities
         {
             m_ServerEffects.ForEach(e =>
             {
-                if(e.IsActive) e.OnUpdate(serverCharacter, this);
+                if (e.IsActive) e.OnUpdate(serverCharacter, this);
             });
         }
 
@@ -110,7 +110,7 @@ namespace FQParty.GamePlay.Abilities
         {
             m_ClientEffects.ForEach(e =>
             {
-                if(e.IsActive) e.OnUpdate(clientCharacter, this);   
+                if (e.IsActive) e.OnUpdate(clientCharacter, this);
             });
         }
 
@@ -141,6 +141,18 @@ namespace FQParty.GamePlay.Abilities
         public void OnAnimationStateExit(Animator animator, AnimatorStateInfo stateInfo, int layerIndex)
         {
             m_ServerEffects.ForEach(e => e.OnAnimationStateExit(animator, stateInfo, layerIndex));
+        }
+
+
+        public void Resolve<TData>(TData data)
+        {
+            m_ServerEffects.ForEach(effect =>
+            {
+                if(effect is IInject<TData> injectEffect)
+                {
+                    injectEffect.Inject(data);
+                }
+            });
         }
 
     }

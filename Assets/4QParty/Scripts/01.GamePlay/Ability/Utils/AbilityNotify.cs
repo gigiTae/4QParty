@@ -10,7 +10,6 @@ namespace FQParty.GamePlay.Abilities
         override public void OnStateEnter(Animator animator, AnimatorStateInfo stateInfo, int layerIndex)
         {
             m_CallCount++;
-
         }
 
         override public void OnStateExit(Animator animator, AnimatorStateInfo stateInfo, int layerIndex)

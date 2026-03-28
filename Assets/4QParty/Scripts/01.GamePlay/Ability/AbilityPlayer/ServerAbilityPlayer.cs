@@ -1,4 +1,5 @@
 using FQParty.GamePlay.Character;
+using FQParty.GamePlay.GameplayObjects;
 using System.Collections.Generic;
 using Unity.Netcode;
 using UnityEngine;
@@ -7,7 +8,7 @@ using UnityEngine.Pool;
 
 namespace FQParty.GamePlay.Abilities
 {
-    public class ServerAbilityPlayer : NetworkBehaviour
+    public class ServerAbilityPlayer : NetworkBehaviour , IApplyAbility
     {
         [SerializeField] ServerCharacter m_ServerCharacter;
         public Ability PlayingAbility => m_PlayingAbility;
@@ -30,6 +31,12 @@ namespace FQParty.GamePlay.Abilities
             m_RequestQueue.Enqueue(ability);
         }
 
+        public void ApplyAbility(Ability ability)
+        {
+            if (!IsServer) return;
+            m_RequestQueue.Enqueue(ability);
+        }
+
         public bool CanRequsetAbility(Ability ability)
         {
             float reuseTime = ability.Config.ReuseTimeSeconds;
@@ -41,7 +48,7 @@ namespace FQParty.GamePlay.Abilities
                 if (timeStamp.ID == ability.AbilityID)
                 {
                     float serverTime = NetworkManager.ServerTime.TimeAsFloat;
-                    return serverTime - timeStamp.LastUsedTime < reuseTime;
+                    return (serverTime - timeStamp.LastUsedTime) >= reuseTime;
                 }
             }
             return true;
@@ -65,8 +72,16 @@ namespace FQParty.GamePlay.Abilities
                     }
                 case AbilityPlayType.NonBlocking:
                     {
-                        StartAbility(ability);
-                        m_NonBlockingAbilities.Add(ability);
+                        AbilityConclusion conclusion = StartAbility(ability);
+
+                        if (conclusion == AbilityConclusion.Stop)
+                        {
+                            ability.OnEndServer(m_ServerCharacter);
+                        }
+                        else if (conclusion == AbilityConclusion.Continue)
+                        {
+                            m_NonBlockingAbilities.Add(ability);
+                        }
                         break;
                     }
             }
@@ -123,16 +138,23 @@ namespace FQParty.GamePlay.Abilities
             if (conclusion == AbilityConclusion.Stop)
             {
                 m_PlayingAbility.OnEndServer(m_ServerCharacter);
-                TryReturnAbility(m_PlayingAbility);
                 m_PlayingAbility = null;
+                TryReturnAbility(m_PlayingAbility);
             }
 
-            foreach (var nonBlockAbility in m_NonBlockingAbilities)
+            for (int i = m_NonBlockingAbilities.Count - 1; i >= 0; i--)
             {
+                var nonBlockAbility = m_NonBlockingAbilities[i];
                 nonBlockAbility.OnUpdateServer(m_ServerCharacter);
+
+                if (nonBlockAbility.IsEndServer() == AbilityConclusion.Stop)
+                {
+                    nonBlockAbility.OnEndServer(m_ServerCharacter);
+                    m_NonBlockingAbilities.RemoveAt(i);
+                    TryReturnAbility(nonBlockAbility);
+                }
             }
         }
-
 
         void ProcessRequsetAbility()
         {
@@ -186,9 +208,9 @@ namespace FQParty.GamePlay.Abilities
 
         public void OnAnimationStateExit(Animator animator, AnimatorStateInfo stateInfo, int layerIndex)
         {
-            m_PlayingAbility?.OnAnimationStateExit(animator, stateInfo, layerIndex);    
+            m_PlayingAbility?.OnAnimationStateExit(animator, stateInfo, layerIndex);
 
-            foreach(var nonBlockAbility in m_NonBlockingAbilities)
+            foreach (var nonBlockAbility in m_NonBlockingAbilities)
             {
                 nonBlockAbility.OnAnimationStateExit(animator, stateInfo, layerIndex);
             }
