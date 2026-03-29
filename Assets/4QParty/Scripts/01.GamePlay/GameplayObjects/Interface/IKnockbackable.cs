@@ -5,8 +5,7 @@ namespace FQParty.GamePlay.GameplayObjects
 {
     public interface IKnockbackable
     {
-        void ApplyKnockback(float speed);
-
+        void ApplyKnockback(float speed, Vector3 direction);
         void CancelKnockback();
     }
 }

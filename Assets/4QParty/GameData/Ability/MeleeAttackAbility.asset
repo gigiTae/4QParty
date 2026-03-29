@@ -29,7 +29,7 @@ MonoBehaviour:
       data:
         m_LayerMask:
           serializedVersion: 2
-          m_Bits: 4294967295
+          m_Bits: 128
         m_Offset: {x: 0, y: 0, z: 1}
         m_HalfExtents: {x: 1, y: 1, z: 1}
         m_FireTime: 0
