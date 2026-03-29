@@ -19,15 +19,13 @@ namespace FQParty.GamePlay.Abilities.Effects
 
         public override void OnStart(ServerCharacter serverCharacter, Ability ability)
         {
-            if (m_Caster == null)
-            {
-                IsActive = false;
-                return;
-            }
-
-            if (serverCharacter.CharacterMovement is IKnockbackable knockbackable)
+            if (m_Caster != null && serverCharacter.CharacterMovement is IKnockbackable knockbackable)
             {
                 knockbackable.ApplyKnockback(m_KnockbackSpeed, m_Caster.transform.forward);
+            }
+            else
+            {
+                IsActive = false;
             }
         }
 

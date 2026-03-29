@@ -1,5 +1,7 @@
+using FQParty.GamePlay.Abilities;
 using FQParty.GamePlay.GameplayObjects;
 using FQParty.GamePlay.Settings;
+using System.Data;
 using Unity.Netcode;
 using UnityEngine;
 
@@ -15,15 +17,24 @@ namespace FQParty.GamePlay.Character
     /// <summary>
     /// 캐릭터의 기본상태를 관리하는 클래스
     /// </summary>
+    [RequireComponent(typeof(ServerAbilityPlayer))]
     public class CharacterStatus : NetworkBehaviour, IDamageable
     {
         [SerializeField] CharacterSettings m_Settings;
-        [SerializeField] ServerCharacter m_ServerCharacter;
+        [SerializeField] Ability m_DeadAbility;
+
+        ServerAbilityPlayer m_ServerAbilityPlayer;
 
         NetworkVariable<CharacterStatement> m_Statement = new(CharacterStatement.Alive);
         NetworkVariable<float> m_CurrentHp = new();
         NetworkVariable<float> m_AttackPower = new();
- 
+
+        void Awake()
+        {
+            m_ServerAbilityPlayer = GetComponent<ServerAbilityPlayer>();
+        }
+
+
         public float MaxHp => m_Settings.MaxHp;
         public float AttackPower => m_AttackPower.Value;
 
@@ -49,17 +60,26 @@ namespace FQParty.GamePlay.Character
         {
             if (!IsServer) return;
 
-            m_CurrentHp.Value = Mathf.Max(0, m_CurrentHp.Value - damage);
+            m_CurrentHp.Value = Mathf.Max(0f, m_CurrentHp.Value - damage);
+
+            if (m_CurrentHp.Value <= 0f)
+            {
+                SetDead();
+            }
+        }
+
+        void SetDead()
+        {
+            if (m_Statement.Value == CharacterStatement.Dead) return;
+
+            Debug.Log("Dead");
+
+            m_Statement.Value = CharacterStatement.Dead;
+            m_ServerAbilityPlayer.RequestAbilityServerRpc(AbilityRequestData.Create(m_DeadAbility));
         }
 
         private void OnGUI()
         {
-            string abilityName = ""; 
-            if (m_ServerCharacter.AbilityPlayer.PlayingAbility != null)
-            {
-                abilityName = m_ServerCharacter.AbilityPlayer.PlayingAbility.name;
-            }
-
             // 1. 월드 좌표를 스크린 좌표로 변환 (캐릭터 머리 위)
             Vector3 worldPos = transform.position + Vector3.up * 2.5f;
             Vector3 screenPos = Camera.main.WorldToScreenPoint(worldPos);
@@ -77,7 +97,7 @@ namespace FQParty.GamePlay.Character
             style.normal.textColor = m_CurrentHp.Value > 30 ? Color.green : Color.red;
 
             // 4. 화면에 HP 출력 (Y축은 GUI 좌표계상 반대이므로 변환)
-            string hpText = $"Hp: {m_CurrentHp.Value} / {MaxHp} \n {abilityName}";
+            string hpText = $"Hp: {m_CurrentHp.Value} / {MaxHp}";
             GUI.Label(new Rect(screenPos.x - 50, Screen.height - screenPos.y - 20, 100, 40), hpText, style);
         }
 

@@ -21,7 +21,7 @@ MonoBehaviour:
   m_ServerEffects:
   - rid: 2614229184908099671
   - rid: 2614229195415880001
-  - rid: 2614229195415880007
+  - rid: 2614229201984159836
   m_ClientEffects: []
   references:
     version: 2
@@ -35,8 +35,8 @@ MonoBehaviour:
       data:
         m_KnockbackDuration: 0.1
         m_KnockbackSpeed: 5
-    - rid: 2614229195415880007
-      type: {class: AnimationEffect, ns: FQParty.GamePlay.Abilities.Effects, asm: FQParty.GamePlay}
+    - rid: 2614229201984159836
+      type: {class: AnimationTriggerEffect, ns: FQParty.GamePlay.Abilities.Effects, asm: FQParty.GamePlay}
       data:
-        Animation: OnHit
-        StateName: Hit
+        m_TriggerName: OnHit
+        m_StateName: Hit

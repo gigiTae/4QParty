@@ -1,28 +1,24 @@
 using FQParty.GamePlay.Character;
 using System;
-using UnityEditor.Animations;
 using UnityEngine;
 
 
 namespace FQParty.GamePlay.Abilities.Effects
 {
     [Serializable]
-    public class AnimationEffect : ServerAbilityEffect
+    public class AnimationBooleanEffect : ServerAbilityEffect
     {
-        [SerializeField] public string Animation;
-        [SerializeField] public string StateName;
-
+        [SerializeField] string m_BoolName;
+        [SerializeField] bool m_Value;
+        [SerializeField] string m_StateName;
         public override void OnStart(ServerCharacter serverCharacter, Ability ability)
         {
-            serverCharacter.NetworkAnimator.SetTrigger(Animation);
+            serverCharacter.NetworkAnimator.Animator.SetBool(m_BoolName, m_Value);
         }
 
-        public override void OnUpdate(ServerCharacter serverCharacter, Ability ability)
-        {   
-        }
         public override void OnAnimationStateExit(Animator animator, AnimatorStateInfo stateInfo, int layerIndex)
         {
-            if (stateInfo.IsName(StateName))
+            if (stateInfo.IsName(m_StateName))
             {
                 IsActive = false;
             }
