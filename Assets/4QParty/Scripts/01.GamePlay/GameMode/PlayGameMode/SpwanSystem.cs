@@ -28,7 +28,6 @@ namespace FQParty.GamePlay.GameMode
             m_Settings.RequestPossessEvent.Unsubscribe(OnRequestPossessEvent);
         }
 
-
         void OnRequestPossessEvent(RequestPossessContext context)
         {
             ulong ownerID = context.RequsetObject.OwnerClientId;

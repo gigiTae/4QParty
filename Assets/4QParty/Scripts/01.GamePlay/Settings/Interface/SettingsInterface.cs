@@ -10,7 +10,7 @@ namespace FQParty.GamePlay.Settings
         float MaxHp { get; }
         float AttackPower { get; }
 
-        Ability DeadAbility { get; }
+        Ability DeadAbility {  get; }
     }
 
     public interface IPlayerCharacterMovementSettings

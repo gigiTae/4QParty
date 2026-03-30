@@ -214,8 +214,6 @@ namespace FQParty.GamePlay.Abilities
             {
                 nonBlockAbility.OnAnimationStateExit(animator, stateInfo, layerIndex);
             }
-
         }
-
     }
 }
