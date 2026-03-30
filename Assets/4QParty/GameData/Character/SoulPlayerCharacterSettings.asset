@@ -12,7 +12,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5e147a19b9aeba041b0922db1f41ea15, type: 3}
   m_Name: SoulPlayerCharacterSettings
   m_EditorClassIdentifier: FQParty.GamePlay::FQParty.GamePlay.Settings.PlayerCharacterSettings
-  m_CharacterSettings: {fileID: 11400000, guid: e1ead64f4e0ed374dbb84873f48e84f8, type: 2}
+  m_MoveSpeed: 5
+  m_GameInputReader: {fileID: 11400000, guid: 1ca3c0efb879c984a9354551da1ad06f, type: 2}
+  m_MaxHp: 100
+  m_AttackPower: 10
+  m_DeadAbility: {fileID: 0}
   m_AttackPerformedAbility: {fileID: 11400000, guid: 7473af966f2672247ba8ac5615fe3fd0, type: 2}
   m_AttackCanceledAbility: {fileID: 0}
   m_InteractPerformedAbility: {fileID: 11400000, guid: 95cd512ae3cebbd4cadeb1a367d3c6f1, type: 2}

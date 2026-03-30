@@ -27,7 +27,6 @@ namespace FQParty.GamePlay.Abilities
             }
         }
 
-
         public void Initialize(ref AbilityRequestData data)
         {
             m_Data = data;

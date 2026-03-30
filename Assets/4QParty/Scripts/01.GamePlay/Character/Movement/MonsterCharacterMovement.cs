@@ -10,7 +10,6 @@ namespace FQParty.GamePlay.Character.Movement
     {
         CharacterController m_CharacterController;
 
-        bool m_OnKnockback = false;
         Vector3 m_KnockbackDirection;
         float m_KnockbackSpeed = 0;
 
@@ -21,7 +20,7 @@ namespace FQParty.GamePlay.Character.Movement
 
         void Update()
         {
-            if(m_OnKnockback)
+            if (MovementState == ServerMovementState.Knockback)
             {
                 Vector3 motion = m_KnockbackDirection * Time.deltaTime * m_KnockbackSpeed;
                 m_CharacterController.Move(motion);
@@ -30,19 +29,20 @@ namespace FQParty.GamePlay.Character.Movement
 
         public void ApplyKnockback(float speed, Vector3 direction)
         {
-            m_OnKnockback = true;
+            if (!IsServer) return;
+
+            MovementState = ServerMovementState.Knockback;
             m_KnockbackSpeed = speed;
             m_KnockbackDirection = direction;
         }
 
         public void CancelKnockback()
         {
+            if (!IsServer) return;
+
+            MovementState = ServerMovementState.Moveable;
             m_KnockbackDirection = Vector3.zero;
             m_KnockbackSpeed = 0f;
-            m_OnKnockback = false;
         }
-
-
     }
-
 }

@@ -15,22 +15,21 @@ namespace FQParty.GamePlay.Character.Movement
         /// </summary>
         public enum ServerMovementState
         {
-            Moveable, // 이동 가능 상태 
-            Stop, // 정지
+            Moveable,  // 이동
+            Stop,      // 정지
             Knockback, // 넉백
         }
-        protected NetworkVariable<ServerMovementState> m_MovementState = new(ServerMovementState.Moveable);
 
-        [Rpc(SendTo.Server)]
-        public virtual void SetMovementStateServerRpc(ServerMovementState state)
+        public ServerMovementState MovementState
         {
-            m_MovementState.Value = state;
-
-            if (m_MovementState.Value == ServerMovementState.Knockback)
+            get => m_MovementState.Value;
+            set
             {
-
+                if (!IsServer) return;
+                m_MovementState.Value = value;  
             }
         }
+        private NetworkVariable<ServerMovementState> m_MovementState = new(ServerMovementState.Moveable);
     }
 
 }

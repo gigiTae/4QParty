@@ -27,5 +27,7 @@ namespace FQParty.GamePlay.GameMode
         }
 
         protected abstract void StartGameMode();
+
+        protected abstract void EndGameMode();
     }
 }

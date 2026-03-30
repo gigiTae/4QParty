@@ -4,7 +4,7 @@ using FQParty.GamePlay.Settings;
 using System;
 using Unity.Netcode;
 using UnityEngine;
-using UnityEngine.Assertions; // NUnit 대신 유니티용 어설션 사용 권장
+using UnityEngine.Assertions;
 
 namespace FQParty.GamePlay.Input
 {
@@ -14,9 +14,11 @@ namespace FQParty.GamePlay.Input
     [RequireComponent(typeof(ServerAbilityPlayer), typeof(ClientAbilityPlayer))]
     public class ClientInputSender : NetworkBehaviour
     {
-        [Header("Settings")]
-        [SerializeField] PlayerCharacterSettings m_PlayerCharacterSettings;
-        [SerializeField] GamePlayInputReader m_GameInputReader;
+        PlayerCharacterSettings m_Settings;
+        public void BindSettings(PlayerCharacterSettings settings)
+        {
+            m_Settings = settings;
+        }
 
         ServerAbilityPlayer m_ServerAbilityPlayer;
         ClientAbilityPlayer m_ClientAbilityPlayer;
@@ -28,7 +30,7 @@ namespace FQParty.GamePlay.Input
         private void Awake()
         {
             m_ServerAbilityPlayer = GetComponent<ServerAbilityPlayer>();
-            m_ClientAbilityPlayer = GetComponent<ClientAbilityPlayer>();    
+            m_ClientAbilityPlayer = GetComponent<ClientAbilityPlayer>();
         }
 
         public override void OnNetworkSpawn()
@@ -39,44 +41,44 @@ namespace FQParty.GamePlay.Input
                 return;
             }
 
-            if (m_GameInputReader != null && m_PlayerCharacterSettings != null)
+            if (m_Settings != null && m_Settings.GamePlayInputReader != null)
             {
                 // Performed Events
-                m_GameInputReader.AttackPerformedEvent += OnAttackPerformed;
-                m_GameInputReader.DashPerformedEvent += OnDashPerformed;
-                m_GameInputReader.InteractPerformedEvent += OnInteractPerformed;
+                m_Settings.GamePlayInputReader.AttackPerformedEvent += OnAttackPerformed;
+                m_Settings.GamePlayInputReader.DashPerformedEvent += OnDashPerformed;
+                m_Settings.GamePlayInputReader.InteractPerformedEvent += OnInteractPerformed;
 
                 // Canceled Events 
-                m_GameInputReader.AttackCanceledEvent += OnAttackCanceled;
-                m_GameInputReader.DashCanceledEvent += OnDashCanceled;
-                m_GameInputReader.InteractCanceledEvent += OnInteractCanceled;
+                m_Settings.GamePlayInputReader.AttackCanceledEvent += OnAttackCanceled;
+                m_Settings.GamePlayInputReader.DashCanceledEvent += OnDashCanceled;
+                m_Settings.GamePlayInputReader.InteractCanceledEvent += OnInteractCanceled;
             }
         }
 
         public override void OnNetworkDespawn()
         {
-            if (m_GameInputReader != null)
+            if (m_Settings.GamePlayInputReader != null)
             {
-                m_GameInputReader.AttackPerformedEvent -= OnAttackPerformed;
-                m_GameInputReader.DashPerformedEvent -= OnDashPerformed;
-                m_GameInputReader.InteractPerformedEvent -= OnInteractPerformed;
+                m_Settings.GamePlayInputReader.AttackPerformedEvent -= OnAttackPerformed;
+                m_Settings.GamePlayInputReader.DashPerformedEvent -= OnDashPerformed;
+                m_Settings.GamePlayInputReader.InteractPerformedEvent -= OnInteractPerformed;
 
-                m_GameInputReader.AttackCanceledEvent -= OnAttackCanceled;
-                m_GameInputReader.DashCanceledEvent -= OnDashCanceled;
-                m_GameInputReader.InteractCanceledEvent -= OnInteractCanceled;
+                m_Settings.GamePlayInputReader.AttackCanceledEvent -= OnAttackCanceled;
+                m_Settings.GamePlayInputReader.DashCanceledEvent -= OnDashCanceled;
+                m_Settings.GamePlayInputReader.InteractCanceledEvent -= OnInteractCanceled;
             }
         }
 
         #region Input Handlers
 
-        private void OnAttackPerformed() => RequestAbilityFromSettings(m_PlayerCharacterSettings.AttackPerformedAbility);
-        private void OnAttackCanceled() => RequestAbilityFromSettings(m_PlayerCharacterSettings.AttackCanceledAbility);
+        private void OnAttackPerformed() => RequestAbilityFromSettings(m_Settings.AttackPerformedAbility);
+        private void OnAttackCanceled() => RequestAbilityFromSettings(m_Settings.AttackCanceledAbility);
 
-        private void OnDashPerformed() => RequestAbilityFromSettings(m_PlayerCharacterSettings.DashPerformedAbility);
-        private void OnDashCanceled() => RequestAbilityFromSettings(m_PlayerCharacterSettings.DashCanceledAbility);
+        private void OnDashPerformed() => RequestAbilityFromSettings(m_Settings.DashPerformedAbility);
+        private void OnDashCanceled() => RequestAbilityFromSettings(m_Settings.DashCanceledAbility);
 
-        private void OnInteractPerformed() => RequestAbilityFromSettings(m_PlayerCharacterSettings.InteractPerformedAbility);
-        private void OnInteractCanceled() => RequestAbilityFromSettings(m_PlayerCharacterSettings.InteractCanceledAbility);
+        private void OnInteractPerformed() => RequestAbilityFromSettings(m_Settings.InteractPerformedAbility);
+        private void OnInteractCanceled() => RequestAbilityFromSettings(m_Settings.InteractCanceledAbility);
 
         /// <summary>
         /// 셋팅 데이터에 할당된 어빌리티가 있는지 확인 후 요청합니다.
@@ -88,7 +90,6 @@ namespace FQParty.GamePlay.Input
                 RequestAbility(ability);
             }
         }
-
         #endregion
 
         private void FixedUpdate()
@@ -106,7 +107,7 @@ namespace FQParty.GamePlay.Input
         {
             // 클라이언트 실행
             m_ClientAbilityPlayer.RequestAbility(data);
-    
+
             // 서버로 실행 요청 전달
             m_ServerAbilityPlayer.RequestAbilityServerRpc(data);
         }
@@ -152,11 +153,11 @@ namespace FQParty.GamePlay.Input
             Vector2 direction = Vector2.zero;
             if (m_InputControllerType == InputControllerType.Gamepad)
             {
-                direction = m_GameInputReader.PlayerMoveInput;
+                direction = m_Settings.GamePlayInputReader.PlayerMoveInput;
             }
             else if (m_InputControllerType == InputControllerType.KeyboradAndMouse)
             {
-                direction = m_GameInputReader.GetMouseDirection(transform);
+                direction = m_Settings.GamePlayInputReader.GetMouseDirection(transform);
             }
 
             return direction;

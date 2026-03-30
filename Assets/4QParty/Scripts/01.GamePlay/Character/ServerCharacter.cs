@@ -10,19 +10,20 @@ namespace FQParty.GamePlay.Character
 {
     public class ServerCharacter : NetworkBehaviour
     {
-        public ClientCharacter ClientCharacter => m_ClientCharacter;
         [SerializeField] ClientCharacter m_ClientCharacter;
-        public CharacterMovement CharacterMovement => m_Movement;
+        public ClientCharacter ClientCharacter => m_ClientCharacter;
+        
         [SerializeField] CharacterMovement m_Movement;
-
-        public CharacterStatus CharacterStatus => m_CharacterStatus;
+        public CharacterMovement CharacterMovement => m_Movement;
+        
         [SerializeField] CharacterStatus m_CharacterStatus;
-
-        public NetworkAnimator NetworkAnimator => m_NetworkAnimator;
+        public CharacterStatus CharacterStatus => m_CharacterStatus;
+        
         [SerializeField] NetworkAnimator m_NetworkAnimator;
+        public NetworkAnimator NetworkAnimator => m_NetworkAnimator;
 
-        public ServerAbilityPlayer AbilityPlayer => m_ServerAbilityPlayer;
         [SerializeField] ServerAbilityPlayer m_ServerAbilityPlayer;
+        public ServerAbilityPlayer AbilityPlayer => m_ServerAbilityPlayer;
     }
 
 }

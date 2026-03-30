@@ -9,7 +9,6 @@ namespace FQParty.GamePlay.Abilities.Effects
     public class PlayerMovementLockEffect : ClientAbilityEffect
     {
         [SerializeField] float LockDuration = 1f;
-
         public override void OnStart(ClientCharacter clientCharacter, Ability ability)
         {
             if (clientCharacter.CharacterMovement is PlayerCharacterMovement movement)

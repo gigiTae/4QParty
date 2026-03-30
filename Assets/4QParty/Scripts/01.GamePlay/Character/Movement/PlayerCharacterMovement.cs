@@ -8,7 +8,7 @@ using UnityEngine.InputSystem;
 namespace FQParty.GamePlay.Character.Movement
 {
     /// <summary>
-    /// 클라이언트 권한 Movement
+    /// 플레이어 캐릭터의 무브먼트
     /// </summary>
     [RequireComponent(typeof(CharacterController), typeof(ClientInputSender))]
     public class PlayerCharacterMovement : CharacterMovement, IDashable
@@ -22,12 +22,15 @@ namespace FQParty.GamePlay.Character.Movement
 
         protected PlayerMovementState m_PlayerMovementState = PlayerMovementState.Moveable;
 
-        [SerializeField] GamePlayInputReader m_GamePlayInputReader;
-        [SerializeField] CharacterSettings m_Settings;
+        public void BindSettings(IPlayerCharacterMovementSettings settings)
+        {
+            m_Settings = settings;  
+        }
+        IPlayerCharacterMovementSettings m_Settings;
 
         CharacterController m_CharacterController;
-        Camera m_PlayerCameara;
         ClientInputSender m_ClientInputSender;
+        Camera m_PlayerCameara;
 
         public override void OnNetworkSpawn()
         {
@@ -51,7 +54,7 @@ namespace FQParty.GamePlay.Character.Movement
         {
             if (!IsOwner) return;
 
-            switch (m_MovementState.Value)
+            switch (MovementState)
             {
                 case ServerMovementState.Moveable:
                     {
@@ -82,7 +85,7 @@ namespace FQParty.GamePlay.Character.Movement
 
         void UpdateInputMove()
         {
-            Vector2 moveInput = m_GamePlayInputReader.PlayerMoveInput;
+            Vector2 moveInput = m_Settings.GamePlayInputReader.PlayerMoveInput;
             Vector3 moveDirection = Vector3.zero;
 
             if (moveInput.sqrMagnitude > 0.01f)

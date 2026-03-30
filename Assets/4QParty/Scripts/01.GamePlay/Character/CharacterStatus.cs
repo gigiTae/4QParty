@@ -20,8 +20,11 @@ namespace FQParty.GamePlay.Character
     [RequireComponent(typeof(ServerAbilityPlayer))]
     public class CharacterStatus : NetworkBehaviour, IDamageable
     {
-        [SerializeField] CharacterSettings m_Settings;
-        [SerializeField] Ability m_DeadAbility;
+        public void BindSettings(ICharacterStatusSettings settings)
+        {
+            m_Settings = settings;
+        }
+        ICharacterStatusSettings m_Settings;
 
         ServerAbilityPlayer m_ServerAbilityPlayer;
 
@@ -34,13 +37,22 @@ namespace FQParty.GamePlay.Character
             m_ServerAbilityPlayer = GetComponent<ServerAbilityPlayer>();
         }
 
-
-        public float MaxHp => m_Settings.MaxHp;
+        public float MaxHp
+        {
+            get
+            {
+                if (m_Settings == null)
+                {
+                    return 0f;
+                }
+                return m_Settings.MaxHp;
+            }
+        }
         public float AttackPower => m_AttackPower.Value;
 
         public override void OnNetworkSpawn()
         {
-            if (IsServer)
+            if (IsServer && m_Settings != null)
             {
                 m_CurrentHp.Value = m_Settings.MaxHp;
                 m_AttackPower.Value = m_Settings.AttackPower;
@@ -72,10 +84,9 @@ namespace FQParty.GamePlay.Character
         {
             if (m_Statement.Value == CharacterStatement.Dead) return;
 
-            Debug.Log("Dead");
-
             m_Statement.Value = CharacterStatement.Dead;
-            m_ServerAbilityPlayer.RequestAbilityServerRpc(AbilityRequestData.Create(m_DeadAbility));
+            var data = AbilityRequestData.Create(m_Settings.DeadAbility);
+            m_ServerAbilityPlayer.RequestAbilityServerRpc(data);
         }
 
         private void OnGUI()
@@ -100,6 +111,5 @@ namespace FQParty.GamePlay.Character
             string hpText = $"Hp: {m_CurrentHp.Value} / {MaxHp}";
             GUI.Label(new Rect(screenPos.x - 50, Screen.height - screenPos.y - 20, 100, 40), hpText, style);
         }
-
     }
 }

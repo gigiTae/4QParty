@@ -10,7 +10,7 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 66a699340fb2efb4e894319365190321, type: 3}
-  m_Name: MeleeAttackAbility
+  m_Name: TestPlayerAttackAbility
   m_EditorClassIdentifier: FQParty.GamePlay::FQParty.GamePlay.Abilities.MeleeAttackAbility
   Config:
     ReuseTimeSeconds: 0

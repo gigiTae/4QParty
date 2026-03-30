@@ -11,7 +11,6 @@ namespace FQParty.GamePlay.Character
     {
         public CharacterMovement CharacterMovement => m_CharacterMovement;
         [SerializeField] CharacterMovement m_CharacterMovement;
-
     }
 
 }

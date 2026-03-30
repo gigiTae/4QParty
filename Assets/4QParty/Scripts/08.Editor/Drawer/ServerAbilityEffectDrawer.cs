@@ -11,7 +11,6 @@ namespace FQParty.Editor.Drawer
     public class ServerAbilityEffectDrawer : PropertyDrawer
     {
         static Dictionary<string, Type> typeMap;
-
         public override void OnGUI(Rect position, SerializedProperty property, GUIContent label)
         {
             if (typeMap == null) BuildTypeMap();

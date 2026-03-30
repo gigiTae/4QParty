@@ -7,7 +7,12 @@ namespace FQParty.GamePlay.GameMode
         protected override void StartGameMode()
         {
         }
-    
+
+
+        protected override void EndGameMode()
+        {
+                    
+        }
     }
 
 }

@@ -19,7 +19,6 @@ GameObject:
   - component: {fileID: 1357554448765932350}
   - component: {fileID: 4630263233460472499}
   - component: {fileID: 4053115238216986115}
-  - component: {fileID: 1984380028067728350}
   m_Layer: 0
   m_Name: Soul
   m_TagString: Untagged
@@ -127,8 +126,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: FQParty.GamePlay::FQParty.GamePlay.Character.CharacterMovement
   ShowTopMostFoldoutHeaderGroup: 1
-  m_GamePlayInputReader: {fileID: 11400000, guid: 1ca3c0efb879c984a9354551da1ad06f, type: 2}
-  m_Settings: {fileID: 11400000, guid: e1ead64f4e0ed374dbb84873f48e84f8, type: 2}
 --- !u!143 &208726931845093319
 CharacterController:
   m_ObjectHideFlags: 0
@@ -172,6 +169,8 @@ MonoBehaviour:
   m_CharacterStatus: {fileID: 1357554448765932350}
   m_NetworkAnimator: {fileID: 0}
   m_ServerAbilityPlayer: {fileID: 4053115238216986115}
+  m_Settings: {fileID: 11400000, guid: 841c4b0b1cd417d41bc40cfa0373d4c2, type: 2}
+  m_ClientInputSender: {fileID: 2277734276588850043}
 --- !u!114 &2929116544677487501
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -199,8 +198,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: FQParty.GamePlay::FQParty.GamePlay.Input.ClientInputSender
   ShowTopMostFoldoutHeaderGroup: 1
-  m_PlayerCharacterSettings: {fileID: 11400000, guid: 841c4b0b1cd417d41bc40cfa0373d4c2, type: 2}
-  m_GameInputReader: {fileID: 11400000, guid: 1ca3c0efb879c984a9354551da1ad06f, type: 2}
 --- !u!114 &1357554448765932350
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -214,8 +211,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: FQParty.GamePlay::FQParty.GamePlay.Character.CharacterStatus
   ShowTopMostFoldoutHeaderGroup: 1
-  m_Settings: {fileID: 11400000, guid: e1ead64f4e0ed374dbb84873f48e84f8, type: 2}
-  m_ServerCharacter: {fileID: 908605504761178731}
 --- !u!114 &4630263233460472499
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -244,29 +239,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: FQParty.GamePlay::FQParty.GamePlay.Abilities.ServerAbilityPlayer
   ShowTopMostFoldoutHeaderGroup: 0
   m_ServerCharacter: {fileID: 908605504761178731}
---- !u!114 &1984380028067728350
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4950392468185354956}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 19102, guid: 0000000000000000e000000000000000, type: 0}
-  m_Name: 
-  m_EditorClassIdentifier: UnityEngine.dll::UnityEngine.UIElements.UIDocument
-  m_PanelSettings: {fileID: 11400000, guid: b570e246885c0094a81794839a954676, type: 2}
-  m_ParentUI: {fileID: 0}
-  sourceAsset: {fileID: 9197481963319205126, guid: cc06470b9606741498886528c627f226, type: 3}
-  m_SortingOrder: 0
-  m_Position: 0
-  m_WorldSpaceSizeMode: 1
-  m_WorldSpaceWidth: 100
-  m_WorldSpaceHeight: 300
-  m_PivotReferenceSize: 0
-  m_Pivot: 0
-  m_WorldSpaceCollider: {fileID: 0}
 --- !u!1001 &6855945421939792330
 PrefabInstance:
   m_ObjectHideFlags: 0

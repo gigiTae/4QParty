@@ -18,6 +18,11 @@ namespace FQParty.GamePlay.GameMode
             m_PlayerSpwanSystem.StartSpwan();
         }
 
+        protected override void EndGameMode()
+        {
+            
+        }
+
     }
 
 }

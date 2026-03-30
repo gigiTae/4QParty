@@ -11,7 +11,6 @@ namespace FQParty.GamePlay.Abilities.Effects
     {
         [SerializeField] float m_FireTime = 0f;
 
-
         public override void OnStart(ServerCharacter serverCharacter, Ability ability)
         {
             if (m_FireTime <= 0f)
