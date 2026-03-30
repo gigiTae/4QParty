@@ -17,7 +17,7 @@ MonoBehaviour:
   m_MaxHp: 100
   m_AttackPower: 10
   m_DeadAbility: {fileID: 0}
-  m_AttackPerformedAbility: {fileID: 11400000, guid: 7473af966f2672247ba8ac5615fe3fd0, type: 2}
+  m_AttackPerformedAbility: {fileID: 0}
   m_AttackCanceledAbility: {fileID: 0}
   m_InteractPerformedAbility: {fileID: 11400000, guid: 95cd512ae3cebbd4cadeb1a367d3c6f1, type: 2}
   m_InteractCanceledAbility: {fileID: 0}

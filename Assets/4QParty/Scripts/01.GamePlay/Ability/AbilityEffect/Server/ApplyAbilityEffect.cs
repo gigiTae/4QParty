@@ -74,7 +74,7 @@ namespace FQParty.GamePlay.Abilities.Effects
                 return null;
             }
 
-            var damageables = new List<IApplyAbility>();
+            var targetList = new List<IApplyAbility>();
 
             for (int i = 0; i < coliders.Length; i++)
             {
@@ -82,14 +82,14 @@ namespace FQParty.GamePlay.Abilities.Effects
 
                 if (target != null)
                 {
-                    damageables.Add(target);
+                    targetList.Add(target);
                 }
             }
 
             DebugGizumo.Instance.AddBox(center, m_HalfExtents * 2f, rotation,
-                damageables.Count > 0 ? Color.red : Color.green, 0.1f);
+                targetList.Count > 0 ? Color.red : Color.green, 0.1f);
 
-            return damageables.Count > 0 ? damageables.ToArray() : null;
+            return targetList.Count > 0 ? targetList.ToArray() : null;
         }
     }
 

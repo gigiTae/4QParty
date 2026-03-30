@@ -16,6 +16,9 @@ namespace FQParty.GamePlay.Settings
         [SerializeField] GamePlayInputReader m_GameInputReader;
         public GamePlayInputReader GamePlayInputReader => m_GameInputReader;
 
+        [SerializeField] bool m_UseInputMove = true;
+        public bool UseInputMove => m_UseInputMove;
+
         [Header("Status")]
         [SerializeField] float m_MaxHp = 100f;
         public float MaxHp => m_MaxHp;

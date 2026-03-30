@@ -1,4 +1,5 @@
 using FQParty.GamePlay.GameplayObjects;
+using Unity.Netcode.Components;
 using UnityEditor.Experimental.GraphView;
 using UnityEngine;
 
@@ -13,16 +14,21 @@ namespace FQParty.GamePlay.Character.Movement
         Vector3 m_KnockbackDirection;
         float m_KnockbackSpeed = 0;
 
+        AnticipatedNetworkTransform m_AnticipatedNetworkTransform;
+
+
         void Awake()
         {
             m_CharacterController = GetComponent<CharacterController>();
         }
 
+ 
         void Update()
         {
             if (MovementState == ServerMovementState.Knockback)
             {
                 Vector3 motion = m_KnockbackDirection * Time.deltaTime * m_KnockbackSpeed;
+
                 m_CharacterController.Move(motion);
             }
         }

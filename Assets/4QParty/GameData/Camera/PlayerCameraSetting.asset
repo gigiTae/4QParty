@@ -12,5 +12,5 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6f1cbd3800c028c4f8fb7824cfaae4d8, type: 3}
   m_Name: PlayerCameraSetting
   m_EditorClassIdentifier: FQParty.GamePlay::FQParty.GamePlay.Cam.PlayerCameraSetting
-  OffsetPosition: {x: 0, y: 10, z: -10}
-  Rotation: {x: 45, y: 0, z: 0}
+  OffsetPosition: {x: 0, y: 10, z: -5}
+  Rotation: {x: 60, y: 0, z: 0}

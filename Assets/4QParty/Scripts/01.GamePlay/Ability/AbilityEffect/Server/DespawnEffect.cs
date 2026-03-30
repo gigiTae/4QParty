@@ -9,6 +9,7 @@ namespace FQParty.GamePlay.Abilities.Effects
     public class DespawnAbility : ServerAbilityEffect
     {
         [SerializeField] float m_DespawnTime = 1f;
+        private Transform m_MainCameraTransform;
 
         public override void OnStart(ServerCharacter serverCharacter, Ability ability)
         {

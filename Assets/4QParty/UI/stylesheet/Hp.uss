@@ -1,0 +1,35 @@
+
+
+.unity-progress-bar {
+    width: 60px;
+    height: 8px;
+    margin: 0;
+    align-self: center;
+}
+
+.unity-progress-bar__container {
+    background-color: rgba(20, 20, 20, 0.8);
+    border-width: 1px;
+    border-color: rgb(0, 0, 0);
+    border-radius: 2px;
+    min-height: 8px;
+    max-height: 8px;
+}
+
+.unity-progress-bar__progress {
+    background-color: rgb(255, 50, 50);
+    border-radius: 1px;
+    margin: 0;
+    transition-property: width;
+    transition-duration: 0.15s;
+    transition-timing-function: ease-out-circ;
+}
+
+.unity-progress-bar__background {
+    background-color: rgba(0, 0, 0, 0);
+    border-width: 0;
+}
+
+.unity-progress-bar__title {
+    display: none;
+}

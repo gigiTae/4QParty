@@ -32,12 +32,6 @@ namespace FQParty.GamePlay.Character.Movement
         ClientInputSender m_ClientInputSender;
         Camera m_PlayerCameara;
 
-        public override void OnNetworkSpawn()
-        {
-        }
-        public override void OnNetworkDespawn()
-        {
-        }
 
         void Awake()
         {
@@ -85,6 +79,8 @@ namespace FQParty.GamePlay.Character.Movement
 
         void UpdateInputMove()
         {
+            if (!m_Settings.UseInputMove) return;   
+
             Vector2 moveInput = m_Settings.GamePlayInputReader.PlayerMoveInput;
             Vector3 moveDirection = Vector3.zero;
 

@@ -129,7 +129,6 @@ namespace FQParty.GamePlay.Input
             bool canRequset = m_ServerAbilityPlayer.CanRequsetAbility(ability);
             if (!canRequset) return;
 
-
             // 입력 방향 정보
             if (ability.Config.InputOptions.HasFlag(AbilityInputOptions.Direction))
             {
@@ -141,7 +140,6 @@ namespace FQParty.GamePlay.Input
             {
                 m_AbilityRequests[m_AbilityRequestCount].Duration = 0f;
             }
-
 
             m_AbilityRequests[m_AbilityRequestCount].AbilityID = ability.AbilityID;
 

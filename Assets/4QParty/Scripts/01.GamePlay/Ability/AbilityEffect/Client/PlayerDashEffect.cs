@@ -13,7 +13,7 @@ namespace FQParty.GamePlay.Abilities.Effects
         [SerializeField] float DashSpeed = 20f;
 
         public override void OnStart(ClientCharacter clientCharacter, Ability ability)
-        {
+            {
             if (clientCharacter.CharacterMovement is IDashable dash)
             {
                 dash.StartDash(DashSpeed); 

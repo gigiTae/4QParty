@@ -1,6 +1,7 @@
 using FQParty.GamePlay.Abilities;
 using FQParty.GamePlay.GameplayObjects;
 using FQParty.GamePlay.Settings;
+using System;
 using System.Data;
 using Unity.Netcode;
 using UnityEngine;
@@ -20,6 +21,8 @@ namespace FQParty.GamePlay.Character
     [RequireComponent(typeof(ServerAbilityPlayer))]
     public class CharacterStatus : NetworkBehaviour, IDamageable
     {
+        public Action<float,float> OnHpChangedEvent;
+
         public void BindSettings(ICharacterStatusSettings settings)
         {
             m_Settings = settings;
@@ -48,10 +51,19 @@ namespace FQParty.GamePlay.Character
                 return m_Settings.MaxHp;
             }
         }
+
+        void OnHpChanged(float previousValue, float newValue)
+        {
+            OnHpChangedEvent?.Invoke(previousValue, newValue);    
+        }
+
+
         public float AttackPower => m_AttackPower.Value;
 
         public override void OnNetworkSpawn()
         {
+            m_CurrentHp.OnValueChanged += OnHpChanged;
+            
             if (IsServer && m_Settings != null)
             {
                 m_CurrentHp.Value = m_Settings.MaxHp;

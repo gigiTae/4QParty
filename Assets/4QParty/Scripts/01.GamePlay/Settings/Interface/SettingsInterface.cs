@@ -17,5 +17,7 @@ namespace FQParty.GamePlay.Settings
     {
         GamePlayInputReader GamePlayInputReader { get; }
         float MoveSpeed { get; }
+
+        bool UseInputMove { get; }  
     }
 }

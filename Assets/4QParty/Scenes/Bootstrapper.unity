@@ -130,7 +130,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 593a2fe42fa9d37498c96f9a383b6521, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Unity.Netcode.Runtime::Unity.Netcode.NetworkManager
---- !u!1 &2051011934
+--- !u!4 &693132018 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 5588623211848345602, guid: fec7c302f9669b8418847f9d80c24637, type: 3}
+  m_PrefabInstance: {fileID: 5001069450468497809}
+  m_PrefabAsset: {fileID: 0}
+--- !u!1 &903841194
 GameObject:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -138,8 +143,8 @@ GameObject:
   m_PrefabAsset: {fileID: 0}
   serializedVersion: 6
   m_Component:
-  - component: {fileID: 2051011936}
-  - component: {fileID: 2051011935}
+  - component: {fileID: 903841195}
+  - component: {fileID: 903841196}
   m_Layer: 0
   m_Name: Network Simulator
   m_TagString: Untagged
@@ -147,13 +152,28 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!114 &2051011935
+--- !u!4 &903841195
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 903841194}
+  serializedVersion: 2
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: -8.44211, y: -20.25952, z: 16.89817}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 693132018}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &903841196
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2051011934}
+  m_GameObject: {fileID: 903841194}
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 98d9db9626104da59357651088226725, type: 3}
@@ -161,7 +181,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Unity.Multiplayer.Tools.NetworkSimulator.Runtime::Unity.Multiplayer.Tools.NetworkSimulator.Runtime.NetworkSimulator
   m_PresetAsset: {fileID: 0}
   m_PresetReference:
-    rid: 2614229220045881436
+    rid: 2614229231684288635
   m_Scenario:
     rid: -2
   m_IsScenarioSettingsFolded: 0
@@ -171,36 +191,15 @@ MonoBehaviour:
     RefIds:
     - rid: -2
       type: {class: , ns: , asm: }
-    - rid: 2614229220045881436
+    - rid: 2614229231684288635
       type: {class: NetworkSimulatorPreset, ns: Unity.Multiplayer.Tools.NetworkSimulator.Runtime, asm: Unity.Multiplayer.Tools.NetworkSimulator.Runtime}
       data:
-        <Name>k__BackingField: 'Mobile 4G [4G, LTE, ''13]'
-        <Description>k__BackingField: 'Suitable for synchronous multiplayer, except
-          that ping (and overall connection quality and stability) may be quite poor.
-
-
-          Expect
-          to handle players dropping all packets in bursts of 1-60s. I.e. Ensure
-          you handle reconnections.'
-        <PacketDelayMs>k__BackingField: 100
-        <PacketJitterMs>k__BackingField: 20
+        <Name>k__BackingField: 
+        <Description>k__BackingField: 
+        <PacketDelayMs>k__BackingField: 0
+        <PacketJitterMs>k__BackingField: 0
         <PacketLossInterval>k__BackingField: 0
-        <PacketLossPercent>k__BackingField: 4
---- !u!4 &2051011936
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2051011934}
-  serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 0}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+        <PacketLossPercent>k__BackingField: 0
 --- !u!1001 &2052980049
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -381,7 +380,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 6199324318893177307, guid: fec7c302f9669b8418847f9d80c24637, type: 3}
       propertyPath: ConnectionData.Port
-      value: 5808
+      value: 5638
       objectReference: {fileID: 0}
     - target: {fileID: 7789548863658344770, guid: fec7c302f9669b8418847f9d80c24637, type: 3}
       propertyPath: m_Name
@@ -389,7 +388,10 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
-    m_AddedGameObjects: []
+    m_AddedGameObjects:
+    - targetCorrespondingSourceObject: {fileID: 5588623211848345602, guid: fec7c302f9669b8418847f9d80c24637, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 903841195}
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: fec7c302f9669b8418847f9d80c24637, type: 3}
 --- !u!1001 &5761565278842868772
@@ -659,4 +661,3 @@ SceneRoots:
   - {fileID: 9201592178743824249}
   - {fileID: 2052980049}
   - {fileID: 5761565278842868772}
-  - {fileID: 2051011936}

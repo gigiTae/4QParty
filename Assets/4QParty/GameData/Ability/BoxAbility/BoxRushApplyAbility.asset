@@ -10,34 +10,35 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 66a699340fb2efb4e894319365190321, type: 3}
-  m_Name: TestPlayerAttackApplyAbility
+  m_Name: BoxRushApplyAbility
   m_EditorClassIdentifier: FQParty.GamePlay::FQParty.GamePlay.Abilities.Ability
   Config:
     ReuseTimeSeconds: 0
-    PlayType: 2
+    PlayType: 1
     ServerEndPolicy: 1
     ClientEndPolicy: 1
     InputOptions: 0
   m_ServerEffects:
-  - rid: 2614229184908099671
-  - rid: 2614229195415880001
-  - rid: 2614229201984159836
+  - rid: 2614229225357967457
+  - rid: 2614229225357967458
+  - rid: 2614229225357967495
   m_ClientEffects: []
   references:
     version: 2
     RefIds:
-    - rid: 2614229184908099671
+    - rid: 2614229225357967457
+      type: {class: KnockbackEffect, ns: FQParty.GamePlay.Abilities.Effects, asm: FQParty.GamePlay}
+      data:
+        m_DirectionType: 1
+        m_KnockbackDuration: 0.5
+        m_KnockbackSpeed: 20
+    - rid: 2614229225357967458
       type: {class: TakeDamageEffect, ns: FQParty.GamePlay.Abilities.Effects, asm: FQParty.GamePlay}
       data:
         m_DamageMultiplier: 1
-    - rid: 2614229195415880001
-      type: {class: KnockbackEffect, ns: FQParty.GamePlay.Abilities.Effects, asm: FQParty.GamePlay}
+    - rid: 2614229225357967495
+      type: {class: TakeDotDamageEffect, ns: FQParty.GamePlay.Abilities.Effects, asm: FQParty.GamePlay}
       data:
-        m_DirectionType: 2
-        m_KnockbackDuration: 0.5
-        m_KnockbackSpeed: 5
-    - rid: 2614229201984159836
-      type: {class: AnimationTriggerEffect, ns: FQParty.GamePlay.Abilities.Effects, asm: FQParty.GamePlay}
-      data:
-        m_TriggerName: OnHit
-        m_StateName: Hit
+        m_DamageMultiplier: 0.5
+        m_Duration: 5
+        m_TickInterval: 1

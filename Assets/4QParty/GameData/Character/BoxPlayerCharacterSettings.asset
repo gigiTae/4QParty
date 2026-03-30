@@ -14,11 +14,12 @@ MonoBehaviour:
   m_EditorClassIdentifier: FQParty.GamePlay::FQParty.GamePlay.Settings.PlayerCharacterSettings
   m_MoveSpeed: 0
   m_GameInputReader: {fileID: 11400000, guid: 1ca3c0efb879c984a9354551da1ad06f, type: 2}
+  m_UseInputMove: 0
   m_MaxHp: 100
   m_AttackPower: 10
   m_DeadAbility: {fileID: 0}
   m_AttackPerformedAbility: {fileID: 11400000, guid: 97d47825d7173644285f5ef58b083160, type: 2}
-  m_AttackCanceledAbility: {fileID: 11400000, guid: c80faa45c9e419d4088859b7da7f6476, type: 2}
+  m_AttackCanceledAbility: {fileID: 11400000, guid: 3f726aeb39e8d0d42a608a6426d3b35e, type: 2}
   m_InteractPerformedAbility: {fileID: 0}
   m_InteractCanceledAbility: {fileID: 0}
   m_DashPerformedAbility: {fileID: 0}
