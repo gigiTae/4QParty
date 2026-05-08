@@ -33,7 +33,7 @@ EditorBuildSettings:
     path: Assets/4QParty/Scenes/TestScene.unity
     guid: f5eeda439c9853f41a3ebb52a6cae7f3
   m_configObjects:
-    com.unity.addressableassets: {fileID: 11400000, guid: 05787acbd5ed79c488428179afaded24, type: 2}
+    com.unity.addressableassets: {fileID: 11400000, guid: a4fba597fdc122b44abbf34da4c9551e, type: 2}
     com.unity.dt.app-ui: {fileID: 11400000, guid: 99f9c9493070a9d4c979a8fec7c5a8d3, type: 2}
     com.unity.input.settings.actions: {fileID: -944628639613478452, guid: 9db0ac594d74c554ea0a7125617072de, type: 3}
     com.unity.localization.settings: {fileID: 11400000, guid: 7c644fef85899ba4c98f8d4772785a2c, type: 2}
